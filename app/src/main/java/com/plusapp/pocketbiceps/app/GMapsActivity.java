@@ -31,15 +31,22 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class GMapsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
 
     private GoogleMap gMap;
@@ -68,6 +75,9 @@ public class GMapsActivity extends AppCompatActivity
     double longitude;
     public LocationManager lm;
 
+    public Location mCurrentLocation;
+
+
     private GoogleApiClient googleApiClient;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
 
@@ -78,15 +88,17 @@ public class GMapsActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
+
+
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] { android.Manifest.permission.ACCESS_COARSE_LOCATION },
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSION_ACCESS_COARSE_LOCATION);
         }
-
-
 
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -164,11 +176,34 @@ public class GMapsActivity extends AppCompatActivity
                 == PackageManager.PERMISSION_GRANTED) {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
-            double lat = lastLocation.getLatitude(), lon = lastLocation.getLongitude();
-            String units = "imperial";
+            if (gMap != null) {
+                gMap.setMyLocationEnabled(true);
+                gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                gMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+            }
+
 
         }
     }
+
+
+    private void addM() {
+        List<MyMarkerObj> m = data.getMyMarkers();
+        for (int i = 0; i < m.size(); i++) {
+            String[] slatlng = m.get(i).getPosition().split(" ");
+            LatLng lat = new LatLng(Double.valueOf(slatlng[0]),
+                    Double.valueOf(slatlng[1]));
+            gMap.addMarker(new MarkerOptions()
+                    .title(m.get(i).getTitle())
+                    .snippet(m.get(i).getSnippet())
+                    .icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .position(lat));
+
+
+        }
+    }
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -224,43 +259,86 @@ public class GMapsActivity extends AppCompatActivity
         String provider = lm.getBestProvider(new Criteria(), true);
 
 
-//
-//        if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            if (context instanceof Activity) {
-//                ActivityCompat.requestPermissions((Activity) context, new String[]{ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
-//
-//            }
-//            return;
-//        }
-//
-
-
-
-
-//        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)
-//                == PackageManager.PERMISSION_GRANTED) {
-//            gMap.setMyLocationEnabled(true);
-//        } else {
-//            // Show rationale and request permission.
-//        }
-
-
-
-//        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 50, (LocationListener) this);
-//
-//
-//
-//        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 50, this);
-
         data = new MarkerDataSource(context);
         data.open();
 
+
+        addM();
+
+        // Get latitude of the current location
+        double latitude = mCurrentLocation.getLatitude();
+        String latitudefordb = String.valueOf(latitude);
+        this.latitudefordb = latitudefordb;
+        // Get longitude of the current location
+        double longitude = mCurrentLocation.getLongitude();
+        String longitudefordb = String.valueOf(longitude);
+        this.longitudefordb = longitudefordb;
+
+        // Create a LatLng object for the current location
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        // Show the current location in Google Map
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Zoom in the Google Map
+        gMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+        gMap.addMarker(new MarkerOptions().position(
+                new LatLng(latitude, longitude)).title("here"));
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        gMap.setMyLocationEnabled(true);
+
+    }
+
+
+    public void poisToDb(){
+
+//        data.addMarker(new MyMarkerObj("twitter", "twitter HQ",
+//                "48.802302 9.802771"));
+//        data.addMarker(new MyMarkerObj("twitter", "twitter HQ",
+//                "45.77734 9.37783"));
+
+        data.addMarker(new MyMarkerObj("Metins Wohnung",
+                "Hier zocken wir meistens :P", "48.49937 9.19023"));
+//        data.addMarker(new MyMarkerObj("Sportplatz",
+//                "Hier gingen wir �fter mit Kimbo und Lena spazieren",
+//                "48.49896 9.18496"));
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+         mCurrentLocation = location;
 
 
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 }
