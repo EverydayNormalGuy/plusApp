@@ -83,7 +83,7 @@ public class GMapsActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
 
-
+  //test
         googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
 
 
