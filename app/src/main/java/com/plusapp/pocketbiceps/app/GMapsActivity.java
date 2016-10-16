@@ -1,7 +1,5 @@
 package com.plusapp.pocketbiceps.app;
 
-import android.*;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -10,13 +8,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,6 +26,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -40,9 +34,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class GMapsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -87,6 +78,9 @@ public class GMapsActivity extends AppCompatActivity
         setContentView(R.layout.activity_gmaps);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
 
 
@@ -252,7 +246,7 @@ public class GMapsActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        gMap=googleMap;
 
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -262,7 +256,7 @@ public class GMapsActivity extends AppCompatActivity
         data = new MarkerDataSource(context);
         data.open();
 
-
+/**
         addM();
 
         // Get latitude of the current location
@@ -279,7 +273,7 @@ public class GMapsActivity extends AppCompatActivity
 
         // Show the current location in Google Map
         gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
+**/
         // Zoom in the Google Map
         gMap.animateCamera(CameraUpdateFactory.zoomTo(20));
         gMap.addMarker(new MarkerOptions().position(

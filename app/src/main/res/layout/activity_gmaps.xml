@@ -9,6 +9,16 @@
     tools:openDrawer="start">
 
 
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.plusapp.pocketbiceps.app.GMapsActivity"
+        />
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -19,6 +29,5 @@
         app:headerLayout="@layout/nav_header_gmaps"
         app:menu="@menu/activity_gmaps_drawer" />
 
-    <include layout="@layout/activity_maps"/>
 
 </android.support.v4.widget.DrawerLayout>

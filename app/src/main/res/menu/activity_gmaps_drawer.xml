@@ -33,6 +33,5 @@
         </menu>
     </item>
 
-    <include layout="@layout/activity_maps"/>
 
 </menu>
