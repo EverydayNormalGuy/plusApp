@@ -1,9 +1,14 @@
 package com.plusapp.pocketbiceps.app;
 
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,8 +20,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
+import com.plusapp.pocketbiceps.app.fragments.ImportFragment;
+import com.plusapp.pocketbiceps.app.fragments.MainFragment;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private GoogleApiClient googleApiClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +38,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +58,16 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /**
+         * Fügt ein Fragment zur MainActivity
+         */
+        FragmentManager fm =getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
+
+
+
+
     }
 
     @Override
@@ -79,12 +105,23 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        FragmentManager fm = getFragmentManager();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+
+            fm.beginTransaction().replace(R.id.content_main, new ImportFragment()).commit();
         } else if (id == R.id.nav_gallery) {
+
+
+
+
+
+
+
+            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
+
 
         } else if (id == R.id.nav_slideshow) {
             Intent intent = new Intent(this,GMapsActivity.class);
@@ -92,6 +129,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(getBaseContext(),"Map staretet",Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {
+
 
         } else if (id == R.id.nav_share) {
 

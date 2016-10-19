@@ -35,6 +35,7 @@
         <activity
             android:name=".GMapsActivity"
             android:label="@string/title_activity_gmaps"
+
              />
     </application>
 

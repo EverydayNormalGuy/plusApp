@@ -74,16 +74,21 @@ public class GMapsActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //setTheme(R.style.AppTheme_AppBarOverlay); damit wird der navigation drawer schwarz
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gmaps);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar toolbarGmaps = (Toolbar) findViewById(R.id.toolbarGmaps);
+        setSupportActionBar(toolbarGmaps);
+
+
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
-  //test
+
+
         googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
 
 
@@ -95,18 +100,9 @@ public class GMapsActivity extends AppCompatActivity
         }
 
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbarGmaps, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
 
         toggle.syncState();
@@ -178,6 +174,8 @@ public class GMapsActivity extends AppCompatActivity
 
 
         }
+        Toolbar toolbarGmaps = (Toolbar) findViewById(R.id.toolbarGmaps);
+        setSupportActionBar(toolbarGmaps);
     }
 
 
@@ -248,6 +246,11 @@ public class GMapsActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         gMap=googleMap;
 
+
+
+        Toolbar toolbarGmaps = (Toolbar) findViewById(R.id.toolbarGmaps);
+        setSupportActionBar(toolbarGmaps);
+
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         String provider = lm.getBestProvider(new Criteria(), true);
@@ -275,7 +278,6 @@ public class GMapsActivity extends AppCompatActivity
         gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 **/
         // Zoom in the Google Map
-        gMap.animateCamera(CameraUpdateFactory.zoomTo(20));
         gMap.addMarker(new MarkerOptions().position(
                 new LatLng(latitude, longitude)).title("here"));
 
@@ -301,8 +303,8 @@ public class GMapsActivity extends AppCompatActivity
 //        data.addMarker(new MyMarkerObj("twitter", "twitter HQ",
 //                "45.77734 9.37783"));
 
-        data.addMarker(new MyMarkerObj("Metins Wohnung",
-                "Hier zocken wir meistens :P", "48.49937 9.19023"));
+//        data.addMarker(new MyMarkerObj("Metins Wohnung",
+//                "Hier zocken wir meistens :P", "48.49937 9.19023"));
 //        data.addMarker(new MyMarkerObj("Sportplatz",
 //                "Hier gingen wir �fter mit Kimbo und Lena spazieren",
 //                "48.49896 9.18496"));
