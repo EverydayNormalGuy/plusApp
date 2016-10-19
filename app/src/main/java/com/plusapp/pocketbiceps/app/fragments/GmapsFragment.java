@@ -55,8 +55,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_gmaps, container,false);
-
+        return inflater.inflate(R.layout.fragment_gmaps, container, false);
 
 
     }
@@ -67,17 +66,16 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         MapFragment fragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
         fragment.getMapAsync(this);
 
-
-
         if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSION_ACCESS_COARSE_LOCATION);
+
+
         }
 
 
     }
-
 
 
     protected synchronized void buildGoogleApiClient() {
@@ -92,8 +90,9 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        gMap=googleMap;
+        gMap = googleMap;
         gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
 
         if (ContextCompat.checkSelfPermission(getActivity().getBaseContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -101,8 +100,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
             buildGoogleApiClient();
             gMap.setMyLocationEnabled(true);
         }
-
-
 
 
     }
@@ -117,16 +114,14 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this );
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
         }
-
 
 
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override

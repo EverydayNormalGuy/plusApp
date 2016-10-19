@@ -1,4 +1,4 @@
-package com.plusapp.pocketbiceps.app;
+package com.plusapp.pocketbiceps.app.database;
 
 /**
  * Created by Metin on 24.03.2015.
@@ -14,6 +14,7 @@ public class MySqlHelper extends SQLiteOpenHelper {
     public static final String TITLE = "loc_title";
     public static final String SNIPPET = "loc_snippet";
     public static final String POSITION = "loc_position";
+    public static final String TIME_STAMP = "loc_time";
 
 
     private static final int D_VERSION = 1;
@@ -22,6 +23,7 @@ public class MySqlHelper extends SQLiteOpenHelper {
             + ID_COL + " integer primary key autoincrement, "
             + TITLE + " text, "
             + SNIPPET + " text, "
+            + TIME_STAMP + " integer, "
             + POSITION + " text);"
             ;
 

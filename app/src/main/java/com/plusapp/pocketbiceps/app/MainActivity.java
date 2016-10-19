@@ -1,14 +1,13 @@
 package com.plusapp.pocketbiceps.app;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.app.Fragment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,15 +20,21 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
+import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
 import com.plusapp.pocketbiceps.app.fragments.ImportFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleApiClient googleApiClient;
+    public MarkerDataSource data;
+    Context context;
 
 
     @Override
@@ -38,6 +43,20 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        data = new MarkerDataSource(this);
+        data.open();
+
+
+        RecyclerView recList = (RecyclerView) findViewById(R.id.lvMemories);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+
+
+        MemoryAdapter ca = new MemoryAdapter(createList2());
+        recList.setAdapter(ca);
 
 
 
@@ -65,10 +84,31 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm =getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
 
+    }
+
+    private List<MemoryInfo> createList(int size) {
+
+        List<MemoryInfo> result = new ArrayList<MemoryInfo>();
+        for (int i=1; i <= size; i++) {
+            MemoryInfo ci = new MemoryInfo();
+            ci.name = MemoryInfo.NAME_PREFIX + i;
+            ci.surname = MemoryInfo.SURNAME_PREFIX + i;
 
 
+            result.add(ci);
+
+        }
+
+        return result;
+    }
+
+    private List<MyMarkerObj> createList2(){
+
+        List<MyMarkerObj> m = data.getMyMarkers();
+        return m;
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -113,19 +153,12 @@ public class MainActivity extends AppCompatActivity
 
             fm.beginTransaction().replace(R.id.content_main, new ImportFragment()).commit();
         } else if (id == R.id.nav_gallery) {
-
-
-
-
-
-
-
             fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
 
 
         } else if (id == R.id.nav_slideshow) {
-            Intent intent = new Intent(this,GMapsActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this,GMapsActivity.class);
+//            startActivity(intent);
             Toast.makeText(getBaseContext(),"Map staretet",Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {

@@ -1,4 +1,4 @@
-package com.plusapp.pocketbiceps.app;
+package com.plusapp.pocketbiceps.app.database;
 
 /**
  * Created by Metin on 24.03.2015.
@@ -9,22 +9,26 @@ public class MyMarkerObj {
     private String title;
     private String snippet;
     private String position;
+    private long timestamp;
 
     public MyMarkerObj(){
 
     }
-    public MyMarkerObj(long id, String title, String snippet, String position){
+
+    public MyMarkerObj(long id, String title, String snippet, String position, long timestamp) {
         this.setId(id);
         this.setTitle(title);
         this.setSnippet(snippet);
         this.setPosition(position);
+        this.setTimestamp(timestamp);
     }
 
-    public MyMarkerObj(String title, String snippet, String position){
+    public MyMarkerObj(String title, String snippet, String position, long timestamp){
 
         this.setTitle(title);
         this.setSnippet(snippet);
         this.setPosition(position);
+        this.setTimestamp(timestamp);
 
     }
     public String getPosition() {
@@ -52,5 +56,12 @@ public class MyMarkerObj {
         this.id = id;
     }
 
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+    public long getTimestamp(){
+        return timestamp;
+    }
 
 }
