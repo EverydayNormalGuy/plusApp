@@ -15,6 +15,7 @@ public class MySqlHelper extends SQLiteOpenHelper {
     public static final String SNIPPET = "loc_snippet";
     public static final String POSITION = "loc_position";
     public static final String TIME_STAMP = "loc_time";
+    public static final String COUNTER ="loc_counter";
 
 
     private static final int D_VERSION = 1;
@@ -24,6 +25,7 @@ public class MySqlHelper extends SQLiteOpenHelper {
             + TITLE + " text, "
             + SNIPPET + " text, "
             + TIME_STAMP + " integer, "
+            + COUNTER + " integer, "
             + POSITION + " text);"
             ;
 

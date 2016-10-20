@@ -16,62 +16,81 @@
 
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/cvImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:orientation="vertical"
             android:scaleType="centerCrop"
-            android:src="@drawable/cast_album_art_placeholder"/>
+            android:src="@drawable/cast_album_art_placeholder" />
 
         <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_above="@+id/cvDescription"
+            android:layout_above="@+id/tvDescription"
             android:background="#50000000"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:text="Hello World!"
-            android:id="@+id/cvTitle"
             android:textColor="#fff"
-            android:textSize="22dp"/>
+            android:textSize="22dp" />
 
 
         <TextView
-            android:id="@+id/cvDescription"
+            android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/image"
+            android:layout_below="@+id/cvImage"
             android:layout_marginBottom="8dp"
             android:paddingLeft="16dp"
             android:paddingTop="16dp"
             android:text="Random Text Blah Blah Blah"
-            android:textSize="16dp"/>
+            android:textSize="16dp" />
 
         <Button
-            android:id="@+id/btnOne"
+            android:id="@+id/btnDelete"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cvDescription"
+            android:layout_below="@+id/tvDescription"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
-            android:text="Button One"
-            android:textColor="#000"/>
+            android:text="Delete"
+            android:textColor="#000" />
 
         <Button
-            android:id="@+id/btnTwo"
+            android:id="@+id/btnEdit"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cvDescription"
-            android:layout_toRightOf="@id/btnOne"
-            android:text="Button Two"
-            android:textColor="#03A9F4"/>
+            android:layout_below="@+id/tvDescription"
+            android:layout_toRightOf="@id/btnDelete"
+            android:text="Edit"
+            android:textColor="#03A9F4" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="#50000000"
+            android:text="TextView"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/tvCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="#7FFF00"
+            android:layout_alignBaseline="@+id/btnEdit"
+            android:layout_alignBottom="@+id/btnEdit"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp" />
 
     </RelativeLayout>
-
-
-
 
 
 </android.support.v7.widget.CardView>

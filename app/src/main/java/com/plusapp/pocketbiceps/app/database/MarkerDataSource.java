@@ -15,7 +15,7 @@ public class MarkerDataSource {
     MySqlHelper dbhelper;
     SQLiteDatabase db;
 
-    String[] cols= {MySqlHelper.TITLE,MySqlHelper.SNIPPET,MySqlHelper.POSITION,MySqlHelper.TIME_STAMP};
+    String[] cols= {MySqlHelper.TITLE,MySqlHelper.SNIPPET,MySqlHelper.POSITION,MySqlHelper.TIME_STAMP, MySqlHelper.COUNTER};
 
     public MarkerDataSource(Context c) {
         dbhelper = new MySqlHelper(c);
@@ -39,6 +39,7 @@ public class MarkerDataSource {
         v.put(MySqlHelper.SNIPPET, m.getSnippet());
         v.put(MySqlHelper.POSITION, m.getPosition());
         v.put(MySqlHelper.TIME_STAMP, m.getTimestamp());
+        v.put(MySqlHelper.COUNTER, m.getCounter());
 
         db.insert(MySqlHelper.TABLE_NAME, null, v);
 
@@ -70,6 +71,7 @@ public class MarkerDataSource {
         m.setSnippet(cursor.getString(1));
         m.setPosition(cursor.getString(2));
         m.setTimestamp(cursor.getLong(3));
+        m.setCounter(cursor.getInt(4));
         return m;
     }
 }
