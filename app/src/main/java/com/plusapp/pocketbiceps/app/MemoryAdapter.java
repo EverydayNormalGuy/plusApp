@@ -16,6 +16,8 @@ import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 
@@ -62,12 +64,45 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
         File f = new File("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
 
-        Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
+
+        Bitmap bmp = decodeFile(f);
         memoryViewHolder.vImage.setImageBitmap(bmp);
 
 
 
 
+    }
+    //Decodes ImageFile und skalliert es um den Speicher zu entlasten
+    private Bitmap decodeFile(File bmpFile){
+        try {
+            //Decode Image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(new FileInputStream(bmpFile),null,o);
+            //Die neue Groesse des Bitmaps
+            final int REQUIRED_SIZE = 200;
+
+            //Den richtigen scale value finden. Sollte power of 2 sein
+            int scale = 1;
+
+            //While Schleife sollte umgangen werden..
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                    o.outHeight / scale / 2 >= REQUIRED_SIZE){
+                scale *=2;
+            }
+
+            //Decode mit inSampleFile
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(new FileInputStream(bmpFile),null,o2);
+
+
+
+        }
+
+        catch (FileNotFoundException e){}
+
+        return null;
     }
 
     @Override

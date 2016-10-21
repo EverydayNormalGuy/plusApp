@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity
 
         File folder = new File("sdcard/special_moments");
 
+
         if (!folder.exists()) {
             //Make Directory
             folder.mkdir();

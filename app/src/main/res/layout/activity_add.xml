@@ -48,7 +48,8 @@
             android:layout_below="@+id/editTitle"
             android:ems="10"
             android:hint="Beschreibung?"
-            android:inputType="textLongMessage" />
+            android:inputType="textMultiLine"
+            android:maxLines="6"/>
 
         <Button
             android:id="@+id/btnRestore"
