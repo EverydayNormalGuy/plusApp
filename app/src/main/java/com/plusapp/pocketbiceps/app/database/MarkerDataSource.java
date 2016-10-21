@@ -48,7 +48,10 @@ public class MarkerDataSource {
     public List<MyMarkerObj> getMyMarkers(){
         List<MyMarkerObj> markers = new ArrayList<MyMarkerObj>();
 
-        Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, null);
+        String orderByTimeDesc = MySqlHelper.TIME_STAMP + " DESC";
+        String orderByCounterDesc = MySqlHelper.COUNTER + " DESC";
+
+        Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByTimeDesc);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
@@ -60,6 +63,9 @@ public class MarkerDataSource {
         return markers;
 
     }
+
+
+
 
     public void deleteMarker(MyMarkerObj m) {
         db.delete(MySqlHelper.TABLE_NAME, MySqlHelper.POSITION + " = '" +m.getPosition()+ "'",null);

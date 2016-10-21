@@ -1,13 +1,11 @@
 package com.plusapp.pocketbiceps.app;
 
-import android.*;
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
@@ -15,8 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -28,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,7 +36,6 @@ import com.plusapp.pocketbiceps.app.fragments.ImportFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +48,7 @@ public class MainActivity extends AppCompatActivity
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     public long currTime=0;
+    public MemoryAdapter memAdapter;
 
 
 //    private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -60,6 +58,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +108,39 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        //NavDrawer Header manipulieren
+
+
+        List<MyMarkerObj> navHeaderGetImage = createList2();
+        MyMarkerObj mmo = navHeaderGetImage.get(0);
+
+        SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+        String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
+
+
+        File f = new File("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
+
+        memAdapter = new MemoryAdapter();
+        Bitmap bmp = memAdapter.decodeFile(f);
+
+
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headNavView = navigationView.getHeaderView(0);
+        TextView nav_user = (TextView) headNavView.findViewById(R.id.tvNavHeaderTitle);
+        nav_user.setText("test1231231");
+        ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+        nav_image_head.setImageBitmap(bmp);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+
+
+
+
+
 
         /**
          * Fügt ein Fragment zur MainActivity

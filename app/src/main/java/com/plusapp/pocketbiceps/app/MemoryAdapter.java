@@ -35,6 +35,9 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     private List<MyMarkerObj> m;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
 
+    public MemoryAdapter(){
+
+    }
 
     public MemoryAdapter(List<MyMarkerObj> markerList){
         this.m = markerList;
@@ -73,7 +76,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
     }
     //Decodes ImageFile und skalliert es um den Speicher zu entlasten
-    private Bitmap decodeFile(File bmpFile){
+    public Bitmap decodeFile(File bmpFile){
         try {
             //Decode Image size
             BitmapFactory.Options o = new BitmapFactory.Options();
