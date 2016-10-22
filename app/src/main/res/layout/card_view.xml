@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardCornerRadius="1dp">
+    card_view:cardCornerRadius="1dp"
+    card_view:cardElevation="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -46,6 +47,7 @@
             android:maxLines="2"
             android:paddingLeft="16dp"
             android:paddingTop="16dp"
+            android:paddingRight="16dp"
             android:text="Random Text Blah Blah Blah"
             android:textSize="16dp" />
 

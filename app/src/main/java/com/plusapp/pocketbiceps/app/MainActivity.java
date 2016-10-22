@@ -112,29 +112,28 @@ public class MainActivity extends AppCompatActivity
 
 
         List<MyMarkerObj> navHeaderGetImage = createList2();
-        MyMarkerObj mmo = navHeaderGetImage.get(0);
+        if(navHeaderGetImage.size()!=0) {
+            MyMarkerObj mmo = navHeaderGetImage.get(0);
 
-        SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
-        String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
-
-
-        File f = new File("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
-
-        memAdapter = new MemoryAdapter();
-        Bitmap bmp = memAdapter.decodeFile(f);
+            SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+            String imageDate = formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
 
+            File f = new File("sdcard/special_moments/" + IMAGE_NAME_PREFIX + imageDate + ".jpg");
+
+            memAdapter = new MemoryAdapter();
+            Bitmap bmp = memAdapter.decodeFile(f);
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View headNavView = navigationView.getHeaderView(0);
-        TextView nav_user = (TextView) headNavView.findViewById(R.id.tvNavHeaderTitle);
-        nav_user.setText("test1231231");
-        ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
-        nav_image_head.setImageBitmap(bmp);
-        navigationView.setNavigationItemSelectedListener(this);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            View headNavView = navigationView.getHeaderView(0);
+//            TextView nav_user = (TextView) headNavView.findViewById(R.id.tvNavHeaderTitle);
+//            nav_user.setText("test1231231");
+            ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+            nav_image_head.setImageBitmap(bmp);
+            navigationView.setNavigationItemSelectedListener(this);
 
-
+        }
 
 
 
