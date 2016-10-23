@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         recList.setLayoutManager(llm);
 
 
-        MemoryAdapter ca = new MemoryAdapter(createList2());
+        MemoryAdapter ca = new MemoryAdapter(createList2(),this);
         recList.setAdapter(ca);
 
 

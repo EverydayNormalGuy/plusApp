@@ -1,6 +1,7 @@
 package com.plusapp.pocketbiceps.app;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,13 +36,15 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     private List<MemoryInfo> memoryList;
     private List<MyMarkerObj> m;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
-
+    private Context mContext;
     public MemoryAdapter(){
 
     }
 
-    public MemoryAdapter(List<MyMarkerObj> markerList){
+    public MemoryAdapter(List<MyMarkerObj> markerList, Context context){
         this.m = markerList;
+        this.mContext=context;
+
     }
 
 
@@ -68,9 +72,11 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         File f = new File("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
 
 
-        Bitmap bmp = decodeFile(f);
-        memoryViewHolder.vImage.setImageBitmap(bmp);
+//        Bitmap bmp = decodeFile(f);
+//        memoryViewHolder.vImage.setImageBitmap(bmp);
 
+        //Picasso uebernimmt das decoden und das laden der Bilder im Hintergrund um laggs zu vermeiden
+        Picasso.with(mContext).load(f).resize(1080,1080).into(memoryViewHolder.vImage);
 
 
 
