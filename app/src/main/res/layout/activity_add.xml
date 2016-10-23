@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:adjustViewBounds="true"
+                android:src="@drawable/cast_album_art_placeholder" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+
+            <EditText
+                android:id="@+id/editTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="52dp"
+                android:ems="10"
+                android:hint="Titel?"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/editDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/editTitle"
+                android:ems="10"
+                android:hint="Beschreibung?"
+                android:inputType="textMultiLine"
+                android:maxLines="6" />
+
+            <Button
+                android:id="@+id/btnRestore"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/editDescription"
+                android:layout_marginBottom="48dp"
+                android:text="Verwerfen"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btnSave"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/btnRestore"
+                android:layout_alignBottom="@+id/btnRestore"
+                android:layout_alignParentEnd="true"
+                android:text="Speichern"
+                android:textColor="#03A9F4" />
+
+            <LinearLayout
+                android:id="@+id/form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="#91f1f1f1"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp" >
+
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/messageEditText"
+                    android:layout_width="252dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignTop="@+id/button1"
+                    android:layout_toLeftOf="@+id/sendMessageButton"
+                    android:layout_weight="0.72"
+                    android:hint="tes5sdf64t"
+                    android:scrollbars="vertical"
+                    android:ems="10"
+                    android:maxHeight="80dp" />
+
+                </android.support.v4.widget.NestedScrollView>
+
+                <ImageButton
+                    android:id="@+id/sendMessageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_menu_send"
+                    android:text="d" />
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+
+</ScrollView>

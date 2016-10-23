@@ -1,4 +1,4 @@
-package com.plusapp.pocketbiceps.app;
+package com.plusapp.pocketbiceps.app.database;
 
 /**
  * Created by Metin on 24.03.2015.
@@ -15,7 +15,7 @@ public class MarkerDataSource {
     MySqlHelper dbhelper;
     SQLiteDatabase db;
 
-    String[] cols= {MySqlHelper.TITLE,MySqlHelper.SNIPPET,MySqlHelper.POSITION};
+    String[] cols= {MySqlHelper.TITLE,MySqlHelper.SNIPPET,MySqlHelper.POSITION,MySqlHelper.TIME_STAMP, MySqlHelper.COUNTER};
 
     public MarkerDataSource(Context c) {
         dbhelper = new MySqlHelper(c);
@@ -38,6 +38,8 @@ public class MarkerDataSource {
         v.put(MySqlHelper.TITLE, m.getTitle());
         v.put(MySqlHelper.SNIPPET, m.getSnippet());
         v.put(MySqlHelper.POSITION, m.getPosition());
+        v.put(MySqlHelper.TIME_STAMP, m.getTimestamp());
+        v.put(MySqlHelper.COUNTER, m.getCounter());
 
         db.insert(MySqlHelper.TABLE_NAME, null, v);
 
@@ -46,7 +48,10 @@ public class MarkerDataSource {
     public List<MyMarkerObj> getMyMarkers(){
         List<MyMarkerObj> markers = new ArrayList<MyMarkerObj>();
 
-        Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, null);
+        String orderByTimeDesc = MySqlHelper.TIME_STAMP + " DESC";
+        String orderByCounterDesc = MySqlHelper.COUNTER + " DESC";
+
+        Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByTimeDesc);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
@@ -59,6 +64,9 @@ public class MarkerDataSource {
 
     }
 
+
+
+
     public void deleteMarker(MyMarkerObj m) {
         db.delete(MySqlHelper.TABLE_NAME, MySqlHelper.POSITION + " = '" +m.getPosition()+ "'",null);
     }
@@ -68,6 +76,8 @@ public class MarkerDataSource {
         m.setTitle(cursor.getString(0));
         m.setSnippet(cursor.getString(1));
         m.setPosition(cursor.getString(2));
+        m.setTimestamp(cursor.getLong(3));
+        m.setCounter(cursor.getInt(4));
         return m;
     }
 }
