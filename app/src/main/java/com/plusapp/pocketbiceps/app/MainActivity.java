@@ -25,14 +25,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
-import com.plusapp.pocketbiceps.app.fragments.ImportFragment;
+import com.plusapp.pocketbiceps.app.fragments.DetailsFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 
 import java.io.File;
@@ -250,8 +249,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-
-            fm.beginTransaction().replace(R.id.content_main, new ImportFragment()).commit();
+            Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+            startActivity(intent);
+//            fm.beginTransaction().replace(R.id.content_main, new DetailsFragment()).commit();
         } else if (id == R.id.nav_gallery) {
             fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
 
