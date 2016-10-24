@@ -262,7 +262,8 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(getBaseContext(), "Map staretet", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {
-
+            Intent intent = new Intent(MainActivity.this, AddActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 

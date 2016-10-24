@@ -76,6 +76,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 //        memoryViewHolder.vImage.setImageBitmap(bmp);
 
         //Picasso uebernimmt das decoden und das laden der Bilder im Hintergrund um laggs zu vermeiden
+        //Context ueber constructor von main activity
         Picasso.with(mContext).load(f).resize(1080,1080).into(memoryViewHolder.vImage);
 
 
