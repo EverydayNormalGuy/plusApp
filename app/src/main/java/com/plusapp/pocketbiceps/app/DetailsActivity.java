@@ -51,7 +51,7 @@ public class DetailsActivity extends AppCompatActivity {
     private static List<MyMarkerObj> m;
     private static int index;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
-    public MarkerDataSource data;
+    public static MarkerDataSource data;
 
 
 
@@ -143,11 +143,12 @@ public class DetailsActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_details2, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.tvDetailsTitle);
+            TextView textViewDescr = (TextView) rootView.findViewById(R.id.tvDetailsDescription);
             ImageView imageView = (ImageView) rootView.findViewById(R.id.ivDetailsFragment);
 
 
-
             MyMarkerObj mmo = m.get(index);
+
 
             SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
             String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
@@ -160,6 +161,11 @@ public class DetailsActivity extends AppCompatActivity {
 
             imageView.setImageBitmap(bmp);
             textView.setText(mmo.getTitle());
+            textViewDescr.setText(mmo.getSnippet());
+            int temp = mmo.getCounter();
+
+
+            mmo.setCounter(temp+1);
             return rootView;
         }
     }
@@ -178,12 +184,13 @@ public class DetailsActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+
             return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
+            // Zeigt an wie viele Pages insgesamt gezeigt werden soll
             return 3;
         }
 

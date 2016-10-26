@@ -43,7 +43,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
 
     // Liste der Titels und Snippets
-    private List<MemoryInfo> memoryList;
     private List<MyMarkerObj> m;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     private Context mContext;
@@ -67,7 +66,9 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         final MyMarkerObj mmo = m.get(i);
         memoryViewHolder.vTitle.setText(mmo.getTitle());
         memoryViewHolder.vDescription.setText(mmo.getSnippet());
-        memoryViewHolder.vCounter.setText(String.valueOf(mmo.getCounter()));
+        memoryViewHolder.vCounter.setText("[ "+String.valueOf(mmo.getCounter())+" ]");
+
+
 
         memoryViewHolder.mem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,10 +85,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
                 FragmentManager fragmentManager = ((Activity) mContext).getFragmentManager();
 
-
-
-
-                Toast.makeText(mContext, "alds"+m.get(i).getTitle(),Toast.LENGTH_LONG).show();
             }
         });
 

@@ -249,16 +249,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
             startActivity(intent);
 //            fm.beginTransaction().replace(R.id.content_main, new DetailsFragment()).commit();
         } else if (id == R.id.nav_gallery) {
-            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
 
 
         } else if (id == R.id.nav_slideshow) {
 //            Intent intent = new Intent(this,GMapsActivity.class);
 //            startActivity(intent);
+            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
+
             Toast.makeText(getBaseContext(), "Map staretet", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {

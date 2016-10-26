@@ -3,6 +3,7 @@ package com.plusapp.pocketbiceps.app.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -105,6 +107,8 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
 
 
     }
+
+
 
     @Override
     public void onConnected(Bundle bundle) {

@@ -91,10 +91,10 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="29dp"
             android:gravity="center"
-            android:background="#7FFF00"
             android:text="TextView"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+            android:textColor="#03A9F4"
+            android:textSize="16sp"
+            tools:background="#ffffff" />
 
     </RelativeLayout>
 
