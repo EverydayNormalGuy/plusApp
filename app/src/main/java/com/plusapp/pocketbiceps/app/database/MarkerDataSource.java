@@ -65,6 +65,18 @@ public class MarkerDataSource {
     }
 
 
+    public void updateMarker(MyMarkerObj m){
+        //Jedes mal wenn ein update durchgeführt wird, wird der counter erhöht
+        ContentValues v = new ContentValues();
+        v.put(MySqlHelper.TITLE, m.getTitle());
+        v.put(MySqlHelper.SNIPPET, m.getSnippet());
+        v.put(MySqlHelper.POSITION, m.getPosition());
+        v.put(MySqlHelper.TIME_STAMP, m.getTimestamp());
+        v.put(MySqlHelper.COUNTER, m.getCounter()+1);
+
+        db.update(MySqlHelper.TABLE_NAME,v,MySqlHelper.TIME_STAMP + " = '" +m.getTimestamp()+ "'",null);
+    }
+
 
 
     public void deleteMarker(MyMarkerObj m) {

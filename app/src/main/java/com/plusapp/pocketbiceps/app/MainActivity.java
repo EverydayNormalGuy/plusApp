@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     public long currTime=0;
     public MemoryAdapter memAdapter;
+    public MemoryAdapter ca;
 
 
 //    private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -83,8 +84,9 @@ public class MainActivity extends AppCompatActivity
         recList.setLayoutManager(llm);
 
 
-        MemoryAdapter ca = new MemoryAdapter(createList2(),this);
+        ca = new MemoryAdapter(createList2(),this);
         recList.setAdapter(ca);
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -134,12 +136,6 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-
-
-
-
-
-
         /**
          * Fügt ein Fragment zur MainActivity
          */
@@ -147,6 +143,7 @@ public class MainActivity extends AppCompatActivity
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
 
     }
+
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override

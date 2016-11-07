@@ -76,9 +76,11 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
                 Bundle args = new Bundle();
                 args.putLong("Details_Id", mmo.getTimestamp());
+                notifyDataSetChanged();
 
                 //Da es eine Non Act. Klasse ist muss der Context weitergegeben werden
-                Intent intent =new Intent(mContext,DetailsActivity.class);
+                //Intent intent =new Intent(mContext,DetailsActivity.class);
+                Intent intent = new Intent(mContext, DetailsAct_wo_pager.class);
                 intent.putExtra("index",i);
                 mContext.startActivity(intent);
 
