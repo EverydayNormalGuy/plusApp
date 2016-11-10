@@ -8,4 +8,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_gmaps">GMapsActivity</string>
+    <string name="title_activity_add_moment">AddMomentAct</string>
+    <string name="title_activity_details">DetailsActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

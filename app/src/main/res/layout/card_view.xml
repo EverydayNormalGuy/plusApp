@@ -92,8 +92,9 @@
             android:layout_marginEnd="29dp"
             android:gravity="center"
             android:text="TextView"
-            android:textColor="#7FFF00"
-            android:textSize="16sp" />
+            android:textColor="#03A9F4"
+            android:textSize="16sp"
+            tools:background="#ffffff" />
 
     </RelativeLayout>
 

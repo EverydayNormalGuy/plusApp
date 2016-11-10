@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
@@ -13,8 +14,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,14 +28,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
-import com.plusapp.pocketbiceps.app.fragments.ImportFragment;
+import com.plusapp.pocketbiceps.app.fragments.DetailsFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 
 import java.io.File;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     public long currTime=0;
     public MemoryAdapter memAdapter;
+    public MemoryAdapter ca;
 
 
 //    private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -66,10 +69,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }
+        //Fuer die Permissions
+        isStoragePermissionGranted();
 
         data = new MarkerDataSource(this);
         data.open();
@@ -84,8 +85,9 @@ public class MainActivity extends AppCompatActivity
         recList.setLayoutManager(llm);
 
 
-        MemoryAdapter ca = new MemoryAdapter(createList2());
+        ca = new MemoryAdapter(createList2(),this);
         recList.setAdapter(ca);
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -135,12 +137,6 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-
-
-
-
-
-
         /**
          * Fügt ein Fragment zur MainActivity
          */
@@ -148,6 +144,32 @@ public class MainActivity extends AppCompatActivity
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            //resume tasks needing this permission
+        }
+    }
+
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
+
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
+    }
+
+
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -250,19 +272,22 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-
-            fm.beginTransaction().replace(R.id.content_main, new ImportFragment()).commit();
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            startActivity(intent);
+//            fm.beginTransaction().replace(R.id.content_main, new DetailsFragment()).commit();
         } else if (id == R.id.nav_gallery) {
-            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
 
 
         } else if (id == R.id.nav_slideshow) {
 //            Intent intent = new Intent(this,GMapsActivity.class);
 //            startActivity(intent);
+            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
+
             Toast.makeText(getBaseContext(), "Map staretet", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {
-
+            Intent intent = new Intent(MainActivity.this, AddActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
