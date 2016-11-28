@@ -17,6 +17,10 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Bei einem Klick auf die Cardview wird die DetailsAct_wo_pager aufgerufen.
+ * Hier wird das Bild die dazugehoerige Ueberschrift und der Beschreibung angezeigt
+ */
 public class DetailsAct_wo_pager extends AppCompatActivity {
 
 
@@ -35,10 +39,8 @@ public class DetailsAct_wo_pager extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-//            this.currTime = extras.getLong("MyMarkerObj");
-
+            // Das Key Argument "currTime" muss mit dem Key aus der MainAct. uebereinstimmen
             this.index = extras.getInt("index");
-            //The key argument here must match that used in the other activity
 
 
             data = new MarkerDataSource(this);
@@ -52,13 +54,10 @@ public class DetailsAct_wo_pager extends AppCompatActivity {
         TextView textViewDescr = (TextView) findViewById(R.id.tvDetailsActDescription);
         ImageView imageView = (ImageView) findViewById(R.id.ivDetailsAct);
 
-
         MyMarkerObj mmo = m.get(index);
-
 
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
-
 
         File f = new File("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
 
@@ -73,13 +72,9 @@ public class DetailsAct_wo_pager extends AppCompatActivity {
 
         int temp = mmo.getCounter();
 
-
-        //mmo.setCounter(temp+1);
-
-
-
     }
 
+    // Sorgt dafuer dass der Stack der Activities geloescht wird
     @Override
     public void onBackPressed() {
         super.onBackPressed();

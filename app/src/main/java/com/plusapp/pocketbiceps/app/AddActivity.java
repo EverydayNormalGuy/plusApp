@@ -23,6 +23,14 @@ import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import java.io.File;
 import java.util.Date;
 
+/**
+ * Diese Activity wird gestartet nachdem das Foto aufgenommen wurde.
+ * Hier wird zuerst das aufgenommene Bild in eine Imageview gesetzt um dem Benutzer das Bild
+ * anzuzeigen. Außerdem erlaubt die Act. dem Benutzer
+ * eine Ueberschrift und eine Beschreibung hinzuzufuegen, die dann in der Datenbank
+ * gespeichert wird
+ *
+ */
 public class AddActivity extends AppCompatActivity {
 
     EditText etTitle;
@@ -55,15 +63,15 @@ public class AddActivity extends AppCompatActivity {
         toolbarAdd = (Toolbar) findViewById(R.id.toolbar2); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbarAdd);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
-
+        // Holt sich die currTime Variable die aus der MainActivity weitergegeben wurde
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            // Das Key Argument "currTime" muss mit dem Key aus der MainAct. uebereinstimmen
             this.dbvCurrTime = extras.getLong("currTime");
-            //The key argument here must match that used in the other activity
         }
 
-
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+        // Formatiert die currTime Variable von Millisekunden zu dem eindeutigen Index
         String imageDate = formatterForImageSearch.format(new Date(dbvCurrTime));
         File f = new File("sdcard/special_moments/" + IMAGE_NAME_PREFIX + imageDate + ".jpg");
 
@@ -74,7 +82,7 @@ public class AddActivity extends AppCompatActivity {
         imageViewAdd = (ImageView) findViewById(R.id.ivAddImage);
         etTitle = (EditText) findViewById(R.id.editTitle);
         etDescription = (EditText) findViewById(R.id.editDescription);
-
+        // Setzt das Bild in die Imageview
         imageViewAdd.setImageBitmap(bmp);
 
 
@@ -121,6 +129,7 @@ public class AddActivity extends AppCompatActivity {
         dbDescription = etDescription.getText().toString();
         dbCounter = 1;
         data.open();
+        // Setzt einen Eintrag mit den eingegeben Daten in die Datenbank
         data.addMarker(new MyMarkerObj(dbTitle,dbDescription,"position",dbvCurrTime,dbCounter));
         data.close();
 
