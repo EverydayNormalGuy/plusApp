@@ -100,7 +100,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         memoryViewHolder.vDate.setText(readablyDate);
 
 
-
+        //Timestamp zum suchen von Bildern aus dem Storage
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 

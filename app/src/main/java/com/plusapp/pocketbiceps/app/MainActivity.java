@@ -17,7 +17,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,7 +33,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
-import com.plusapp.pocketbiceps.app.fragments.DetailsFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 
 import java.io.File;
@@ -280,6 +278,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
+
+            Intent intent = new Intent(MainActivity.this, AddActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_send) {
 
