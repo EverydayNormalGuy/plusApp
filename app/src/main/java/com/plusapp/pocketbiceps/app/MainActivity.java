@@ -2,9 +2,11 @@ package com.plusapp.pocketbiceps.app;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -12,6 +14,7 @@ import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -34,6 +37,7 @@ import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
+import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
 
 import java.io.File;
 import java.util.Date;
@@ -55,6 +59,13 @@ public class MainActivity extends AppCompatActivity
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_key = getString(R.string.preference_key_darktheme);
+        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+
+        if(isSetToDarkTheme==true){
+            setTheme(R.style.DarkTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -247,10 +258,24 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, ActivityPreference.class);
+            startActivity(i);
             return true;
+        }
+        if (id == R.id.menu_sort){
+            showSortDialog();
+
+
+
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSortDialog() {
+        FragmentManager fm = getFragmentManager();
+        DialogFragment sortFragment = new SortDialogFragment();
+        sortFragment.show(fm,"SORT_DIALOG");
     }
 
     // Interaktion mit den Menuepunkten aus dem NavigationDrawer
