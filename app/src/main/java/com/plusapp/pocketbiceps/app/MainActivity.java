@@ -9,17 +9,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,8 +33,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
@@ -40,6 +46,7 @@ import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +63,20 @@ public class MainActivity extends AppCompatActivity
     public MemoryAdapter ca;
 
 
+    FloatingActionMenu fab_Menu;
+    FloatingActionButton fab1;
+    FloatingActionButton fab2;
+    FloatingActionButton fab3;
+
+    private List<FloatingActionMenu> fab_Submenus = new ArrayList<>();
+    private Handler mUiHandler = new Handler();
+
+
+    TextView momentsCounter;
+    int momentsCount;
+
+    boolean isDarkTheme;
+
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +86,7 @@ public class MainActivity extends AppCompatActivity
 
         if(isSetToDarkTheme==true){
             setTheme(R.style.DarkTheme);
+            isDarkTheme=true;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -76,9 +98,9 @@ public class MainActivity extends AppCompatActivity
 
         //Oeffnet die Datenbank
         data = new MarkerDataSource(this);
-        data.open();
+        data.open();  //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
 
-//        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
+
 
         // Erstellt die RecylerView
         RecyclerView recList = (RecyclerView) findViewById(R.id.lvMemories);
@@ -87,24 +109,59 @@ public class MainActivity extends AppCompatActivity
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
+
+        momentsCount = createList2().size();
+
+
+
+        fab_Menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+
         // An den MemoryAdapter wird Liste an den Konstruktor weitergegeben
         ca = new MemoryAdapter(createList2(),this);
         recList.setAdapter(ca);
 
+        
+        /*
+        Hier wird der clicklListener der weiter unten programmiert ist hinzugefügt
+        damit kann man auf Klick events mit einem Switch reagieren
+         */
+        fab1.setOnClickListener(clickListener);
+        fab2.setOnClickListener(clickListener);
+        fab3.setOnClickListener(clickListener);
 
-        // Der FAB startet die Kamera
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        /*
+        Gibt an in welcher Geschwindigkeit die normalen Buttons
+        auftauchen sollen
+         */
+        int delay = 400;
+        for (final FloatingActionMenu menu : fab_Submenus) {
+            mUiHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    menu.showMenuButton(true);
+                }
+            }, delay);
+            delay += 150;
+        }
+        /*
+        Das toggle sorgt dafür dass der Menübutton aufgeklappt und zugeklappt werden kann
+        */
+        fab_Menu.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
-                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = getFile();
-                camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                startActivityForResult(camera_intent, CAM_REQUEST);
-
+            public void onClick(View v) {
+                if (fab_Menu.isOpened()) {
+                   /*
+                   Mit getMenuButtonLabelText() bekommt man den Text der in der XML deklariert ist
+                    */
+                    // Toast.makeText(getBaseContext(), fab_Menu.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
+                }
+                fab_Menu.toggle(true);
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -141,12 +198,55 @@ public class MainActivity extends AppCompatActivity
             nav_image_head.setImageBitmap(bmp);
             navigationView.setNavigationItemSelectedListener(this);
 
+            momentsCounter=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
+            //This method will initialize the count value
+            initializeCountDrawer();
+
         }
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
 
+        
+        
     }
+
+    private void initializeCountDrawer() {
+        //Gravity property aligns the text
+        momentsCounter.setGravity(Gravity.CENTER_VERTICAL);
+        momentsCounter.setTypeface(null, Typeface.BOLD);
+        if (isDarkTheme==true){
+            momentsCounter.setTextColor(getResources().getColor(R.color.colorCardViewBlue));
+        }
+        else {
+            momentsCounter.setTextColor(getResources().getColor(R.color.colorAccent));
+        }
+        momentsCounter.setText(String.valueOf(momentsCount));
+    }
+
+
+    /*
+ Was soll passieren wenn man die normalen Buttons betätigt
+  */
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab1:
+                    Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File file = getFile();
+                    camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                    startActivityForResult(camera_intent, CAM_REQUEST);
+                    break;
+                case R.id.fab2:
+                    fab2.setVisibility(View.GONE);
+                    break;
+                case R.id.fab3:
+                    fab2.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
 
     // Die Permissions fuer das Schreiben des External Storage werden hier abgefragt
     @Override
