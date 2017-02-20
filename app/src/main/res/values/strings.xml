@@ -11,4 +11,18 @@
     <string name="title_activity_add_moment">AddMomentAct</string>
     <string name="title_activity_details">DetailsActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="title_activity_preference">Einstellungen</string>
+    <string name="preference_title_darktheme">Dark Theme benutzen</string>
+    <string name="preference_key_darktheme">darktheme</string>
+    <string name="preference_description_darktheme">Ein dunkles Layout wird benutzt</string>
+
+
+
+    <string-array name="sortDialog">
+        <item>Neuste</item>
+        <item>Älteste</item>
+        <item>Meistgesehen</item>
+        <item>am wenigsten gesehen</item>
+    </string-array>
 </resources>

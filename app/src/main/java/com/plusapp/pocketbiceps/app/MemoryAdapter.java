@@ -64,6 +64,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
 
         final MyMarkerObj mmo = m.get(i);
+        // Setzt die Werte aus der Datenbank in die CardView Felder
         memoryViewHolder.vTitle.setText(mmo.getTitle());
         memoryViewHolder.vDescription.setText(mmo.getSnippet());
         memoryViewHolder.vCounter.setText("[ "+String.valueOf(mmo.getCounter())+" ]");
@@ -99,25 +100,22 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         memoryViewHolder.vDate.setText(readablyDate);
 
 
-
+        //Timestamp zum suchen von Bildern aus dem Storage
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
-
         File f = new File("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
 
-
-//        Bitmap bmp = decodeFile(f);
-//        memoryViewHolder.vImage.setImageBitmap(bmp);
-
-        //Picasso uebernimmt das decoden und das laden der Bilder im Hintergrund um laggs zu vermeiden
+        //Picasso uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
         //Context ueber constructor von main activity
         Picasso.with(mContext).load(f).resize(1080,1080).into(memoryViewHolder.vImage);
 
 
 
     }
-    //Decodes ImageFile und skalliert es um den Speicher zu entlasten
+    // Decodes ImageFile und skalliert es um den Speicher zu entlasten
+    // Wird nur noch in der AddActivity benutzt um das Bild in der Imageview anzuzeigen
+    // TODO: decodeFile() in der AddActivity mit Picasso ersetzen
     public Bitmap decodeFile(File bmpFile){
         try {
             //Decode Image size
@@ -150,17 +148,21 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         return null;
     }
 
+    /**
+     * Gibt der MemoryViewHolder Klasse das Layout der View mit auf die geklickt wurde
+     */
     @Override
     public MemoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.card_view, viewGroup, false);
 
-
-
         return new MemoryViewHolder(itemView);
     }
 
+    /**
+     * Kuemmert sich um die einzelnen Elemente der CardView und gibt eine View zurueck
+     */
     public static class MemoryViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView vTitle;
@@ -172,8 +174,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
         public MemoryViewHolder(View v) {
             super(v);
-
-
             vTitle =  (TextView) v.findViewById(R.id.tvTitle);
             vDescription = (TextView)  v.findViewById(R.id.tvDescription);
             vCounter = (TextView) v.findViewById(R.id.tvCounter);

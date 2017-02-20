@@ -2,9 +2,11 @@ package com.plusapp.pocketbiceps.app;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -12,12 +14,12 @@ import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,8 +36,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
-import com.plusapp.pocketbiceps.app.fragments.DetailsFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
+import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
 
 import java.io.File;
 import java.util.Date;
@@ -54,16 +56,16 @@ public class MainActivity extends AppCompatActivity
     public MemoryAdapter ca;
 
 
-//    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-//    private static String READ_EXTERNAL_STORAGE;
-//    private static String WRITE_EXTERNAL_STORAGE;
-
-
-
-
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_key = getString(R.string.preference_key_darktheme);
+        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+
+        if(isSetToDarkTheme==true){
+            setTheme(R.style.DarkTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -72,30 +74,30 @@ public class MainActivity extends AppCompatActivity
         //Fuer die Permissions
         isStoragePermissionGranted();
 
+        //Oeffnet die Datenbank
         data = new MarkerDataSource(this);
         data.open();
 
 //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
 
-
+        // Erstellt die RecylerView
         RecyclerView recList = (RecyclerView) findViewById(R.id.lvMemories);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-
+        // An den MemoryAdapter wird Liste an den Konstruktor weitergegeben
         ca = new MemoryAdapter(createList2(),this);
         recList.setAdapter(ca);
 
 
-
+        // Der FAB startet die Kamera
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+
                 Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 File file = getFile();
                 camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
@@ -110,20 +112,22 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        //NavDrawer Header manipulieren
-
-
+        // NavDrawer Header manipulieren
         List<MyMarkerObj> navHeaderGetImage = createList2();
+        // Falls mind. ein Moment Eintrag existiert, wird das Foto dass als letztes gemacht wurde
+        // in den NavHeader eingefügt
         if(navHeaderGetImage.size()!=0) {
             MyMarkerObj mmo = navHeaderGetImage.get(0);
 
+            // Das Datum und die Zeit dienen als Index um die Bilder zu finden z.B. Moments_10-12-2016-18-24-10
             SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
             String imageDate = formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
-
+            // Das Bild wird in die Variable f initialisiert
             File f = new File("sdcard/special_moments/" + IMAGE_NAME_PREFIX + imageDate + ".jpg");
 
             memAdapter = new MemoryAdapter();
+            // Erzeugt ein Bitmap aus der .jpg um die Speichergroeße Bilder zu reduzieren
             Bitmap bmp = memAdapter.decodeFile(f);
 
 
@@ -131,20 +135,20 @@ public class MainActivity extends AppCompatActivity
             View headNavView = navigationView.getHeaderView(0);
 //            TextView nav_user = (TextView) headNavView.findViewById(R.id.tvNavHeaderTitle);
 //            nav_user.setText("test1231231");
+
             ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+            // Setzt das Bild in den NavHeader
             nav_image_head.setImageBitmap(bmp);
             navigationView.setNavigationItemSelectedListener(this);
 
         }
 
-        /**
-         * Fügt ein Fragment zur MainActivity
-         */
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
 
     }
 
+    // Die Permissions fuer das Schreiben des External Storage werden hier abgefragt
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -174,23 +178,15 @@ public class MainActivity extends AppCompatActivity
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data); unnötig
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-//            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//        }
-//
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String dateString = formatter.format(new Date(currTime));
 
-
-
-        //Speichert das gemacht Bild im path
+        //Speichert das gemachte Bild im path
         String path = "sdcard/special_moments/"+IMAGE_NAME_PREFIX+dateString+".jpg";
         Drawable.createFromPath(path);
         Intent intent =new Intent(MainActivity.this,AddActivity.class);
+        // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
         intent.putExtra("currTime",currTime);
         startActivity(intent);
 
@@ -199,6 +195,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Diese Methode erstellt ggfs. einen Ordner auf dem Handy und speichert das Bild als .jpg Format
+     * getFile() gibt ein .jpg File zurueck
+     */
     @TargetApi(Build.VERSION_CODES.N)
     private File getFile() {
 
@@ -206,10 +206,6 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String dateString = formatter.format(new Date(currTime));
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-//            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//        }
 
         File folder = new File("sdcard/special_moments");
 
@@ -224,6 +220,10 @@ public class MainActivity extends AppCompatActivity
         return image_file;
     }
 
+    /**
+     * Erstellt eine Liste aus den Markern (Moments) in der Datenbank
+     * @return Marker Liste aus der DB
+     */
     private List<MyMarkerObj> createList2() {
 
         List<MyMarkerObj> m = data.getMyMarkers();
@@ -258,12 +258,27 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, ActivityPreference.class);
+            startActivity(i);
             return true;
+        }
+        if (id == R.id.menu_sort){
+            showSortDialog();
+
+
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void showSortDialog() {
+        FragmentManager fm = getFragmentManager();
+        DialogFragment sortFragment = new SortDialogFragment();
+        sortFragment.show(fm,"SORT_DIALOG");
+    }
+
+    // Interaktion mit den Menuepunkten aus dem NavigationDrawer
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -274,13 +289,11 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             startActivity(intent);
-//            fm.beginTransaction().replace(R.id.content_main, new DetailsFragment()).commit();
         } else if (id == R.id.nav_gallery) {
 
 
         } else if (id == R.id.nav_slideshow) {
-//            Intent intent = new Intent(this,GMapsActivity.class);
-//            startActivity(intent);
+
             fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
 
             Toast.makeText(getBaseContext(), "Map staretet", Toast.LENGTH_LONG).show();
@@ -290,6 +303,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
+
+            Intent intent = new Intent(MainActivity.this, AddActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_send) {
 

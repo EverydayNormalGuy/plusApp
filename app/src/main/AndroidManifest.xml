@@ -46,7 +46,12 @@
             android:name=".DetailsActivity"
             android:label="@string/title_activity_details"
             android:theme="@style/AppTheme" />
-        <activity android:name=".DetailsAct_wo_pager"></activity>
+        <activity
+            android:name=".DetailsAct_wo_pager">
+        </activity>
+        <activity android:name=".ActivityPreference"
+            android:parentActivityName=".MainActivity"
+            />
     </application>
 
 </manifest>

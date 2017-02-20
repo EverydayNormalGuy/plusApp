@@ -31,9 +31,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * <h1>Detailansicht. Bis dato wird die DetailsAct_wo_pager aufgerufen statt diese hier</h1>
+ * Sobald das Feature "durch die Eintraege swipen" implementiert wird, wird
+ * diese Klasse herangezogen
+ */
 public class DetailsActivity extends AppCompatActivity {
 
     /**
+     *
+     *
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
