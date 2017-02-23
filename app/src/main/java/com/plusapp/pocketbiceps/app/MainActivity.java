@@ -2,6 +2,7 @@ package com.plusapp.pocketbiceps.app;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -9,17 +10,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,8 +34,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
@@ -40,6 +47,7 @@ import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +56,7 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleApiClient googleApiClient;
     public MarkerDataSource data;
+    public MarkerDataSource data2;
     Context context;
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
@@ -55,56 +64,115 @@ public class MainActivity extends AppCompatActivity
     public MemoryAdapter memAdapter;
     public MemoryAdapter ca;
 
+    RecyclerView recList;
 
+
+    FloatingActionMenu fab_Menu;
+    FloatingActionButton fab1;
+    FloatingActionButton fab2;
+    FloatingActionButton fab3;
+
+    private List<FloatingActionMenu> fab_Submenus = new ArrayList<>();
+    private Handler mUiHandler = new Handler();
+
+
+    TextView momentsCounter;
+    int momentsCount;
+
+    boolean isDarkTheme;
+    boolean isSetToDarkTheme;
+
+    SharedPreferences sp;
+    public static int sortOrder;
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String theme_key = getString(R.string.preference_key_darktheme);
-        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+        isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
 
         if(isSetToDarkTheme==true){
             setTheme(R.style.DarkTheme);
+            isDarkTheme=true;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        sp = getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
+        sortOrder=sp.getInt("sort_mode",0);
+
         //Fuer die Permissions
         isStoragePermissionGranted();
 
         //Oeffnet die Datenbank
         data = new MarkerDataSource(this);
-        data.open();
+        data.open();  //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
 
-//        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
+
 
         // Erstellt die RecylerView
-        RecyclerView recList = (RecyclerView) findViewById(R.id.lvMemories);
+        recList = (RecyclerView) findViewById(R.id.lvMemories);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
+
+        momentsCount = createList2().size();
+
+
+
+        fab_Menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+
         // An den MemoryAdapter wird Liste an den Konstruktor weitergegeben
-        ca = new MemoryAdapter(createList2(),this);
-        recList.setAdapter(ca);
+        this.ca = new MemoryAdapter(createList2(),this);
+        this.recList.setAdapter(ca);
 
+        
+        /*
+        Hier wird der clicklListener der weiter unten programmiert ist hinzugefügt
+        damit kann man auf Klick events mit einem Switch reagieren
+         */
+        fab1.setOnClickListener(clickListener);
+        fab2.setOnClickListener(clickListener);
+        fab3.setOnClickListener(clickListener);
 
-        // Der FAB startet die Kamera
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        /*
+        Gibt an in welcher Geschwindigkeit die normalen Buttons
+        auftauchen sollen
+         */
+        int delay = 400;
+        for (final FloatingActionMenu menu : fab_Submenus) {
+            mUiHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    menu.showMenuButton(true);
+                }
+            }, delay);
+            delay += 150;
+        }
+        /*
+        Das toggle sorgt dafür dass der Menübutton aufgeklappt und zugeklappt werden kann
+        */
+        fab_Menu.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
-                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = getFile();
-                camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                startActivityForResult(camera_intent, CAM_REQUEST);
-
+            public void onClick(View v) {
+                if (fab_Menu.isOpened()) {
+                   /*
+                   Mit getMenuButtonLabelText() bekommt man den Text der in der XML deklariert ist
+                    */
+                    // Toast.makeText(getBaseContext(), fab_Menu.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
+                }
+                fab_Menu.toggle(true);
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -141,10 +209,72 @@ public class MainActivity extends AppCompatActivity
             nav_image_head.setImageBitmap(bmp);
             navigationView.setNavigationItemSelectedListener(this);
 
+            momentsCounter=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
+            //This method will initialize the count value
+            initializeCountDrawer();
+
         }
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
+
+        
+        
+    }
+
+
+    private void initializeCountDrawer() {
+        //Gravity property aligns the text
+        momentsCounter.setGravity(Gravity.CENTER_VERTICAL);
+        momentsCounter.setTypeface(null, Typeface.BOLD);
+        if (isDarkTheme==true){
+            momentsCounter.setTextColor(getResources().getColor(R.color.colorCardViewBlue));
+        }
+        else {
+            momentsCounter.setTextColor(getResources().getColor(R.color.colorAccent));
+        }
+        momentsCounter.setText(String.valueOf(momentsCount));
+    }
+
+
+    /*
+     Was soll passieren wenn man die normalen Buttons betätigt
+      */
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab1:
+                    Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File file = getFile();
+                    camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                    startActivityForResult(camera_intent, CAM_REQUEST);
+                    break;
+                case R.id.fab2:
+                    //fab2.setVisibility(View.GONE);
+                    break;
+                case R.id.fab3:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * Aktualisiert die Listview. Die SP von sortDialog werden hiern nochmal
+     * aufgerufen und in sortorder gespeichert. danach kann die neue Liste mit der
+     * Sortierunge aufgerufen werden
+     */
+    public void refresh(){
+
+        sp = getBaseContext().getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
+        this.sortOrder=sp.getInt("sort_mode",0);
+        this.ca = new MemoryAdapter(createList2(),this);
+        this.recList.setAdapter(ca);
+        ca.notifyDataSetChanged();
+
+        if (createList2().size()==1){
+            recreate();
+        }
 
     }
 
@@ -190,9 +320,6 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("currTime",currTime);
         startActivity(intent);
 
-
-
-
     }
 
     /**
@@ -225,10 +352,8 @@ public class MainActivity extends AppCompatActivity
      * @return Marker Liste aus der DB
      */
     private List<MyMarkerObj> createList2() {
-
-        List<MyMarkerObj> m = data.getMyMarkers();
+        List<MyMarkerObj> m = data.getMyMarkers(sortOrder);
         return m;
-
     }
 
 
@@ -240,6 +365,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
@@ -265,12 +391,13 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.menu_sort){
             showSortDialog();
 
-
-
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 
     private void showSortDialog() {
         FragmentManager fm = getFragmentManager();
@@ -294,7 +421,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
-            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
+            /**
+             * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
+             */
+            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).addToBackStack(null).commit();
 
             Toast.makeText(getBaseContext(), "Map staretet", Toast.LENGTH_LONG).show();
 

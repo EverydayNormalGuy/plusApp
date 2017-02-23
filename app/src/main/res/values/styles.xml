@@ -9,6 +9,11 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBarOverlay">false</item>
+        <!-- FAB Color -->
+        <item name="fab_colorNormal">@color/colorAccent</item>
+        <item name="fab_colorPressed">@color/colorAccent</item>
+        <item name="menu_colorNormal">@color/colorAccent</item>
+        <item name="menu_colorPressed">@color/colorAccent</item>
 
     </style>
 
@@ -25,6 +30,12 @@
     <!-- Dark theme. -->
     <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar" >
         <item name="colorAccent">@color/colorCardViewBlue</item>
+        <!-- FAB Color -->
+        <item name="fab_colorNormal">@color/colorCardViewBlue</item>
+        <item name="fab_colorPressed">@color/colorCardViewBlue</item>
+        <item name="menu_colorNormal">@color/colorCardViewBlue</item>
+        <item name="menu_colorPressed">@color/colorCardViewBlue</item>
+
     </style>
 
 </resources>

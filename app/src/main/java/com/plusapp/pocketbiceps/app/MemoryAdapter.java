@@ -5,16 +5,19 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +43,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
     public MarkerDataSource data;
 
+    MyMarkerObj mmo;
+    MainActivity mainActivity;
     DetailsFragment detailsFrag = new DetailsFragment();
 
 
@@ -57,13 +63,27 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     }
 
 
+
+
+    // Löscht die Liste des Adapters um sie mit den neuen Daten zu füllen und auszugeben
+    public void updateAdapter(List<MyMarkerObj> mx){
+
+        mainActivity = ((MainActivity) mContext);
+        mainActivity.refresh();
+
+//        m.clear();
+//        m.addAll(mx);
+//        notifyDataSetChanged();
+//        Toast.makeText(mContext, "as"+m, Toast.LENGTH_SHORT).show();
+    }
+
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(final MemoryViewHolder memoryViewHolder, final int i) {
 
 
 
-        final MyMarkerObj mmo = m.get(i);
+         mmo = m.get(i);
         // Setzt die Werte aus der Datenbank in die CardView Felder
         memoryViewHolder.vTitle.setText(mmo.getTitle());
         memoryViewHolder.vDescription.setText(mmo.getSnippet());
@@ -91,6 +111,16 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             }
         });
 
+        memoryViewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, ""+mmo.getTimestamp(), Toast.LENGTH_SHORT).show();
+
+                showDeleteDialog();
+
+
+            }
+        });
 
 
 
@@ -108,11 +138,41 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
         //Picasso uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
         //Context ueber constructor von main activity
-        Picasso.with(mContext).load(f).resize(1080,1080).into(memoryViewHolder.vImage);
-
+        Picasso.with(mContext).load(f).resize(1080,1080).centerCrop().into(memoryViewHolder.vImage);
 
 
     }
+
+    private void showDeleteDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Diesen Eintrag löschen?")
+                .setCancelable(false)
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        data = new MarkerDataSource(mContext);
+                        data.open();
+                        data.deleteMarker(mmo);
+                        dialog.dismiss();
+                        m = data.getMyMarkers(MainActivity.sortOrder);
+                        updateAdapter(m); //Ruft notify auf
+
+                    }
+                })
+                .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
+
+
+
+
+
     // Decodes ImageFile und skalliert es um den Speicher zu entlasten
     // Wird nur noch in der AddActivity benutzt um das Bild in der Imageview anzuzeigen
     // TODO: decodeFile() in der AddActivity mit Picasso ersetzen
@@ -170,6 +230,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         protected TextView vCounter;
         protected TextView vDate;
         protected ImageView vImage;
+        protected Button btnDelete;
+        protected Button btnEdit;
         protected View mem;
 
         public MemoryViewHolder(View v) {
@@ -179,6 +241,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             vCounter = (TextView) v.findViewById(R.id.tvCounter);
             vDate = (TextView) v.findViewById(R.id.tvDate);
             vImage = (ImageView) v.findViewById(R.id.cvImage);
+            btnDelete = (Button) v.findViewById(R.id.btnDelete);
+            btnEdit = (Button) v.findViewById(R.id.btnEdit);
             mem = v;
         }
     }

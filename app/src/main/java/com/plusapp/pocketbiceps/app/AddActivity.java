@@ -4,11 +4,13 @@ import android.*;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.icu.text.SimpleDateFormat;
 import android.location.Location;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -32,6 +34,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.Date;
@@ -62,11 +65,19 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
     private LocationRequest mLocationRequest;
     String dbLati;
     String dbLongi;
-
+    boolean isDarkTheme;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_key = getString(R.string.preference_key_darktheme);
+        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+
+        if(isSetToDarkTheme==true){
+            setTheme(R.style.DarkTheme);
+            isDarkTheme=true;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
@@ -89,7 +100,6 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         File f = new File("sdcard/special_moments/" + IMAGE_NAME_PREFIX + imageDate + ".jpg");
 
         memAdapter = new MemoryAdapter();
-        Bitmap bmp = memAdapter.decodeFile(f);
 
 
         imageViewAdd = (ImageView) findViewById(R.id.ivAddImage);
@@ -97,8 +107,12 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         etDescription = (EditText) findViewById(R.id.editDescription);
         btnGetLoc = (Button) findViewById(R.id.btnGetLocation);
 
+
+        Picasso.with(getBaseContext()).load(f).resize(1080,1350).centerCrop().into(imageViewAdd);
+
+
         // Setzt das Bild in die Imageview
-        imageViewAdd.setImageBitmap(bmp);
+        //imageViewAdd.setImageBitmap(bmp);
 
         btnGetLoc.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,19 +2,25 @@ package com.plusapp.pocketbiceps.app;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.icu.text.SimpleDateFormat;
+import android.media.ExifInterface;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -30,10 +36,18 @@ public class DetailsAct_wo_pager extends AppCompatActivity {
     private static int index;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     public static MarkerDataSource data;
-
+    public boolean isDarkTheme;
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_key = getString(R.string.preference_key_darktheme);
+        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+
+        if(isSetToDarkTheme==true){
+            setTheme(R.style.DarkTheme);
+            isDarkTheme=true;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_act_wo_pager);
 
@@ -49,7 +63,7 @@ public class DetailsAct_wo_pager extends AppCompatActivity {
 
             data = new MarkerDataSource(this);
             data.open();
-            m = data.getMyMarkers();
+            m = data.getMyMarkers(MainActivity.sortOrder);
             m.get(index);
 
         }
@@ -66,9 +80,26 @@ public class DetailsAct_wo_pager extends AppCompatActivity {
         File f = new File("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
 
         MemoryAdapter mem = new MemoryAdapter();
-        Bitmap bmp = mem.decodeFile(f);
+        //Bitmap bmp = mem.decodeFile(f);
 
-        imageView.setImageBitmap(bmp);
+        String orientation="";
+        try {
+            ExifInterface exif = new ExifInterface("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
+              orientation= exif.getAttribute(ExifInterface.TAG_ORIENTATION); // 6 Vertikal, 1 Horizontal
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (orientation.equals("1")){
+            Picasso.with(getBaseContext()).load(f).resize(800,566).centerCrop().into(imageView);
+        }
+        else if (orientation.equals("6")){
+            Picasso.with(getBaseContext()).load(f).resize(1080,1350).centerCrop().into(imageView);
+        }
+
+
+
+        //imageView.setImageBitmap(bmp);
         textView.setText(mmo.getTitle());
         textViewDescr.setText(mmo.getSnippet());
 
@@ -77,6 +108,8 @@ public class DetailsAct_wo_pager extends AppCompatActivity {
         int temp = mmo.getCounter();
 
     }
+
+
 
     // Sorgt dafuer dass der Stack der Activities geloescht wird
     @Override
