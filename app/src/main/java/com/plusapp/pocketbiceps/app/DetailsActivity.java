@@ -88,7 +88,7 @@ public class DetailsActivity extends AppCompatActivity {
 
             data = new MarkerDataSource(this);
             data.open();
-            m = data.getMyMarkers();
+            m = data.getMyMarkers(MainActivity.sortOrder);
             m.get(index);
 
         }

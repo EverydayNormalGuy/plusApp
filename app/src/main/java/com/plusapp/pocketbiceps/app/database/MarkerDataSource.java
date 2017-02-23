@@ -45,13 +45,38 @@ public class MarkerDataSource {
 
     }
 
-    public List<MyMarkerObj> getMyMarkers(){
+    public List<MyMarkerObj> getMyMarkers(int sortOrder){
         List<MyMarkerObj> markers = new ArrayList<MyMarkerObj>();
 
         String orderByTimeDesc = MySqlHelper.TIME_STAMP + " DESC";
         String orderByCounterDesc = MySqlHelper.COUNTER + " DESC";
+        String orderByTimeAsc = MySqlHelper.TIME_STAMP + " ASC";
+        String orderByCounterAsc = MySqlHelper.COUNTER + " ASC";
 
-        Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByTimeDesc);
+
+        //Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByTimeDesc);
+
+        Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, null);
+
+        switch (sortOrder){
+            case 0:
+                 cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByTimeDesc);
+                break;
+            case 1:
+                 cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByTimeAsc);
+                break;
+            case 2:
+                 cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByCounterDesc);
+                break;
+            case 3:
+                 cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByCounterAsc);
+                break;
+        }
+
+
+
+
+        //Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
@@ -63,6 +88,7 @@ public class MarkerDataSource {
         return markers;
 
     }
+
 
 
     public void updateMarker(MyMarkerObj m){
@@ -78,9 +104,15 @@ public class MarkerDataSource {
     }
 
 
+    public void sortMostViewed(){
+        Cursor c = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, MySqlHelper.COUNTER+" DESC");
+        c.moveToFirst();
+    }
+
+
 
     public void deleteMarker(MyMarkerObj m) {
-        db.delete(MySqlHelper.TABLE_NAME, MySqlHelper.POSITION + " = '" +m.getPosition()+ "'",null);
+        db.delete(MySqlHelper.TABLE_NAME, MySqlHelper.TIME_STAMP + " = '" +m.getTimestamp()+ "'",null);
     }
 
     private MyMarkerObj cursorToMarker(Cursor cursor){

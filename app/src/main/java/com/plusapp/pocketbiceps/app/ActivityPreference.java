@@ -1,6 +1,7 @@
 package com.plusapp.pocketbiceps.app;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -17,8 +18,17 @@ import java.util.prefs.PreferenceChangeListener;
 
 public class ActivityPreference extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
 
+    boolean isDarkTheme;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_key = getString(R.string.preference_key_darktheme);
+        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+
+        if(isSetToDarkTheme==true){
+            setTheme(R.style.DarkTheme);
+            isDarkTheme=true;
+        }
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         Preference darkTheme = findPreference(getString(R.string.preference_key_darktheme));
@@ -46,6 +56,13 @@ public class ActivityPreference extends PreferenceActivity implements Preference
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(ActivityPreference.this,MainActivity.class);
+        startActivity(i);
+    }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {

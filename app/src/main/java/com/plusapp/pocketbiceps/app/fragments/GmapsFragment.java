@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -181,7 +182,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
 
         data.open();
 
-        List<MyMarkerObj> m = data.getMyMarkers();
+        List<MyMarkerObj> m = data.getMyMarkers(MainActivity.sortOrder);
         for (int i = 0; i < m.size(); i++) {
                 if (m.get(i).getPosition().equals("position")){
                     //donothing
@@ -216,6 +217,8 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
 
                 }
             }
+
+
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -297,5 +300,21 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         if (googleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         }
+    }
+
+    /**
+     * Sorgt dafür dass die Toolbar versteckt bzw. wieder angezeigt wird
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+
     }
 }

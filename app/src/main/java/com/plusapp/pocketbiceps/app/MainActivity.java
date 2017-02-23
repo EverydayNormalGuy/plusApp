@@ -2,6 +2,7 @@ package com.plusapp.pocketbiceps.app;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -55,12 +56,15 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleApiClient googleApiClient;
     public MarkerDataSource data;
+    public MarkerDataSource data2;
     Context context;
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     public long currTime=0;
     public MemoryAdapter memAdapter;
     public MemoryAdapter ca;
+
+    RecyclerView recList;
 
 
     FloatingActionMenu fab_Menu;
@@ -76,13 +80,16 @@ public class MainActivity extends AppCompatActivity
     int momentsCount;
 
     boolean isDarkTheme;
+    boolean isSetToDarkTheme;
 
+    SharedPreferences sp;
+    public static int sortOrder;
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String theme_key = getString(R.string.preference_key_darktheme);
-        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+        isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
 
         if(isSetToDarkTheme==true){
             setTheme(R.style.DarkTheme);
@@ -92,6 +99,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        sp = getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
+        sortOrder=sp.getInt("sort_mode",0);
 
         //Fuer die Permissions
         isStoragePermissionGranted();
@@ -103,7 +114,7 @@ public class MainActivity extends AppCompatActivity
 
 
         // Erstellt die RecylerView
-        RecyclerView recList = (RecyclerView) findViewById(R.id.lvMemories);
+        recList = (RecyclerView) findViewById(R.id.lvMemories);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -120,8 +131,8 @@ public class MainActivity extends AppCompatActivity
         fab3 = (FloatingActionButton) findViewById(R.id.fab3);
 
         // An den MemoryAdapter wird Liste an den Konstruktor weitergegeben
-        ca = new MemoryAdapter(createList2(),this);
-        recList.setAdapter(ca);
+        this.ca = new MemoryAdapter(createList2(),this);
+        this.recList.setAdapter(ca);
 
         
         /*
@@ -211,6 +222,7 @@ public class MainActivity extends AppCompatActivity
         
     }
 
+
     private void initializeCountDrawer() {
         //Gravity property aligns the text
         momentsCounter.setGravity(Gravity.CENTER_VERTICAL);
@@ -226,8 +238,8 @@ public class MainActivity extends AppCompatActivity
 
 
     /*
- Was soll passieren wenn man die normalen Buttons betätigt
-  */
+     Was soll passieren wenn man die normalen Buttons betätigt
+      */
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -239,14 +251,32 @@ public class MainActivity extends AppCompatActivity
                     startActivityForResult(camera_intent, CAM_REQUEST);
                     break;
                 case R.id.fab2:
-                    fab2.setVisibility(View.GONE);
+                    //fab2.setVisibility(View.GONE);
                     break;
                 case R.id.fab3:
-                    fab2.setVisibility(View.VISIBLE);
                     break;
             }
         }
     };
+
+    /**
+     * Aktualisiert die Listview. Die SP von sortDialog werden hiern nochmal
+     * aufgerufen und in sortorder gespeichert. danach kann die neue Liste mit der
+     * Sortierunge aufgerufen werden
+     */
+    public void refresh(){
+
+        sp = getBaseContext().getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
+        this.sortOrder=sp.getInt("sort_mode",0);
+        this.ca = new MemoryAdapter(createList2(),this);
+        this.recList.setAdapter(ca);
+        ca.notifyDataSetChanged();
+
+        if (createList2().size()==1){
+            recreate();
+        }
+
+    }
 
     // Die Permissions fuer das Schreiben des External Storage werden hier abgefragt
     @Override
@@ -290,9 +320,6 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("currTime",currTime);
         startActivity(intent);
 
-
-
-
     }
 
     /**
@@ -325,10 +352,8 @@ public class MainActivity extends AppCompatActivity
      * @return Marker Liste aus der DB
      */
     private List<MyMarkerObj> createList2() {
-
-        List<MyMarkerObj> m = data.getMyMarkers();
+        List<MyMarkerObj> m = data.getMyMarkers(sortOrder);
         return m;
-
     }
 
 
@@ -340,6 +365,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
@@ -365,12 +391,13 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.menu_sort){
             showSortDialog();
 
-
-
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 
     private void showSortDialog() {
         FragmentManager fm = getFragmentManager();
@@ -394,7 +421,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
-            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
+            /**
+             * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
+             */
+            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).addToBackStack(null).commit();
 
             Toast.makeText(getBaseContext(), "Map staretet", Toast.LENGTH_LONG).show();
 
