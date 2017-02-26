@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleApiClient googleApiClient;
+    private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
+
     public MarkerDataSource data;
     public MarkerDataSource data2;
     Context context;
@@ -104,8 +107,9 @@ public class MainActivity extends AppCompatActivity
         sp = getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
         sortOrder=sp.getInt("sort_mode",0);
 
-        //Fuer die Permissions
+        //Permissions Abfragen
         isStoragePermissionGranted();
+        grantLocationPermission();
 
         //Oeffnet die Datenbank
         data = new MarkerDataSource(this);
@@ -245,15 +249,18 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.fab1:
-                    Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File file = getFile();
-                    camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                    startActivityForResult(camera_intent, CAM_REQUEST);
+                    Intent i = new Intent(MainActivity.this, ActivityPreference.class);
+                    startActivity(i);
                     break;
+
                 case R.id.fab2:
                     //fab2.setVisibility(View.GONE);
                     break;
                 case R.id.fab3:
+                    Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File file = getFile();
+                    camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                    startActivityForResult(camera_intent, CAM_REQUEST);
                     break;
             }
         }
@@ -287,6 +294,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void grantLocationPermission(){
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    PERMISSION_ACCESS_COARSE_LOCATION);
+        }
+    }
+
     public  boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -309,6 +324,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        // Wenn nicht auf Abbrechen in der CameraAct. gedrückt wurde passiert werden die daten gespeichert
+        // und die AddActivity wird gestartet
+        if (resultCode == RESULT_OK){
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String dateString = formatter.format(new Date(currTime));
 
@@ -318,7 +337,8 @@ public class MainActivity extends AppCompatActivity
         Intent intent =new Intent(MainActivity.this,AddActivity.class);
         // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
         intent.putExtra("currTime",currTime);
-        startActivity(intent);
+        startActivity(intent);}
+
 
     }
 
@@ -425,6 +445,13 @@ public class MainActivity extends AppCompatActivity
              * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
              */
             fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).addToBackStack(null).commit();
+
+            // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        PERMISSION_ACCESS_COARSE_LOCATION);
+            }
 
             Toast.makeText(getBaseContext(), "Map staretet", Toast.LENGTH_LONG).show();
 

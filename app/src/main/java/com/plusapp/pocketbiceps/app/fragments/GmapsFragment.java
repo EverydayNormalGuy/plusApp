@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -18,6 +19,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import com.google.android.gms.common.ConnectionResult;
@@ -104,13 +107,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         MapFragment fragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
         fragment.getMapAsync(this);
 
-        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                    PERMISSION_ACCESS_COARSE_LOCATION);
-
-
-        }
         //Inflate die custom marker XML und referenziert auf die darininhaltende Imageview
         mCustomMarkerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_custom_marker, null);
         mMarkerImageView = (ImageView) mCustomMarkerView.findViewById(R.id.placeholder_image_marker);
@@ -133,8 +129,25 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-        gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        String gMapViewType = sPrefs.getString("gmapviewtype","2");
+
+        /**
+         * "1" Standard, "2" Satelit, "3" Hybrid siehe string-array gmaptypevalues
+         */
+        if (gMapViewType.equals("1")){
+            gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        }
+        else if (gMapViewType.equals("2")){
+            gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+        }
+        else if (gMapViewType.equals("3")){
+            gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
 
         if (ContextCompat.checkSelfPermission(getActivity().getBaseContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -142,6 +155,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
             buildGoogleApiClient();
             gMap.setMyLocationEnabled(true);
         }
+
 
         MapsInitializer.initialize(getActivity());
         addCustomMarker();
