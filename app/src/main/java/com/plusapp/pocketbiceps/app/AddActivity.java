@@ -3,6 +3,7 @@ package com.plusapp.pocketbiceps.app;
 import android.*;
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,6 +68,8 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
     String dbLati;
     String dbLongi;
     boolean isDarkTheme;
+    private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
+
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -118,6 +122,13 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
             @Override
             public void onClick(View v) {
 
+//                if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+//                        != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(AddActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+//                            PERMISSION_ACCESS_COARSE_LOCATION);
+//                }
+//
+
                 if (ContextCompat.checkSelfPermission(getBaseContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
@@ -150,10 +161,20 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_add) {
+
+//            if (ContextCompat.checkSelfPermission(getBaseContext(),
+//                    Manifest.permission.ACCESS_FINE_LOCATION)
+//                    == PackageManager.PERMISSION_GRANTED) {
+//                buildGoogleApiClient();
+//
+//            }
+
+
             saveAddings();
             return true;
         }
         if (id == R.id.delete_add) {
+            finish();
             Toast.makeText(getApplicationContext(), "Gelöscht", Toast.LENGTH_LONG).show();
         }
 
@@ -164,15 +185,15 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
 
     public void saveAddings() {
-        if (TextUtils.isEmpty(etTitle.getText().toString().trim())) {
-            etTitle.setError("Gib einen Titel ein");
-            return;
-        }
-
-        if (TextUtils.isEmpty(etDescription.getText().toString().trim())) {
-            etTitle.setError("Gib eine Beschreibung ein");
-            return;
-        }
+//        if (TextUtils.isEmpty(etTitle.getText().toString().trim())) {
+//            etTitle.setText("-");
+//            return;
+//        }
+//
+//        if (TextUtils.isEmpty(etDescription.getText().toString().trim())) {
+//            etTitle.setText("-");
+//            return;
+//        }
 
         dbTitle = etTitle.getText().toString();
         dbDescription = etDescription.getText().toString();

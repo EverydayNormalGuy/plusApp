@@ -10,7 +10,7 @@
     <item
         android:id="@+id/menu_sort"
         android:orderInCategory="101"
-        android:icon="@drawable/ic_expand_00000"
+        android:icon="@drawable/sort48"
         app:showAsAction="ifRoom"
         android:title="Sort"/>
     />
