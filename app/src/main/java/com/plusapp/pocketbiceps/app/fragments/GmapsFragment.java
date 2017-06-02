@@ -211,7 +211,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                     SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
                     String imageDate=formatterForImageSearch.format(new Date(m.get(i).getTimestamp()));
 
-                    File f = new File("sdcard/special_moments/"+IMAGE_NAME_PREFIX+imageDate+".jpg");
+                    File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
 
                     //Bitmap Decoder hat sich hier praktischer ergeben
                     memAdapter = new MemoryAdapter();

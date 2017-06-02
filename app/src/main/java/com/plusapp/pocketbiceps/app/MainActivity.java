@@ -3,8 +3,10 @@ package com.plusapp.pocketbiceps.app;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +18,7 @@ import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -49,6 +52,7 @@ import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     Context context;
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
+    public static final String IMAGE_PATH_URI = "sdcard/Pictures/Special_Moments/";
     public long currTime=0;
     public MemoryAdapter memAdapter;
     public MemoryAdapter ca;
@@ -196,7 +201,7 @@ public class MainActivity extends AppCompatActivity
             String imageDate = formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
             // Das Bild wird in die Variable f initialisiert
-            File f = new File("sdcard/special_moments/" + IMAGE_NAME_PREFIX + imageDate + ".jpg");
+            File f = new File(IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
 
             memAdapter = new MemoryAdapter();
             // Erzeugt ein Bitmap aus der .jpg um die Speichergroeße Bilder zu reduzieren
@@ -255,6 +260,31 @@ public class MainActivity extends AppCompatActivity
 
                 case R.id.fab2:
                     //fab2.setVisibility(View.GONE);
+//                    Calendar calendar = Calendar.getInstance();
+//                    calendar.set(Calendar.HOUR_OF_DAY,20);
+////                    calendar.set(Calendar.MINUTE,8);
+//                    Intent intent = new Intent(getApplicationContext(),NotificationReceiver.class);
+////                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),100,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+////                    AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+////                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),alarmManager.INTERVAL_DAY,pendingIntent);
+//
+//                    Toast.makeText(getBaseContext(), "Service startet", Toast.LENGTH_SHORT).show();
+
+//                    int j = createList2().size();
+//                    List<MyMarkerObj> listNotifi = createList2();
+//                    for (int x = 0 ; x < j;x++){
+//
+//                        MyMarkerObj mmoNotify = listNotifi.get(x);
+//                        mmoNotify.getTimestamp();
+//
+//                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), (int) mmoNotify.getTimestamp(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
+//                        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+//                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,mmoNotify.getTimestamp(),getDuration(mmoNotify.getTimestamp()),pendingIntent);
+//
+//
+//                    }
+
+
                     break;
                 case R.id.fab3:
                     Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -265,6 +295,39 @@ public class MainActivity extends AppCompatActivity
             }
         }
     };
+
+    private long getDuration(long timestamp) {
+        // get todays date
+        Calendar cal = Calendar.getInstance();
+        // get current month
+        cal.setTimeInMillis(timestamp);
+        int currentMonth = cal.get(Calendar.MONTH);
+
+        // move month ahead
+        currentMonth++;
+        // check if has not exceeded threshold of december
+
+        if (currentMonth > Calendar.DECEMBER) {
+            // alright, reset month to jan and forward year by 1 e.g fro 2013 to 2014
+            currentMonth = Calendar.JANUARY;
+            // Move year ahead as well
+            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
+        }
+
+        // reset calendar to next month
+        cal.set(Calendar.MONTH, currentMonth);
+        // get the maximum possible days in this month
+        int maximumDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        // set the calendar to maximum day (e.g in case of fEB 28th, or leap 29th)
+        cal.set(Calendar.DAY_OF_MONTH, maximumDay);
+        long thenTime = cal.getTimeInMillis(); // this is time one month ahead
+
+
+        return (thenTime); // this is what you set as trigger point time i.e one month after
+
+    }
+
 
     /**
      * Aktualisiert die Listview. Die SP von sortDialog werden hiern nochmal
@@ -332,12 +395,13 @@ public class MainActivity extends AppCompatActivity
         String dateString = formatter.format(new Date(currTime));
 
         //Speichert das gemachte Bild im path
-        String path = "sdcard/special_moments/"+IMAGE_NAME_PREFIX+dateString+".jpg";
+        String path = IMAGE_PATH_URI+IMAGE_NAME_PREFIX+dateString+".jpg";
         Drawable.createFromPath(path);
         Intent intent =new Intent(MainActivity.this,AddActivity.class);
         // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
         intent.putExtra("currTime",currTime);
-        startActivity(intent);}
+
+            startActivity(intent);}
 
 
     }
@@ -354,7 +418,7 @@ public class MainActivity extends AppCompatActivity
         String dateString = formatter.format(new Date(currTime));
 
 
-        File folder = new File("sdcard/special_moments");
+        File folder = new File(IMAGE_PATH_URI);
 
 
         if (!folder.exists()) {
@@ -438,6 +502,19 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
 
+            Intent i = new Intent(Intent.ACTION_PICK);
+            i.setType("image/*");
+            startActivity(i);
+
+
+//
+//            Intent i=new Intent();
+//            i.setAction(Intent.ACTION_GET_CONTENT);
+//            Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()
+//                    + "/special_moments/");
+//            i.setDataAndType(uri, "*/*");
+//
+//            startActivity(i);
 
         } else if (id == R.id.nav_slideshow) {
 
