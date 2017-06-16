@@ -28,7 +28,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- Dark theme. -->
-    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar" >
+    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorAccent">@color/colorCardViewBlue</item>
         <!-- FAB Color -->
         <item name="fab_colorNormal">@color/colorCardViewBlue</item>
@@ -36,6 +36,18 @@
         <item name="menu_colorNormal">@color/colorCardViewBlue</item>
         <item name="menu_colorPressed">@color/colorCardViewBlue</item>
 
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 </resources>

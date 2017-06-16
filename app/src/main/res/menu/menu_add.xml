@@ -16,4 +16,4 @@
         android:title="User"
         android:icon="@drawable/ic_delete_black_24px"
         app:showAsAction="ifRoom"/>
-    /></menu>
+</menu>

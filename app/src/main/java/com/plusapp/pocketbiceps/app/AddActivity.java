@@ -52,6 +52,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         com.google.android.gms.location.LocationListener {
 
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
+
     EditText etTitle;
     EditText etDescription;
     ImageView imageViewAdd;
@@ -101,7 +102,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         // Formatiert die currTime Variable von Millisekunden zu dem eindeutigen Index
         String imageDate = formatterForImageSearch.format(new Date(dbvCurrTime));
-        File f = new File("sdcard/special_moments/" + IMAGE_NAME_PREFIX + imageDate + ".jpg");
+        File f = new File(MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
 
         memAdapter = new MemoryAdapter();
 
