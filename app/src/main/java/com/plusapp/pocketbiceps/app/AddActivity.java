@@ -58,6 +58,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
     ImageView imageViewAdd;
     String dbTitle;
     String dbDescription;
+    String dbPath;
     int dbCounter = 0;
     long dbvCurrTime;
     MemoryAdapter memAdapter;
@@ -109,8 +110,10 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
 
         File f = new File(MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
+        dbPath = MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg";
         if (this.galleryPathName != null){
              f = new File(galleryPathName);
+            this.dbPath = galleryPathName;
         }
 
         memAdapter = new MemoryAdapter();
@@ -211,10 +214,10 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         data.open();
         // Setzt einen Eintrag mit den eingegeben Daten in die Datenbank
         if (dbLongi==null){
-            data.addMarker(new MyMarkerObj(dbTitle, dbDescription, "position", dbvCurrTime, dbCounter));
+            data.addMarker(new MyMarkerObj(dbTitle, dbDescription, "position", dbvCurrTime, dbCounter, dbPath));
         }
         else{
-            data.addMarker(new MyMarkerObj(dbTitle, dbDescription, dbLongi+" "+dbLati, dbvCurrTime, dbCounter));
+            data.addMarker(new MyMarkerObj(dbTitle, dbDescription, dbLongi+" "+dbLati, dbvCurrTime, dbCounter, dbPath));
         }
         data.close();
 

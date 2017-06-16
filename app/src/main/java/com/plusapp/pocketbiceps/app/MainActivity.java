@@ -412,10 +412,6 @@ public class MainActivity extends AppCompatActivity
                     // Wenn das Bild ausgewaehlt wurde
                     if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data){
 
-                        // Hole das jetzige Datum
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
-                        String dateString = formatter.format(new Date(currTime));
-
                         // Hole das Bild von data
                         Uri selectedImage = data.getData();
                         String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -429,9 +425,12 @@ public class MainActivity extends AppCompatActivity
                         cursor.close();
                         Drawable.createFromPath(imgDecodableString);
 
+                        // Hole das heutige Datum
+                        this.currTime = System.currentTimeMillis();
+
 
                         Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                        intent.putExtra("currTime", dateString);
+                        intent.putExtra("currTime", currTime);
                         intent.putExtra("pathName", imgDecodableString);
 
                         startActivity(intent);

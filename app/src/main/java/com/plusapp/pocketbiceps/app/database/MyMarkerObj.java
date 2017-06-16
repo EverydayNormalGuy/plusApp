@@ -11,12 +11,13 @@ public class MyMarkerObj {
     private String position;
     private long timestamp;
     private int counter;
+    private String path;
 
     public MyMarkerObj(){
 
     }
 
-    public MyMarkerObj(long id, String title, String snippet, String position, long timestamp, int counter) {
+    public MyMarkerObj(long id, String title, String snippet, String position, long timestamp, int counter, String path) {
         this.setId(id);
         this.setTitle(title);
         this.setSnippet(snippet);
@@ -25,13 +26,14 @@ public class MyMarkerObj {
         this.setCounter(counter);
     }
 
-    public MyMarkerObj(String title, String snippet, String position, long timestamp, int counter){
+    public MyMarkerObj(String title, String snippet, String position, long timestamp, int counter, String path){
 
         this.setTitle(title);
         this.setSnippet(snippet);
         this.setPosition(position);
         this.setTimestamp(timestamp);
         this.setCounter(counter);
+        this.setPath(path);
 
 
     }
@@ -73,5 +75,12 @@ public class MyMarkerObj {
     }
     public int getCounter(){
         return counter;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+    public String getPath(){
+        return path;
     }
 }

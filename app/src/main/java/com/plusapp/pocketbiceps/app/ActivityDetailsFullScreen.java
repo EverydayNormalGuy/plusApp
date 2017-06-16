@@ -166,14 +166,14 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
             imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
-            File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+            File f = new File(mmo.getPath());
 
             MemoryAdapter mem = new MemoryAdapter();
             //Bitmap bmp = mem.decodeFile(f);
 
             String orientation="";
             try {
-                ExifInterface exif = new ExifInterface(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+                ExifInterface exif = new ExifInterface(mmo.getPath());
                 orientation= exif.getAttribute(ExifInterface.TAG_ORIENTATION); // 6 Vertikal, 1 Horizontal
             } catch (IOException e) {
                 e.printStackTrace();
