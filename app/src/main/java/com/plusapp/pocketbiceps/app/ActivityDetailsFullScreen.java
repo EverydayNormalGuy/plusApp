@@ -13,12 +13,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
@@ -139,6 +141,7 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
+        findViewById(R.id.tvMomentsTitle).setOnTouchListener(mDelayHideTouchListener);
         findViewById(R.id.tvMomentsDetails).setOnTouchListener(mDelayHideTouchListener);
         findViewById(R.id.btnEditDetails).setOnTouchListener(mDelayHideTouchListener);
         findViewById(R.id.btnShareDetails).setOnTouchListener(mDelayHideTouchListener);
@@ -155,6 +158,8 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             m.get(index);
 
             ImageView ivMomentDetails = (ImageView) findViewById(R.id.ivMomentDetails);
+            TextView tvDetailsTitle = (TextView) findViewById(R.id.tvMomentsTitle);
+            TextView tvDetailsDescr= (TextView) findViewById(R.id.tvMomentsDetails);
 
             MyMarkerObj mmo = m.get(index);
 
@@ -194,6 +199,9 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
 //            textView.setText(mmo.getTitle());
 //            textViewDescr.setText(mmo.getSnippet());
 
+            tvDetailsTitle.setText(mmo.getTitle());
+            tvDetailsDescr.setText(mmo.getSnippet());
+            tvDetailsDescr.setMovementMethod(new ScrollingMovementMethod()); // Dadurch kann man durch die Textview scrollen
             data.updateMarker(mmo);
 
             btn_EditDetails = (Button) findViewById(R.id.btnEditDetails);

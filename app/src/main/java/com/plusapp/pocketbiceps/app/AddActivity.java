@@ -70,6 +70,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
     String dbLongi;
     boolean isDarkTheme;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
+    private String galleryPathName;
 
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -97,12 +98,20 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         if (extras != null) {
             // Das Key Argument "currTime" muss mit dem Key aus der MainAct. uebereinstimmen
             this.dbvCurrTime = extras.getLong("currTime");
+            if(extras.getString("pathName")!=null){
+                this.galleryPathName = extras.getString("pathName");
+            }
         }
 
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         // Formatiert die currTime Variable von Millisekunden zu dem eindeutigen Index
         String imageDate = formatterForImageSearch.format(new Date(dbvCurrTime));
+
+
         File f = new File(MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
+        if (this.galleryPathName != null){
+             f = new File(galleryPathName);
+        }
 
         memAdapter = new MemoryAdapter();
 

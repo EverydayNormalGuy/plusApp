@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -67,8 +68,8 @@ public class MainActivity extends AppCompatActivity
     Context context;
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
-    public static final String IMAGE_PATH_URI = "sdcard/Pictures/Special_Moments/";
-    public long currTime=0;
+    public static final String IMAGE_PATH_URI = "sdcard/Special_Moments/";
+    public long currTime = 0;
     public MemoryAdapter memAdapter;
     public MemoryAdapter ca;
 
@@ -92,16 +93,20 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences sp;
     public static int sortOrder;
+
+    private static int RESULT_LOAD_IMG = 2;
+    String imgDecodableString;
+
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String theme_key = getString(R.string.preference_key_darktheme);
-        isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+        isSetToDarkTheme = sPrefs.getBoolean(theme_key, false);
 
-        if(isSetToDarkTheme==true){
+        if (isSetToDarkTheme == true) {
             setTheme(R.style.DarkTheme);
-            isDarkTheme=true;
+            isDarkTheme = true;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -110,7 +115,7 @@ public class MainActivity extends AppCompatActivity
 
 
         sp = getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
-        sortOrder=sp.getInt("sort_mode",0);
+        sortOrder = sp.getInt("sort_mode", 0);
 
         //Permissions Abfragen
         isStoragePermissionGranted();
@@ -119,7 +124,6 @@ public class MainActivity extends AppCompatActivity
         //Oeffnet die Datenbank
         data = new MarkerDataSource(this);
         data.open();  //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
-
 
 
         // Erstellt die RecylerView
@@ -133,14 +137,13 @@ public class MainActivity extends AppCompatActivity
         momentsCount = createList2().size();
 
 
-
         fab_Menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         fab3 = (FloatingActionButton) findViewById(R.id.fab3);
 
         // An den MemoryAdapter wird Liste an den Konstruktor weitergegeben
-        this.ca = new MemoryAdapter(createList2(),this);
+        this.ca = new MemoryAdapter(createList2(), this);
         this.recList.setAdapter(ca);
 
         
@@ -193,7 +196,7 @@ public class MainActivity extends AppCompatActivity
         List<MyMarkerObj> navHeaderGetImage = createList2();
         // Falls mind. ein Moment Eintrag existiert, wird das Foto dass als letztes gemacht wurde
         // in den NavHeader eingefügt
-        if(navHeaderGetImage.size()!=0) {
+        if (navHeaderGetImage.size() != 0) {
             MyMarkerObj mmo = navHeaderGetImage.get(0);
 
             // Das Datum und die Zeit dienen als Index um die Bilder zu finden z.B. Moments_10-12-2016-18-24-10
@@ -218,7 +221,7 @@ public class MainActivity extends AppCompatActivity
             nav_image_head.setImageBitmap(bmp);
             navigationView.setNavigationItemSelectedListener(this);
 
-            momentsCounter=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
+            momentsCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
             //This method will initialize the count value
             initializeCountDrawer();
 
@@ -227,8 +230,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
 
-        
-        
+
     }
 
 
@@ -236,10 +238,9 @@ public class MainActivity extends AppCompatActivity
         //Gravity property aligns the text
         momentsCounter.setGravity(Gravity.CENTER_VERTICAL);
         momentsCounter.setTypeface(null, Typeface.BOLD);
-        if (isDarkTheme==true){
+        if (isDarkTheme == true) {
             momentsCounter.setTextColor(getResources().getColor(R.color.colorCardViewBlue));
-        }
-        else {
+        } else {
             momentsCounter.setTextColor(getResources().getColor(R.color.colorAccent));
         }
         momentsCounter.setText(String.valueOf(momentsCount));
@@ -334,15 +335,15 @@ public class MainActivity extends AppCompatActivity
      * aufgerufen und in sortorder gespeichert. danach kann die neue Liste mit der
      * Sortierunge aufgerufen werden
      */
-    public void refresh(){
+    public void refresh() {
 
         sp = getBaseContext().getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
-        this.sortOrder=sp.getInt("sort_mode",0);
-        this.ca = new MemoryAdapter(createList2(),this);
+        this.sortOrder = sp.getInt("sort_mode", 0);
+        this.ca = new MemoryAdapter(createList2(), this);
         this.recList.setAdapter(ca);
         ca.notifyDataSetChanged();
 
-        if (createList2().size()==1){
+        if (createList2().size() == 1) {
             recreate();
         }
 
@@ -352,12 +353,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //resume tasks needing this permission
         }
     }
 
-    public void grantLocationPermission(){
+    public void grantLocationPermission() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -365,7 +366,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public  boolean isStoragePermissionGranted() {
+    public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -375,34 +376,77 @@ public class MainActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
+        } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
     }
-
 
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        // Wenn nicht auf Abbrechen in der CameraAct. gedrückt wurde passiert werden die daten gespeichert
-        // und die AddActivity wird gestartet
-        if (resultCode == RESULT_OK){
+        switch(requestCode) {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
-        String dateString = formatter.format(new Date(currTime));
+            case 1:
+            // Wenn nicht auf Abbrechen in der CameraAct. gedrückt wurde passiert werden die daten gespeichert
+            // und die AddActivity wird gestartet
+            if (resultCode == RESULT_OK) {
 
-        //Speichert das gemachte Bild im path
-        String path = IMAGE_PATH_URI+IMAGE_NAME_PREFIX+dateString+".jpg";
-        Drawable.createFromPath(path);
-        Intent intent =new Intent(MainActivity.this,AddActivity.class);
-        // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
-        intent.putExtra("currTime",currTime);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+                String dateString = formatter.format(new Date(currTime));
+                //Speichert das gemachte Bild im path
+                String path = IMAGE_PATH_URI + IMAGE_NAME_PREFIX + dateString + ".jpg";
+                Drawable.createFromPath(path);
+                Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
+                intent.putExtra("currTime", currTime);
 
-            startActivity(intent);}
+                startActivity(intent);
+            }
+            break;
+            case 2:
+                super.onActivityResult(requestCode, resultCode, data);
 
+                try{
+                    // Wenn das Bild ausgewaehlt wurde
+                    if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data){
+
+                        // Hole das jetzige Datum
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+                        String dateString = formatter.format(new Date(currTime));
+
+                        // Hole das Bild von data
+                        Uri selectedImage = data.getData();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                        // Cursor holen
+                        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                        // Move to first row
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        imgDecodableString = cursor.getString(columnIndex);
+                        cursor.close();
+                        Drawable.createFromPath(imgDecodableString);
+
+
+                        Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                        intent.putExtra("currTime", dateString);
+                        intent.putExtra("pathName", imgDecodableString);
+
+                        startActivity(intent);
+
+                    }
+                    else {
+                        Toast.makeText(this, "Kein Bild zum importieren ausgewählt", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                catch (Exception e){
+                    Toast.makeText(this, "Fehler", Toast.LENGTH_SHORT).show();
+            }
+            break;
+
+        }
 
     }
 
@@ -426,13 +470,14 @@ public class MainActivity extends AppCompatActivity
             folder.mkdir();
         }
 
-        File image_file = new File(folder, IMAGE_NAME_PREFIX+dateString+".jpg");
+        File image_file = new File(folder, IMAGE_NAME_PREFIX + dateString + ".jpg");
 
         return image_file;
     }
 
     /**
      * Erstellt eine Liste aus den Markern (Moments) in der Datenbank
+     *
      * @return Marker Liste aus der DB
      */
     private List<MyMarkerObj> createList2() {
@@ -472,7 +517,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(i);
             return true;
         }
-        if (id == R.id.menu_sort){
+        if (id == R.id.menu_sort) {
             showSortDialog();
 
         }
@@ -481,12 +526,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
     private void showSortDialog() {
         FragmentManager fm = getFragmentManager();
         DialogFragment sortFragment = new SortDialogFragment();
-        sortFragment.show(fm,"SORT_DIALOG");
+        sortFragment.show(fm, "SORT_DIALOG");
     }
 
     // Interaktion mit den Menuepunkten aus dem NavigationDrawer
@@ -502,19 +545,15 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
 
-            Intent i = new Intent(Intent.ACTION_PICK);
-            i.setType("image/*");
-            startActivity(i);
-
-
-//
-//            Intent i=new Intent();
-//            i.setAction(Intent.ACTION_GET_CONTENT);
-//            Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()
-//                    + "/special_moments/");
-//            i.setDataAndType(uri, "*/*");
-//
+//            Intent i = new Intent(Intent.ACTION_PICK);
+//            i.setType("image/*");
 //            startActivity(i);
+
+            // Create intent to Open Image applications like Gallery, Google Photos
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+            galleryIntent.setType("image/*");
+            startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+
 
         } else if (id == R.id.nav_slideshow) {
 
