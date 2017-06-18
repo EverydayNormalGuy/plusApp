@@ -50,6 +50,8 @@ import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -73,6 +75,9 @@ public class MainActivity extends AppCompatActivity
     public MemoryAdapter memAdapter;
     public MemoryAdapter ca;
 
+    public Bitmap bmp;
+    public NavigationView navigationView;
+
     RecyclerView recList;
 
 
@@ -90,6 +95,8 @@ public class MainActivity extends AppCompatActivity
 
     boolean isDarkTheme;
     boolean isSetToDarkTheme;
+    boolean isCoverPhoto;
+    boolean isSettoCoverPhoto;
 
     SharedPreferences sp;
     public static int sortOrder;
@@ -108,6 +115,71 @@ public class MainActivity extends AppCompatActivity
             setTheme(R.style.DarkTheme);
             isDarkTheme = true;
         }
+
+        // Prueft ob das Coverfoto gesetzt werden soll und speichert es ggfs. in einer Bitmap
+        String cover_key = getString(R.string.preference_key_coverphoto);
+        isSettoCoverPhoto = sPrefs.getBoolean(cover_key, false);
+
+        //Oeffnet die Datenbank
+        data = new MarkerDataSource(this);
+        data.open();  //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
+
+
+        if (isSettoCoverPhoto == true) {
+
+            // NavDrawer Header manipulieren
+            List<MyMarkerObj> navHeaderGetImage = createList2();
+            // Falls mind. ein Moment Eintrag existiert, wird das Foto dass als letztes gemacht wurde
+            // in den NavHeader eingefügt
+            if (navHeaderGetImage.size() != 0) {
+                MyMarkerObj mmo = navHeaderGetImage.get(0);
+
+                // Das Datum und die Zeit dienen als Index um die Bilder zu finden z.B. Moments_10-12-2016-18-24-10
+                SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+                String imageDate = formatterForImageSearch.format(new Date(mmo.getTimestamp()));
+
+                // Das Bild wird in die Variable f initialisiert
+                File f = new File(mmo.getPath());
+
+                memAdapter = new MemoryAdapter();
+
+                Picasso.with(this).load(f).resize(540, 540).centerCrop().into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                        bmp = bitmap;
+
+                        navigationView = (NavigationView) findViewById(R.id.nav_view);
+                        View headNavView = navigationView.getHeaderView(0);
+
+                        ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+                        // Setzt das Bild in den NavHeader wenn bmp not null ist
+                        if (bmp != null){
+                            nav_image_head.setImageBitmap(bmp);
+                        }
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+
+                });
+
+
+                // Erzeugt ein Bitmap aus der .jpg um die Speichergroeße Bilder zu reduzieren
+                // this.bmp = memAdapter.decodeFile(f);
+
+                isCoverPhoto = true;
+            }
+        }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -121,9 +193,6 @@ public class MainActivity extends AppCompatActivity
         isStoragePermissionGranted();
         grantLocationPermission();
 
-        //Oeffnet die Datenbank
-        data = new MarkerDataSource(this);
-        data.open();  //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
 
 
         // Erstellt die RecylerView
@@ -192,40 +261,16 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        // NavDrawer Header manipulieren
-        List<MyMarkerObj> navHeaderGetImage = createList2();
-        // Falls mind. ein Moment Eintrag existiert, wird das Foto dass als letztes gemacht wurde
-        // in den NavHeader eingefügt
-        if (navHeaderGetImage.size() != 0) {
-            MyMarkerObj mmo = navHeaderGetImage.get(0);
 
-            // Das Datum und die Zeit dienen als Index um die Bilder zu finden z.B. Moments_10-12-2016-18-24-10
-            SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
-            String imageDate = formatterForImageSearch.format(new Date(mmo.getTimestamp()));
-
-            // Das Bild wird in die Variable f initialisiert
-            File f = new File(IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
-
-            memAdapter = new MemoryAdapter();
-            // Erzeugt ein Bitmap aus der .jpg um die Speichergroeße Bilder zu reduzieren
-            Bitmap bmp = memAdapter.decodeFile(f);
-
-
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            View headNavView = navigationView.getHeaderView(0);
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
 //            TextView nav_user = (TextView) headNavView.findViewById(R.id.tvNavHeaderTitle);
 //            nav_user.setText("test1231231");
 
-            ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
-            // Setzt das Bild in den NavHeader
-            nav_image_head.setImageBitmap(bmp);
             navigationView.setNavigationItemSelectedListener(this);
 
             momentsCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
             //This method will initialize the count value
             initializeCountDrawer();
-
-        }
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
@@ -244,6 +289,7 @@ public class MainActivity extends AppCompatActivity
             momentsCounter.setTextColor(getResources().getColor(R.color.colorAccent));
         }
         momentsCounter.setText(String.valueOf(momentsCount));
+
     }
 
 

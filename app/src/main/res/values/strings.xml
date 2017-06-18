@@ -19,6 +19,9 @@
     <string name="preference_key_gmapviewtype">gmapviewtype</string>
     <string name="preference_title_gmapviewtype">Kartenansicht</string>
     <string name="preference_description_gmapviewtype">Die Google Map in einer anderen Ansicht anzeigen</string>
+    <string name="preference_key_coverphoto">coverphoto</string>
+    <string name="preference_description_coverphoto">Das zuletzt gemachte Foto wird im Seitenmenü angezeigt</string>
+    <string name="preference_title_coverphoto">Foto im Seitenmenü anzeigen</string>
 
 
     <string-array name="sortDialog">
@@ -43,4 +46,5 @@
     <string name="title_activity_details_full_screen">ActivityDetailsFullScreen</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>

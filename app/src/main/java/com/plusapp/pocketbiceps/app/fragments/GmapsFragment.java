@@ -231,7 +231,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
 
                 }
             }
-    
+
     @Override
     public void onConnected(Bundle bundle) {
 
