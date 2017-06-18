@@ -8,8 +8,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -185,7 +187,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     }
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void addCustomMarker() {
         Log.d(TAG, "addCustomMarker()");
@@ -211,7 +212,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                     SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
                     String imageDate=formatterForImageSearch.format(new Date(m.get(i).getTimestamp()));
 
-                    File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+                    File f = new File(m.get(i).getPath()); // TODO Nicht sicher ob das klappt hier
 
                     //Bitmap Decoder hat sich hier praktischer ergeben
                     memAdapter = new MemoryAdapter();
