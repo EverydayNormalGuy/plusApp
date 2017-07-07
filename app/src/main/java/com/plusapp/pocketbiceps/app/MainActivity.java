@@ -98,6 +98,9 @@ public class MainActivity extends AppCompatActivity
     boolean isCoverPhoto;
     boolean isSettoCoverPhoto;
 
+
+    public Target bmpHeaderTarget;
+
     SharedPreferences sp;
     public static int sortOrder;
 
@@ -125,61 +128,6 @@ public class MainActivity extends AppCompatActivity
         data.open();  //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
 
 
-        if (isSettoCoverPhoto == true) {
-
-            // NavDrawer Header manipulieren
-            List<MyMarkerObj> navHeaderGetImage = createList2();
-            // Falls mind. ein Moment Eintrag existiert, wird das Foto dass als letztes gemacht wurde
-            // in den NavHeader eingefügt
-            if (navHeaderGetImage.size() != 0) {
-                MyMarkerObj mmo = navHeaderGetImage.get(0);
-
-                // Das Datum und die Zeit dienen als Index um die Bilder zu finden z.B. Moments_10-12-2016-18-24-10
-                SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
-                String imageDate = formatterForImageSearch.format(new Date(mmo.getTimestamp()));
-
-                // Das Bild wird in die Variable f initialisiert
-                File f = new File(mmo.getPath());
-
-                memAdapter = new MemoryAdapter();
-
-                Picasso.with(this).load(f).resize(540, 540).centerCrop().into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-                        bmp = bitmap;
-
-                        navigationView = (NavigationView) findViewById(R.id.nav_view);
-                        View headNavView = navigationView.getHeaderView(0);
-
-                        ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
-                        // Setzt das Bild in den NavHeader wenn bmp not null ist
-                        if (bmp != null){
-                            nav_image_head.setImageBitmap(bmp);
-                        }
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-
-                });
-
-
-                // Erzeugt ein Bitmap aus der .jpg um die Speichergroeße Bilder zu reduzieren
-                // this.bmp = memAdapter.decodeFile(f);
-
-                isCoverPhoto = true;
-            }
-        }
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -192,7 +140,6 @@ public class MainActivity extends AppCompatActivity
         //Permissions Abfragen
         isStoragePermissionGranted();
         grantLocationPermission();
-
 
 
         // Erstellt die RecylerView
@@ -215,7 +162,7 @@ public class MainActivity extends AppCompatActivity
         this.ca = new MemoryAdapter(createList2(), this);
         this.recList.setAdapter(ca);
 
-        
+
         /*
         Hier wird der clicklListener der weiter unten programmiert ist hinzugefügt
         damit kann man auf Klick events mit einem Switch reagieren
@@ -262,20 +209,70 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
 
-            navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
 //            TextView nav_user = (TextView) headNavView.findViewById(R.id.tvNavHeaderTitle);
 //            nav_user.setText("test1231231");
 
-            navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
 
+
+        if (isSettoCoverPhoto == true) {
+
+            // NavDrawer Header manipulieren
+            List<MyMarkerObj> navHeaderGetImage = createList2();
+            // Falls mind. ein Moment Eintrag existiert, wird das Foto dass als letztes gemacht wurde
+            // in den NavHeader eingefügt
+            if (navHeaderGetImage.size() != 0) {
+                MyMarkerObj mmo = navHeaderGetImage.get(0);
+
+                // Das Datum und die Zeit dienen als Index um die Bilder zu finden z.B. Moments_10-12-2016-18-24-10
+                SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+                String imageDate = formatterForImageSearch.format(new Date(mmo.getTimestamp()));
+
+                // Das Bild wird in die Variable f initialisiert
+                File f = new File(mmo.getPath());
+
+                memAdapter = new MemoryAdapter();
+
+                bmpHeaderTarget = new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        bmp = bitmap;
+
+                        View headNavView = navigationView.getHeaderView(0);
+
+                        ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+
+                        // Setzt das Bild in den NavHeader wenn bmp not null ist
+                        if (bmp != null) {
+                            nav_image_head.setImageBitmap(bmp);
+                        }
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                };
+
+                Picasso.with(this).load(f).resize(540, 540).centerCrop().into(bmpHeaderTarget);
+
+                isCoverPhoto = true;
+
+            }
             momentsCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
             //This method will initialize the count value
             initializeCountDrawer();
 
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
 
-
+        }
     }
 
 
