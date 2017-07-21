@@ -114,7 +114,7 @@ public class MarkerDataSource {
 
 
     public void deleteMarker(MyMarkerObj m) {
-        db.delete(MySqlHelper.TABLE_NAME, MySqlHelper.TIME_STAMP + " = '" +m.getTimestamp()+ "'",null);
+        db.delete(MySqlHelper.TABLE_NAME, MySqlHelper.PATH + " = '" +m.getPath()+ "'",null);
     }
 
     private MyMarkerObj cursorToMarker(Cursor cursor){

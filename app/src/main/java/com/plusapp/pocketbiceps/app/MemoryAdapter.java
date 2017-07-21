@@ -107,11 +107,10 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 //                mContext.startActivity(intent);
 
 
-                FragmentManager fragmentManager = ((Activity) mContext).getFragmentManager();
-
 
                 Intent intent = new Intent(mContext, ActivityDetailsFullScreen.class);
                 intent.putExtra("index",i);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 mContext.startActivity(intent);
             }
         });
