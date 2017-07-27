@@ -2,26 +2,30 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true">
 
-    <PreferenceCategory
-        android:title="Layout Optionen">
+    <PreferenceCategory android:title="Layout Optionen">
 
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/preference_key_darktheme"
-        android:summary="@string/preference_description_darktheme"
-        android:title="@string/preference_title_darktheme" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/preference_key_darktheme"
+            android:summary="@string/preference_description_darktheme"
+            android:title="@string/preference_title_darktheme" />
+
+        <CheckBoxPreference
+            android:key="@string/preference_key_coverphoto"
+            android:summary="@string/preference_description_coverphoto"
+            android:title="@string/preference_title_coverphoto" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="Google Map Optionen">
-    <ListPreference
-        android:key="@string/preference_key_gmapviewtype"
-        android:title="@string/preference_title_gmapviewtype"
-        android:summary="@string/preference_description_gmapviewtype"
-        android:entries="@array/gmapTypeDialog"
-        android:defaultValue="0"
-        android:entryValues="@array/gmapTypeValues" />
+
+    <PreferenceCategory android:title="Google Map Optionen">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/gmapTypeDialog"
+            android:entryValues="@array/gmapTypeValues"
+            android:key="@string/preference_key_gmapviewtype"
+            android:summary="@string/preference_description_gmapviewtype"
+            android:title="@string/preference_title_gmapviewtype" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Point;
 import android.icu.text.SimpleDateFormat;
 import android.media.ExifInterface;
@@ -13,17 +15,22 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+import com.plusapp.pocketbiceps.app.helperclasses.Blur;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +52,7 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private static final int AUTO_HIDE_DELAY_MILLIS = 50;
 
     private static List<MyMarkerObj> m;
     private static int index;
@@ -54,7 +61,7 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
     private String imageDate;
     private Button btn_ShareDetails;
     private Button btn_EditDetails;
-
+    private ImageView ivMomentDetails;
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -122,6 +129,7 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
 
         setContentView(R.layout.activity_details_full_screen);
 
+
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
@@ -139,6 +147,7 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
+        findViewById(R.id.tvMomentsTitle).setOnTouchListener(mDelayHideTouchListener);
         findViewById(R.id.tvMomentsDetails).setOnTouchListener(mDelayHideTouchListener);
         findViewById(R.id.btnEditDetails).setOnTouchListener(mDelayHideTouchListener);
         findViewById(R.id.btnShareDetails).setOnTouchListener(mDelayHideTouchListener);
@@ -154,21 +163,23 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             m = data.getMyMarkers(MainActivity.sortOrder);
             m.get(index);
 
-            ImageView ivMomentDetails = (ImageView) findViewById(R.id.ivMomentDetails);
+            ivMomentDetails = (ImageView) findViewById(R.id.ivMomentDetails);
+            TextView tvDetailsTitle = (TextView) findViewById(R.id.tvMomentsTitle);
+            TextView tvDetailsDescr= (TextView) findViewById(R.id.tvMomentsDetails);
 
             MyMarkerObj mmo = m.get(index);
 
             SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
             imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
-            File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+            final File f = new File(mmo.getPath());
 
             MemoryAdapter mem = new MemoryAdapter();
             //Bitmap bmp = mem.decodeFile(f);
 
             String orientation="";
             try {
-                ExifInterface exif = new ExifInterface(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+                ExifInterface exif = new ExifInterface(mmo.getPath());
                 orientation= exif.getAttribute(ExifInterface.TAG_ORIENTATION); // 6 Vertikal, 1 Horizontal
             } catch (IOException e) {
                 e.printStackTrace();
@@ -183,17 +194,54 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
 
             final Point displaySize = getDisplaySize(getWindowManager().getDefaultDisplay());
             final int size = (int) Math.ceil(Math.sqrt(displaySize.x * displaySize.y));
-            Picasso.with(this)
-                    .load(f)
-                    .resize(size, size)
-                    .centerInside()
-                    .into(ivMomentDetails);
+
+
+            Transformation blurTransformation = new Transformation() {
+                @Override
+                public Bitmap transform(Bitmap source) {
+                    Bitmap blurred = Blur.fastblur(getBaseContext(),source,5);
+                    source.recycle();
+                    return blurred;
+                }
+
+                @Override
+                public String key() {
+                    return "blur()";
+                }
+            };
+
+            Picasso.with(this).load(f).resize(100, 100).centerInside().transform(blurTransformation).into(ivMomentDetails, new Callback() {
+                @Override
+                public void onSuccess() {
+                    Picasso.with(getBaseContext())
+                            .load(f)
+                            .resize(size, size)
+                            .centerInside()
+                            .placeholder(ivMomentDetails.getDrawable())
+                            .into(ivMomentDetails);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+
+//            Picasso.with(getBaseContext())
+//                            .load(f)
+//                            .resize(size, size)
+//                            .centerInside()
+//                            .placeholder(R.drawable.cast_mini_controller_progress_drawable)
+//                            .into(ivMomentDetails);
 
 
             //imageView.setImageBitmap(bmp);
 //            textView.setText(mmo.getTitle());
 //            textViewDescr.setText(mmo.getSnippet());
 
+            tvDetailsTitle.setText(mmo.getTitle());
+            tvDetailsDescr.setText(mmo.getSnippet());
+            tvDetailsDescr.setMovementMethod(new ScrollingMovementMethod()); // Dadurch kann man durch die Textview scrollen
             data.updateMarker(mmo);
 
             btn_EditDetails = (Button) findViewById(R.id.btnEditDetails);
@@ -222,6 +270,9 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
 
         }
     }
+
+
+
 
     // https://stackoverflow.com/questions/10271020/bitmap-too-large-to-be-uploaded-into-a-texture
     public Point getDisplaySize(Display display) {

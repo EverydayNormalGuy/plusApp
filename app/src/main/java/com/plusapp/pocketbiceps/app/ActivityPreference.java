@@ -19,15 +19,16 @@ import java.util.prefs.PreferenceChangeListener;
 public class ActivityPreference extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
 
     boolean isDarkTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String theme_key = getString(R.string.preference_key_darktheme);
-        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key, false);
 
-        if(isSetToDarkTheme==true){
+        if (isSetToDarkTheme == true) {
             setTheme(R.style.DarkTheme);
-            isDarkTheme=true;
+            isDarkTheme = true;
         }
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
@@ -36,23 +37,34 @@ public class ActivityPreference extends PreferenceActivity implements Preference
         darkTheme.setOnPreferenceChangeListener(this);
 
 
-        final CheckBoxPreference checkBoxPreference= (CheckBoxPreference) getPreferenceManager().findPreference(getString(R.string.preference_key_darktheme));
+        final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) getPreferenceManager().findPreference(getString(R.string.preference_key_darktheme));
         checkBoxPreference.
                 setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         if (newValue.toString().equals("true")) {
-                            Toast.makeText(getApplicationContext(), "CB: " + "true",
-                                    Toast.LENGTH_SHORT).show();
+
                         } else {
-                            Toast.makeText(getApplicationContext(), "CB: " + "false",
-                                    Toast.LENGTH_SHORT).show();
+
                         }
                         return true;
                     }
                 });
 
+        final CheckBoxPreference checkBoxPreferenceCoverphoto = (CheckBoxPreference) getPreferenceManager().findPreference(getString(R.string.preference_key_coverphoto));
+        checkBoxPreferenceCoverphoto.
+                setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if (newValue.toString().equals("true")) {
 
+                        } else {
+
+                        }
+
+                        return true;
+                    }
+                });
 
     }
 
@@ -60,7 +72,7 @@ public class ActivityPreference extends PreferenceActivity implements Preference
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(ActivityPreference.this,MainActivity.class);
+        Intent i = new Intent(ActivityPreference.this, MainActivity.class);
         startActivity(i);
     }
 

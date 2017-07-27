@@ -75,7 +75,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/editDescription"
                 android:layout_alignParentStart="true"
-                android:id="@+id/btnGetLocation" />
+                android:id="@+id/btnGetLocation"
+                style="?android:buttonBarButtonStyle"
+                android:textColor="#03A9F4" />
 
 
         </RelativeLayout>

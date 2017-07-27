@@ -107,11 +107,10 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 //                mContext.startActivity(intent);
 
 
-                FragmentManager fragmentManager = ((Activity) mContext).getFragmentManager();
-
 
                 Intent intent = new Intent(mContext, ActivityDetailsFullScreen.class);
                 intent.putExtra("index",i);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 mContext.startActivity(intent);
             }
         });
@@ -139,7 +138,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
-        File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+        //File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+        File f = new File(mmo.getPath());
 
         //Picasso uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
         //Context ueber constructor von main activity
