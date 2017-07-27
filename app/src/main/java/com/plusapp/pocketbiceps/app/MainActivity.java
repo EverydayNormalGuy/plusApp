@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -54,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -333,8 +335,17 @@ public class MainActivity extends AppCompatActivity
                 case R.id.fab3:
                     Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     File file = getFile();
-                    camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                    startActivityForResult(camera_intent, CAM_REQUEST);
+                    if(Build.VERSION.SDK_INT>=24){
+                        try{
+                            Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                            m.invoke(null);
+                            camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                            startActivityForResult(camera_intent, CAM_REQUEST);
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+
                     break;
             }
         }
@@ -396,7 +407,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //resume tasks needing this permission
         }
     }

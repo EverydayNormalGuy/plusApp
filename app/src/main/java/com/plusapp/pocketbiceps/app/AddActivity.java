@@ -14,6 +14,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -72,6 +73,9 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
     boolean isDarkTheme;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
     private String galleryPathName;
+    View.OnClickListener sbOnClickListener; // Snackbar OnClickListener
+
+
 
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -135,23 +139,33 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
             @Override
             public void onClick(View v) {
 
-//                if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-//                        != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(AddActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-//                            PERMISSION_ACCESS_COARSE_LOCATION);
-//                }
-//
+                if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(AddActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                            PERMISSION_ACCESS_COARSE_LOCATION);
+                    // Snackbar wird benötigt dass das Android System genug Zeit hat nach der Permissionsabfrage die aktuelle Position zu bekommen.
+                    // Der sbOnClickListener triggert onLocationChanged an, so dass bei betaetigen von Okay die aktuelle Position nochmals abgefragt wird.
+                    Snackbar.make(findViewById(android.R.id.content),"Der Standort wird nur beim Speichern abgefragt",Snackbar.LENGTH_INDEFINITE).setAction("Okay", sbOnClickListener).show();
 
+                }
                 if (ContextCompat.checkSelfPermission(getBaseContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
                     buildGoogleApiClient();
                 }
+
             }
         });
 
-    }
+        sbOnClickListener = new View.OnClickListener(){
 
+            @Override
+            public void onClick(View v) {
+                buildGoogleApiClient();
+            }
+        };
+
+    }
 
     protected synchronized void buildGoogleApiClient() {
         googleApiClient = new GoogleApiClient.Builder(getBaseContext()) //villeicht ohne basecontxt
@@ -175,14 +189,6 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_add) {
 
-//            if (ContextCompat.checkSelfPermission(getBaseContext(),
-//                    Manifest.permission.ACCESS_FINE_LOCATION)
-//                    == PackageManager.PERMISSION_GRANTED) {
-//                buildGoogleApiClient();
-//
-//            }
-
-
             saveAddings();
             return true;
         }
@@ -193,9 +199,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
         return super.onOptionsItemSelected(item);
 
-
     }
-
 
     public void saveAddings() {
 //        if (TextUtils.isEmpty(etTitle.getText().toString().trim())) {
@@ -265,8 +269,5 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         if (googleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         }
-
     }
-
-
 }
