@@ -345,7 +345,10 @@ public class MainActivity extends AppCompatActivity
                             e.printStackTrace();
                         }
                     }
-
+                    else {
+                        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                        startActivityForResult(camera_intent, CAM_REQUEST);
+                    }
                     break;
             }
         }
@@ -630,7 +633,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-            Intent intent = new Intent(MainActivity.this, AddActivity.class);
+            Intent intent = new Intent(MainActivity.this, ActivityGallery.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_send) {

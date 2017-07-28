@@ -44,7 +44,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".DetailsAct_wo_pager"
-            android:label="@string/title_activity_details"></activity>
+            android:label="@string/title_activity_details" />
         <activity
             android:name=".ActivityPreference"
             android:label="@string/title_activity_details"
@@ -54,7 +54,9 @@
             android:name=".ActivityDetailsFullScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_details_full_screen"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".ActivityGallery" />
+        <activity android:name=".ActivitySinglePhoto"></activity>
     </application>
 
 </manifest>

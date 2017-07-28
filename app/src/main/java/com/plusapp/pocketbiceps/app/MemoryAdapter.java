@@ -160,7 +160,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                         dialog.dismiss();
                         m = data.getMyMarkers(MainActivity.sortOrder);
                         updateAdapter(m); //Ruft notify auf
-
                     }
                 })
                 .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
