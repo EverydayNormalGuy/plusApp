@@ -6,6 +6,10 @@ import android.os.Parcelable;
 
 import com.plusapp.pocketbiceps.app.MainActivity;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
+import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+
+import java.lang.reflect.Array;
+import java.util.List;
 
 /**
  * Created by guemuesm on 28.07.2017.
@@ -16,6 +20,8 @@ public class Photo implements Parcelable {
     private static MarkerDataSource data;
     private String mUrl;
     private String mTitle;
+    MyMarkerObj mmo;
+    static List<MyMarkerObj> mList;
 
 
     public Photo(String url, String title) {
@@ -60,18 +66,15 @@ public class Photo implements Parcelable {
 
         data = new MarkerDataSource(context);
         data.open();
-        data.getMyMarkers(MainActivity.sortOrder);
+        mList = data.getMyMarkers(MainActivity.sortOrder);
 
+        Photo temp[] = new Photo[mList.size()];
 
+        for (int i = 0; i < mList.size(); i++){
+            temp[i] = new Photo(mList.get(i).getPath(), mList.get(i).getTitle());
+        }
 
-        return new Photo[]{
-                new Photo("http://i.imgur.com/zuG2bGQ.jpg", "Galaxy"),
-                new Photo("http://i.imgur.com/ovr0NAF.jpg", "Space Shuttle"),
-                new Photo("http://i.imgur.com/n6RfJX2.jpg", "Galaxy Orion"),
-                new Photo("http://i.imgur.com/qpr5LR2.jpg", "Earth"),
-                new Photo("http://i.imgur.com/pSHXfu5.jpg", "Astronaut"),
-                new Photo("http://i.imgur.com/3wQcZeY.jpg", "Satellite"),
-        };
+        return temp;
     }
 
     @Override

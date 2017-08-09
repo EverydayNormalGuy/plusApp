@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,6 +20,7 @@ public class ActivitySinglePhoto extends AppCompatActivity {
     public static final String EXTRA_PHOTO = "ActivitySinglePhoto.PHOTO";
 
     private ImageView mImageView;
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class ActivitySinglePhoto extends AppCompatActivity {
         setContentView(R.layout.activity_single_photo);
 
         mImageView = (ImageView) findViewById(R.id.image);
+        tvTitle = (TextView) findViewById(R.id.singlePhotoTitle);
         Photo photo = getIntent().getParcelableExtra(EXTRA_PHOTO);
 
         Glide.with(this)
@@ -51,12 +54,14 @@ public class ActivitySinglePhoto extends AppCompatActivity {
                     public void onPalette(Palette palette) {
                         if (null != palette) {
                             ViewGroup parent = (ViewGroup) mImageView.getParent().getParent();
-                            parent.setBackgroundColor(palette.getDarkVibrantColor(Color.GRAY));
+//                            parent.setBackgroundColor(palette.getDarkVibrantColor(Color.GRAY)); aendert die Hintergrund farbe
                         }
                     }
                 })
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mImageView);
+
+        tvTitle.setText(photo.getTitle());
 
     }
 

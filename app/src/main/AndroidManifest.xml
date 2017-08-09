@@ -56,7 +56,10 @@
             android:label="@string/title_activity_details_full_screen"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".ActivityGallery" />
-        <activity android:name=".ActivitySinglePhoto"></activity>
+
+        <activity
+            android:name=".ActivitySinglePhoto"
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>
