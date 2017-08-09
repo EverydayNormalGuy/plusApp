@@ -1,12 +1,16 @@
 package com.plusapp.pocketbiceps.app;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,15 +25,27 @@ public class ActivitySinglePhoto extends AppCompatActivity {
 
     private ImageView mImageView;
     private TextView tvTitle;
-
+    boolean isSetToDarkTheme;
+    boolean isDarkTheme;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_key = getString(R.string.preference_key_darktheme);
+        isSetToDarkTheme = sPrefs.getBoolean(theme_key, false);
+
+        if (isSetToDarkTheme == true) {
+            setTheme(R.style.DarkTheme);
+            isDarkTheme = true;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_photo);
 
         mImageView = (ImageView) findViewById(R.id.image);
         tvTitle = (TextView) findViewById(R.id.singlePhotoTitle);
-        Photo photo = getIntent().getParcelableExtra(EXTRA_PHOTO);
+        final Photo photo = getIntent().getParcelableExtra(EXTRA_PHOTO);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress);
+
 
         Glide.with(this)
                 .load(photo.getUrl())
@@ -39,6 +55,7 @@ public class ActivitySinglePhoto extends AppCompatActivity {
 
                     @Override
                     public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
                         return false;
                     }
 
@@ -46,8 +63,9 @@ public class ActivitySinglePhoto extends AppCompatActivity {
                     public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
 
                         onPalette(Palette.from(resource).generate());
+                        progressBar.setVisibility(View.GONE);
                         mImageView.setImageBitmap(resource);
-
+                        tvTitle.setText(photo.getTitle());
                         return false;
                     }
 
@@ -60,8 +78,6 @@ public class ActivitySinglePhoto extends AppCompatActivity {
                 })
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mImageView);
-
-        tvTitle.setText(photo.getTitle());
 
     }
 

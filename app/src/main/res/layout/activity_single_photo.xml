@@ -6,6 +6,8 @@
     android:background="#000000"
     android:orientation="vertical">
 
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +23,11 @@
             android:background="#000000"
             >
 
+            <ProgressBar
+                android:id="@+id/progress"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
             <ImageView
                 android:id="@+id/image"
                 android:background="#000000"
@@ -32,7 +39,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_gravity="bottom"
-                android:text="Bitte Warten.."
                 android:id="@+id/singlePhotoTitle"
                 android:paddingTop="8dp"
                 android:paddingLeft="18dp"
