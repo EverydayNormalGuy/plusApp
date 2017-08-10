@@ -73,6 +73,7 @@ public class ActivityPreference extends PreferenceActivity implements Preference
     public void onBackPressed() {
         super.onBackPressed();
         Intent i = new Intent(ActivityPreference.this, MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
 

@@ -118,6 +118,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         if (this.galleryPathName != null){
              f = new File(galleryPathName);
             this.dbPath = galleryPathName;
+            String asd = dbPath;
         }
 
         memAdapter = new MemoryAdapter();

@@ -7,11 +7,15 @@
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
             app:actionLayout="@layout/nav_moments_counter"
-            android:title="Listenansicht" />
+            android:title="Anzahl der Momente" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery öffnen" />
+            android:title="Von Gallery importieren" />
+        <item
+            android:id="@+id/nav_moments_gallery"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Alle Moments anzeigen" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/karten48"
@@ -27,11 +31,11 @@
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Teilen" />
+                android:title="Kontakt" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Implressum" />
+                android:title="Impressum" />
         </menu>
     </item>
 

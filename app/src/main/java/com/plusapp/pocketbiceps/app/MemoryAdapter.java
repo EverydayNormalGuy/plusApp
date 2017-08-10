@@ -96,7 +96,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             public void onClick(View v) {
 
                 Bundle args = new Bundle();
-                args.putLong("Details_Id", mmo.getTimestamp());
+                args.putString("Details_Id", mmo.getPath());
                 notifyDataSetChanged();
 
                 //Da es eine Non Act. Klasse ist muss der Context weitergegeben werden
@@ -118,10 +118,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         memoryViewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, ""+mmo.getTimestamp(), Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(mContext, ""+mmo.getPath()+""+mmo.getTimestamp(), Toast.LENGTH_SHORT).show();
                 showDeleteDialog();
-
 
             }
         });
@@ -160,6 +158,10 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                         dialog.dismiss();
                         m = data.getMyMarkers(MainActivity.sortOrder);
                         updateAdapter(m); //Ruft notify auf
+                        
+//                        Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
+//                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                        mContext.startActivity(i);
                     }
                 })
                 .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
