@@ -139,7 +139,7 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             setTheme(R.style.DarkTheme);
             isDarkTheme = true;
         }
-        
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_full_screen);
 

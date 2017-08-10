@@ -2,6 +2,8 @@ package com.plusapp.pocketbiceps.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,8 +18,18 @@ import com.plusapp.pocketbiceps.app.helperclasses.Photo;
 
 public class ActivityGallery extends AppCompatActivity {
 
+    boolean isSetToDarkTheme;
+    boolean isDarkTheme;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_key = getString(R.string.preference_key_darktheme);
+        isSetToDarkTheme = sPrefs.getBoolean(theme_key, false);
+
+        if (isSetToDarkTheme == true) {
+            setTheme(R.style.DarkTheme);
+            isDarkTheme = true;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
@@ -81,8 +93,9 @@ public class ActivityGallery extends AppCompatActivity {
                 if(position != RecyclerView.NO_POSITION) {
                     Photo photo = mPhotos[position];
 
-                    Intent intent = new Intent(mContext, ActivitySinglePhoto.class);
-                    intent.putExtra(ActivitySinglePhoto.EXTRA_PHOTO, photo);
+                    Intent intent = new Intent(mContext, ActivityImageSlider.class);
+                    intent.putExtra(ActivityImageSlider.EXTRA_PHOTO, photo);
+                    intent.putExtra("position", position);
                     startActivity(intent);
                 }
             }
