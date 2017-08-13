@@ -1,91 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fitsSystemWindows="true">
 
 
-
-
-        <RelativeLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:theme="?attr/actionBarTheme"
-                android:minHeight="?attr/actionBarSize"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/toolbar2"/>
+                android:layout_height="0dp"
+                android:layout_weight="0.5">
 
-            <ImageView
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:background="?attr/colorPrimary"
+                    android:minHeight="?attr/actionBarSize"
+                    android:theme="?attr/actionBarTheme" />
+
+                <ImageView
+                    android:id="@+id/ivAddImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/toolbar2"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/cast_album_art_placeholder" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/ivAddImage"
-                android:adjustViewBounds="true"
-                android:src="@drawable/cast_album_art_placeholder"
-                android:layout_below="@+id/toolbar2"
-                android:layout_alignParentEnd="true" />
+                android:layout_height="0dp"
+                android:layout_weight="0.5">
 
-        </RelativeLayout>
+                <EditText
+                    android:id="@+id/editDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/editTitle"
+                    android:ems="10"
+                    android:hint="Beschreibung?"
+                    android:inputType="textMultiLine"
+                    android:maxLines="6" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5">
+                <EditText
+                    android:id="@+id/editTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:ems="10"
+                    android:hint="Titel?"
+                    android:inputType="textPersonName" />
 
-            <EditText
-                android:id="@+id/editDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/editTitle"
-                android:ems="10"
-                android:hint="Beschreibung?"
-                android:inputType="textMultiLine"
-                android:maxLines="6" />
-
-            <EditText
-                android:id="@+id/editTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Titel?"
-                android:inputType="textPersonName"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true" />
-
-            <Button
-                android:text="Get Location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editDescription"
-                android:layout_alignParentStart="true"
-                android:id="@+id/btnGetLocation"
-                style="?android:buttonBarButtonStyle"
-                android:textColor="#03A9F4" />
+                <Button
+                    android:id="@+id/btnGetLocation"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editDescription"
+                    android:gravity="right"
+                    android:text="Standort speichern"
+                    android:textColor="#03A9F4"
+                    android:layout_alignParentEnd="true" />
 
 
-        </RelativeLayout>
+            </RelativeLayout>
 
 
-    </LinearLayout>
+        </LinearLayout>
 
 
+    </ScrollView>
 
-</ScrollView>
-
+</LinearLayout>

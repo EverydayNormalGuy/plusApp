@@ -195,7 +195,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         }
         if (id == R.id.delete_add) {
             finish();
-            Toast.makeText(getApplicationContext(), "Gelöscht", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Abgebrochen..", Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);

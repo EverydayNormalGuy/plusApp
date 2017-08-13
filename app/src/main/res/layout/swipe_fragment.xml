@@ -21,16 +21,5 @@
         android:layout_gravity="center_vertical"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_gravity="bottom"
-        android:layout_below="@+id/ivSlider"
-        android:id="@+id/tvSliderTitle"
-        android:paddingTop="8dp"
-        android:paddingLeft="18dp"
-        android:scrollbars="vertical"
-        android:layout_height="wrap_content"
-        android:textSize="18dp"
-        android:textColor="#ffffff"/>
 
 </RelativeLayout>

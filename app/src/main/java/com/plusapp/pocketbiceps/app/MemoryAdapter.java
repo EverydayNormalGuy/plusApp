@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +90,25 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         memoryViewHolder.vDescription.setText(mmo.getSnippet());
         memoryViewHolder.vCounter.setText("[ "+String.valueOf(mmo.getCounter())+" ]");
 
+        // Sorge fuer eine dynamische Darstellung der Cardview, je nach dem ob Titel oder Beschreibungen vorhanden sind oder nicht
+        if (mmo.getTitle().equals("") && mmo.getSnippet().equals("")){
+            memoryViewHolder.vTitle.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) memoryViewHolder.btnDelete.getLayoutParams();
+            params.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) memoryViewHolder.btnEdit.getLayoutParams();
+            params2.addRule(RelativeLayout.BELOW, R.id.cvImage);
+        }
+
+        else if (mmo.getTitle().equals("")){
+            memoryViewHolder.vTitle.setVisibility(View.GONE);
+        }
+        else if (mmo.getSnippet().equals("")){
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) memoryViewHolder.btnDelete.getLayoutParams();
+            params.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) memoryViewHolder.btnEdit.getLayoutParams();
+            params2.addRule(RelativeLayout.BELOW, R.id.cvImage);
+        }
+
 
 
         memoryViewHolder.mem.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +126,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 //                intent.putExtra("index",i);
 //                mContext.startActivity(intent);
 
-
+//                Toast.makeText(mContext, ""+mmo.getPath(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(mContext, ActivityDetailsFullScreen.class);
                 intent.putExtra("index",i);
@@ -115,16 +135,15 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             }
         });
 
+
         memoryViewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, ""+mmo.getPath()+""+mmo.getTimestamp(), Toast.LENGTH_SHORT).show();
-                showDeleteDialog();
-
+                // muss dringend mit m.get(i) gemacht werden damit beim loeschen das richtige Element geloescht wird und nicht das letzte in der Liste
+                mmo = m.get(i);
+                showDeleteDialog(mmo);
             }
         });
-
-
 
         //Konvertiert LongDate aus der DB in eine normale Date View
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -146,7 +165,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
     }
 
-    private void showDeleteDialog() {
+    private void showDeleteDialog(final MyMarkerObj mmo) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage("Diesen Eintrag löschen?")
                 .setCancelable(false)

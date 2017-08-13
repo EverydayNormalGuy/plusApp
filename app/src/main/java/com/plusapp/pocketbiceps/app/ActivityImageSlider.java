@@ -102,7 +102,6 @@ public class ActivityImageSlider extends FragmentActivity {
                                  Bundle savedInstanceState){
             View swipeView = inflater.inflate(R.layout.swipe_fragment, container, false);
             final ImageView ivSlider = (ImageView) swipeView.findViewById(R.id.ivSlider);
-            final TextView tvSliderTitle = (TextView) swipeView.findViewById(R.id.tvSliderTitle);
             Bundle bundle = getArguments();
             final int position = bundle.getInt("position");
 
@@ -126,7 +125,6 @@ public class ActivityImageSlider extends FragmentActivity {
                             progressBar.setVisibility(View.GONE);
                             onPalette(Palette.from(resource).generate());
                             ivSlider.setImageBitmap(resource);
-                            tvSliderTitle.setText(temp[position].getTitle());
                             return false;
                         }
 

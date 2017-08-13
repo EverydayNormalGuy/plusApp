@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +50,7 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
-    private static final boolean AUTO_HIDE = true;
+    private static final boolean AUTO_HIDE = false;
 
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
@@ -67,6 +68,9 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
     private Button btn_ShareDetails;
     private Button btn_EditDetails;
     private ImageView ivMomentDetails;
+    private View separatorLine;
+    private LinearLayout bottomLayout;
+    public MyMarkerObj mmo;
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -101,7 +105,16 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.show();
             }
-            mControlsView.setVisibility(View.VISIBLE);
+
+            // Versteckt das LinearLayout vom Titel und der Beschreibung wenn der Titel leer ist
+            if (mmo.getTitle().equals("") && mmo.getSnippet().equals("")){
+                separatorLine.setVisibility(View.GONE);
+                mControlsView.setVisibility(View.GONE);
+            }
+            else {
+                mControlsView.setVisibility(View.VISIBLE);
+            }
+//            mControlsView.setVisibility(View.VISIBLE);
             mControlsViewTop.setVisibility(View.VISIBLE);
         }
     };
@@ -179,8 +192,10 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             ivMomentDetails = (ImageView) findViewById(R.id.ivMomentDetails);
             TextView tvDetailsTitle = (TextView) findViewById(R.id.tvMomentsTitle);
             TextView tvDetailsDescr= (TextView) findViewById(R.id.tvMomentsDetails);
+            separatorLine = findViewById(R.id.separatorLine);
+//            bottomLayout = (LinearLayout) findViewById(R.id.fullscreen_content_controls);
 
-            MyMarkerObj mmo = m.get(index);
+            mmo = m.get(index);
 
             SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
             imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
@@ -256,6 +271,13 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
 
             tvDetailsTitle.setText(mmo.getTitle());
             tvDetailsDescr.setText(mmo.getSnippet());
+
+            // Laesst die separator linie verschwinden wenn nichts im Titel drin steht
+//            if (mmo.getTitle().equals("")){
+//                separatorLine.setVisibility(View.GONE);
+//                mControlsView.setVisibility(View.GONE);
+//                Toast.makeText(this, "gone", Toast.LENGTH_SHORT).show();
+//            }
             tvDetailsDescr.setMovementMethod(new ScrollingMovementMethod()); // Dadurch kann man durch die Textview scrollen
             data.updateMarker(mmo);
 
@@ -272,8 +294,9 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             btn_ShareDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri uri = Uri.parse("file://" + "/" + MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
+//                    Uri uri = Uri.parse("file://" + "/" + MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
 
+                    Uri uri = Uri.parse("file://" + "/" + mmo.getPath());
                     Intent share = new Intent(Intent.ACTION_SEND);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                     share.setType("image/*");
@@ -315,6 +338,7 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             hide();
         } else {
             show();
+
         }
     }
 
