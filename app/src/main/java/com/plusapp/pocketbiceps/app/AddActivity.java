@@ -266,7 +266,6 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         dbLati = String.valueOf(location.getLatitude());
         dbLongi = String.valueOf(location.getLongitude());
 
-        Toast.makeText(this, "bl" + location.getLatitude() + "  " + location.getLongitude(), Toast.LENGTH_LONG).show();
         if (googleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         }

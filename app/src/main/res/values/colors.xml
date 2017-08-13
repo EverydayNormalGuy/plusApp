@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorCardViewBlue">#03A9F4</color>
-
+    <color name="colorGold">#C8A262</color>
     <color name="black_overlay">#66000000</color>
 </resources>

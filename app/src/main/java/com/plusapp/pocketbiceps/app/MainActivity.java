@@ -102,6 +102,10 @@ public class MainActivity extends AppCompatActivity
 
     public MyMarkerObj mmoForCache;
 
+
+    View headNavView;
+    ImageView nav_image_head;
+
     public Target bmpHeaderTarget;
 
     SharedPreferences sp;
@@ -218,6 +222,16 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        headNavView = navigationView.getHeaderView(0);
+        nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+
+        if (isDarkTheme){
+            nav_image_head.setImageResource(R.drawable.logoblackgold);
+        }
+        else {
+            nav_image_head.setImageResource(R.drawable.logoblackwhite);
+        }
+
 
         if (isSettoCoverPhoto == true) {
 
@@ -242,9 +256,9 @@ public class MainActivity extends AppCompatActivity
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         bmp = bitmap;
 
-                        View headNavView = navigationView.getHeaderView(0);
-
-                        ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+//                        headNavView = navigationView.getHeaderView(0);
+//
+//                        nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
 
                         // Setzt das Bild in den NavHeader wenn bmp not null ist
                         if (bmp != null) {
@@ -552,12 +566,12 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm = getFragmentManager();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-//
-//        if (id == R.id.nav_camera) {
-//            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-//            startActivity(intent);
-//        } else
-        if (id == R.id.nav_gallery) {
+
+        if (id == R.id.nav_camera) {
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_gallery) {
 
 //            Intent i = new Intent(Intent.ACTION_PICK);
 //            i.setType("image/*");

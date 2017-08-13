@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
+import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -88,7 +90,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         // Setzt die Werte aus der Datenbank in die CardView Felder
         memoryViewHolder.vTitle.setText(mmo.getTitle());
         memoryViewHolder.vDescription.setText(mmo.getSnippet());
-        memoryViewHolder.vCounter.setText("[ "+String.valueOf(mmo.getCounter())+" ]");
+        memoryViewHolder.vCounter.setText(String.valueOf(mmo.getCounter()));
 
         // Sorge fuer eine dynamische Darstellung der Cardview, je nach dem ob Titel oder Beschreibungen vorhanden sind oder nicht
         if (mmo.getTitle().equals("") && mmo.getSnippet().equals("")){
@@ -203,6 +205,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     // TODO: decodeFile() in der AddActivity mit Picasso ersetzen
     public Bitmap decodeFile(File bmpFile){
         try {
+
             //Decode Image size
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inJustDecodeBounds = true;
@@ -222,13 +225,15 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             //Decode mit inSampleFile
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
-            return BitmapFactory.decodeStream(new FileInputStream(bmpFile),null,o2);
 
+            return BitmapFactory.decodeStream(new FileInputStream(bmpFile),null,o2);
 
 
         }
 
-        catch (FileNotFoundException e){}
+        catch (FileNotFoundException e){} catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }
