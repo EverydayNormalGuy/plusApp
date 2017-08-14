@@ -100,6 +100,11 @@ public class MainActivity extends AppCompatActivity
     boolean isCoverPhoto;
     boolean isSettoCoverPhoto;
 
+    public MyMarkerObj mmoForCache;
+
+
+    View headNavView;
+    ImageView nav_image_head;
 
     public Target bmpHeaderTarget;
 
@@ -217,6 +222,16 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        headNavView = navigationView.getHeaderView(0);
+        nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+
+        if (isDarkTheme){
+            nav_image_head.setImageResource(R.drawable.logoblackgold);
+        }
+        else {
+            nav_image_head.setImageResource(R.drawable.logoblackwhite);
+        }
+
 
         if (isSettoCoverPhoto == true) {
 
@@ -241,9 +256,9 @@ public class MainActivity extends AppCompatActivity
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         bmp = bitmap;
 
-                        View headNavView = navigationView.getHeaderView(0);
-
-                        ImageView nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
+//                        headNavView = navigationView.getHeaderView(0);
+//
+//                        nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
 
                         // Setzt das Bild in den NavHeader wenn bmp not null ist
                         if (bmp != null) {
@@ -267,14 +282,15 @@ public class MainActivity extends AppCompatActivity
                 isCoverPhoto = true;
 
             }
-            momentsCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
-            //This method will initialize the count value
-            initializeCountDrawer();
-
-            FragmentManager fm = getFragmentManager();
-            fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
 
         }
+        momentsCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
+        //This method will initialize the count value
+        initializeCountDrawer();
+
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
+
     }
 
 
@@ -305,31 +321,20 @@ public class MainActivity extends AppCompatActivity
                     break;
 
                 case R.id.fab2:
-                    //fab2.setVisibility(View.GONE);
-//                    Calendar calendar = Calendar.getInstance();
-//                    calendar.set(Calendar.HOUR_OF_DAY,20);
-////                    calendar.set(Calendar.MINUTE,8);
-//                    Intent intent = new Intent(getApplicationContext(),NotificationReceiver.class);
-////                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),100,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-////                    AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-////                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),alarmManager.INTERVAL_DAY,pendingIntent);
-//
-//                    Toast.makeText(getBaseContext(), "Service startet", Toast.LENGTH_SHORT).show();
 
-//                    int j = createList2().size();
-//                    List<MyMarkerObj> listNotifi = createList2();
-//                    for (int x = 0 ; x < j;x++){
-//
-//                        MyMarkerObj mmoNotify = listNotifi.get(x);
-//                        mmoNotify.getTimestamp();
-//
-//                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), (int) mmoNotify.getTimestamp(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
-//                        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-//                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,mmoNotify.getTimestamp(),getDuration(mmoNotify.getTimestamp()),pendingIntent);
-//
-//
-//                    }
+                    FragmentManager fm = getFragmentManager();
 
+                    fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
+
+
+
+                    // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
+                    if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                PERMISSION_ACCESS_COARSE_LOCATION);
+                    }
+                    fab_Menu.toggle(true);
 
                     break;
                 case R.id.fab3:
@@ -345,44 +350,14 @@ public class MainActivity extends AppCompatActivity
                             e.printStackTrace();
                         }
                     }
-
+                    else {
+                        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                        startActivityForResult(camera_intent, CAM_REQUEST);
+                    }
                     break;
             }
         }
     };
-
-    private long getDuration(long timestamp) {
-        // get todays date
-        Calendar cal = Calendar.getInstance();
-        // get current month
-        cal.setTimeInMillis(timestamp);
-        int currentMonth = cal.get(Calendar.MONTH);
-
-        // move month ahead
-        currentMonth++;
-        // check if has not exceeded threshold of december
-
-        if (currentMonth > Calendar.DECEMBER) {
-            // alright, reset month to jan and forward year by 1 e.g fro 2013 to 2014
-            currentMonth = Calendar.JANUARY;
-            // Move year ahead as well
-            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
-        }
-
-        // reset calendar to next month
-        cal.set(Calendar.MONTH, currentMonth);
-        // get the maximum possible days in this month
-        int maximumDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-        // set the calendar to maximum day (e.g in case of fEB 28th, or leap 29th)
-        cal.set(Calendar.DAY_OF_MONTH, maximumDay);
-        long thenTime = cal.getTimeInMillis(); // this is time one month ahead
-
-
-        return (thenTime); // this is what you set as trigger point time i.e one month after
-
-    }
-
 
     /**
      * Aktualisiert die Listview. Die SP von sortDialog werden hiern nochmal
@@ -550,6 +525,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -564,12 +540,12 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent i = new Intent(this, ActivityPreference.class);
-            startActivity(i);
-            return true;
-        }
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            Intent i = new Intent(this, ActivityPreference.class);
+//            startActivity(i);
+//            return true;
+//        }
         if (id == R.id.menu_sort) {
             showSortDialog();
 
@@ -596,17 +572,18 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
-
-//            Intent i = new Intent(Intent.ACTION_PICK);
-//            i.setType("image/*");
-//            startActivity(i);
+        }
+        else if (id == R.id.nav_gallery) {
 
             // Create intent to Open Image applications like Gallery, Google Photos
             Intent galleryIntent = new Intent(Intent.ACTION_PICK);
             galleryIntent.setType("image/*");
             startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+//            galleryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+        } else if (id == R.id.nav_moments_gallery){
+            Intent intent = new Intent(MainActivity.this, ActivityGallery.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -622,21 +599,18 @@ public class MainActivity extends AppCompatActivity
                         PERMISSION_ACCESS_COARSE_LOCATION);
             }
 
-            Toast.makeText(getBaseContext(), "Map staretet", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Map startet", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(MainActivity.this, AddActivity.class);
+            Intent intent = new Intent(MainActivity.this, ActivityPreference.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
-
-            Intent intent = new Intent(MainActivity.this, AddActivity.class);
-            startActivity(intent);
+            Toast.makeText(getBaseContext(), "In Arbeit..", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_send) {
-
+            Toast.makeText(getBaseContext(), "In Arbeit..", Toast.LENGTH_SHORT).show();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

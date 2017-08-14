@@ -46,8 +46,8 @@
             android:layout_marginBottom="8dp"
             android:maxLines="2"
             android:paddingLeft="16dp"
-            android:paddingTop="16dp"
             android:paddingRight="16dp"
+            android:paddingTop="16dp"
             android:text="Random Text Blah Blah Blah"
             android:textSize="16dp" />
 
@@ -82,6 +82,15 @@
             android:text="TextView"
             android:textColor="#fff" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:src="@drawable/ic_eye"
+            android:layout_alignBottom="@+id/tvCounter"
+            android:layout_toStartOf="@+id/tvCounter"
+            android:layout_marginBottom="10dp" />
+
         <TextView
             android:id="@+id/tvCounter"
             android:layout_width="wrap_content"
@@ -89,11 +98,11 @@
             android:layout_alignBaseline="@+id/btnEdit"
             android:layout_alignBottom="@+id/btnEdit"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="29dp"
+            android:layout_marginEnd="8dp"
             android:gravity="center"
+            style="?android:buttonBarButtonStyle"
             android:text="TextView"
             android:textColor="#03A9F4"
-            android:textSize="16sp"
             tools:background="#ffffff" />
 
     </RelativeLayout>

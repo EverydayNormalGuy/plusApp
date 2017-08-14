@@ -118,6 +118,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         if (this.galleryPathName != null){
              f = new File(galleryPathName);
             this.dbPath = galleryPathName;
+            String asd = dbPath;
         }
 
         memAdapter = new MemoryAdapter();
@@ -194,7 +195,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         }
         if (id == R.id.delete_add) {
             finish();
-            Toast.makeText(getApplicationContext(), "Gelöscht", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Abgebrochen..", Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -265,7 +266,6 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         dbLati = String.valueOf(location.getLatitude());
         dbLongi = String.valueOf(location.getLongitude());
 
-        Toast.makeText(this, "bl" + location.getLatitude() + "  " + location.getLongitude(), Toast.LENGTH_LONG).show();
         if (googleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         }

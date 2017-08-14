@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
+import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -82,31 +85,36 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     public void onBindViewHolder(final MemoryViewHolder memoryViewHolder, final int i) {
 
 
-
          mmo = m.get(i);
         // Setzt die Werte aus der Datenbank in die CardView Felder
         memoryViewHolder.vTitle.setText(mmo.getTitle());
         memoryViewHolder.vDescription.setText(mmo.getSnippet());
-        memoryViewHolder.vCounter.setText("[ "+String.valueOf(mmo.getCounter())+" ]");
+        memoryViewHolder.vCounter.setText(String.valueOf(mmo.getCounter()));
+
+        // Sorge fuer eine dynamische Darstellung der Cardview, je nach dem ob Titel oder Beschreibungen vorhanden sind oder nicht
+        if (mmo.getTitle().equals("") && mmo.getSnippet().equals("")){
+            memoryViewHolder.vTitle.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) memoryViewHolder.btnDelete.getLayoutParams();
+            params.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) memoryViewHolder.btnEdit.getLayoutParams();
+            params2.addRule(RelativeLayout.BELOW, R.id.cvImage);
+        }
+
+        else if (mmo.getTitle().equals("")){
+            memoryViewHolder.vTitle.setVisibility(View.GONE);
+        }
+        else if (mmo.getSnippet().equals("")){
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) memoryViewHolder.btnDelete.getLayoutParams();
+            params.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) memoryViewHolder.btnEdit.getLayoutParams();
+            params2.addRule(RelativeLayout.BELOW, R.id.cvImage);
+        }
 
 
 
         memoryViewHolder.mem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Bundle args = new Bundle();
-                args.putLong("Details_Id", mmo.getTimestamp());
-                notifyDataSetChanged();
-
-                //Da es eine Non Act. Klasse ist muss der Context weitergegeben werden
-                //Intent intent =new Intent(mContext,DetailsActivity.class);
-                //TODO: hier wurde intent auskommentiert
-//                Intent intent = new Intent(mContext, DetailsAct_wo_pager.class);
-//                intent.putExtra("index",i);
-//                mContext.startActivity(intent);
-
-
 
                 Intent intent = new Intent(mContext, ActivityDetailsFullScreen.class);
                 intent.putExtra("index",i);
@@ -115,18 +123,25 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             }
         });
 
+
         memoryViewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, ""+mmo.getTimestamp(), Toast.LENGTH_SHORT).show();
-
-                showDeleteDialog();
-
-
+                // muss dringend mit m.get(i) gemacht werden damit beim loeschen das richtige Element geloescht wird und nicht das letzte in der Liste
+                mmo = m.get(i);
+                showDeleteDialog(mmo);
             }
         });
 
-
+        memoryViewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ActivityEdit.class);
+                intent.putExtra("index", i);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                mContext.startActivity(intent);
+            }
+        });
 
         //Konvertiert LongDate aus der DB in eine normale Date View
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -139,6 +154,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
         //File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+
         File f = new File(mmo.getPath());
 
         //Picasso uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
@@ -148,7 +164,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
     }
 
-    private void showDeleteDialog() {
+    private void showDeleteDialog(final MyMarkerObj mmo) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage("Diesen Eintrag löschen?")
                 .setCancelable(false)
@@ -161,6 +177,9 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                         m = data.getMyMarkers(MainActivity.sortOrder);
                         updateAdapter(m); //Ruft notify auf
 
+                        Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        mContext.startActivity(i);
                     }
                 })
                 .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
@@ -183,6 +202,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     // TODO: decodeFile() in der AddActivity mit Picasso ersetzen
     public Bitmap decodeFile(File bmpFile){
         try {
+
             //Decode Image size
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inJustDecodeBounds = true;
@@ -202,13 +222,15 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             //Decode mit inSampleFile
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
-            return BitmapFactory.decodeStream(new FileInputStream(bmpFile),null,o2);
 
+            return BitmapFactory.decodeStream(new FileInputStream(bmpFile),null,o2);
 
 
         }
 
-        catch (FileNotFoundException e){}
+        catch (FileNotFoundException e){} catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }
