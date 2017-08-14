@@ -85,7 +85,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     public void onBindViewHolder(final MemoryViewHolder memoryViewHolder, final int i) {
 
 
-
          mmo = m.get(i);
         // Setzt die Werte aus der Datenbank in die CardView Felder
         memoryViewHolder.vTitle.setText(mmo.getTitle());
@@ -117,19 +116,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             @Override
             public void onClick(View v) {
 
-                Bundle args = new Bundle();
-                args.putString("Details_Id", mmo.getPath());
-                notifyDataSetChanged();
-
-                //Da es eine Non Act. Klasse ist muss der Context weitergegeben werden
-                //Intent intent =new Intent(mContext,DetailsActivity.class);
-                //TODO: hier wurde intent auskommentiert
-//                Intent intent = new Intent(mContext, DetailsAct_wo_pager.class);
-//                intent.putExtra("index",i);
-//                mContext.startActivity(intent);
-
-//                Toast.makeText(mContext, ""+mmo.getPath(), Toast.LENGTH_SHORT).show();
-
                 Intent intent = new Intent(mContext, ActivityDetailsFullScreen.class);
                 intent.putExtra("index",i);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -147,6 +133,16 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             }
         });
 
+        memoryViewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ActivityEdit.class);
+                intent.putExtra("index", i);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                mContext.startActivity(intent);
+            }
+        });
+
         //Konvertiert LongDate aus der DB in eine normale Date View
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String readablyDate = formatter.format(new Date(mmo.getTimestamp()));
@@ -158,6 +154,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
         //File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
+
         File f = new File(mmo.getPath());
 
         //Picasso uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
@@ -179,10 +176,10 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                         dialog.dismiss();
                         m = data.getMyMarkers(MainActivity.sortOrder);
                         updateAdapter(m); //Ruft notify auf
-                        
-//                        Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
-//                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//                        mContext.startActivity(i);
+
+                        Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        mContext.startActivity(i);
                     }
                 })
                 .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {

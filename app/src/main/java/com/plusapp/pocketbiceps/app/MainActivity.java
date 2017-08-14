@@ -324,7 +324,9 @@ public class MainActivity extends AppCompatActivity
 
                     FragmentManager fm = getFragmentManager();
 
-                    fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).addToBackStack(null).commit();
+                    fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
+
+
 
                     // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
                     if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -572,10 +574,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         else if (id == R.id.nav_gallery) {
-
-//            Intent i = new Intent(Intent.ACTION_PICK);
-//            i.setType("image/*");
-//            startActivity(i);
 
             // Create intent to Open Image applications like Gallery, Google Photos
             Intent galleryIntent = new Intent(Intent.ACTION_PICK);
