@@ -7,12 +7,14 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,6 +57,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     private List<MyMarkerObj> m;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     private Context mContext;
+    boolean isShowDate;
+    boolean isSetToShowDate;
     public MemoryAdapter(){
 
     }
@@ -83,6 +87,11 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(final MemoryViewHolder memoryViewHolder, final int i) {
+
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String theme_key = mContext.getString(R.string.preference_key_showdate);
+        isSetToShowDate = sPrefs.getBoolean(theme_key, true);
+
 
 
          mmo = m.get(i);
@@ -146,21 +155,22 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         //Konvertiert LongDate aus der DB in eine normale Date View
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String readablyDate = formatter.format(new Date(mmo.getTimestamp()));
-        memoryViewHolder.vDate.setText(readablyDate);
+        if (isSetToShowDate == true) {
+            memoryViewHolder.vDate.setText(readablyDate);
+            isShowDate = true;
+        }
 
 
         //Timestamp zum suchen von Bildern aus dem Storage
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
-        //File f = new File(MainActivity.IMAGE_PATH_URI+IMAGE_NAME_PREFIX+imageDate+".jpg");
 
         File f = new File(mmo.getPath());
 
         //Picasso uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
         //Context ueber constructor von main activity
         Picasso.with(mContext).load(f).resize(1080,1080).centerCrop().into(memoryViewHolder.vImage);
-
 
     }
 
@@ -178,7 +188,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                         updateAdapter(m); //Ruft notify auf
 
                         Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         mContext.startActivity(i);
                     }
                 })
@@ -198,8 +208,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
 
     // Decodes ImageFile und skalliert es um den Speicher zu entlasten
-    // Wird nur noch in der AddActivity benutzt um das Bild in der Imageview anzuzeigen
-    // TODO: decodeFile() in der AddActivity mit Picasso ersetzen
+    // Wird nur noch fuer die Marker in der Gmaps benutzt um das Bild anzuzeigen
     public Bitmap decodeFile(File bmpFile){
         try {
 

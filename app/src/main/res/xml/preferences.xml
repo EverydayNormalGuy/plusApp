@@ -15,6 +15,12 @@
             android:key="@string/preference_key_coverphoto"
             android:summary="@string/preference_description_coverphoto"
             android:title="@string/preference_title_coverphoto" />
+        <CheckBoxPreference
+            android:key="@string/preference_key_showdate"
+            android:summary="@string/preference_description_showdate"
+            android:title="@string/preference_title_showdate"
+            android:defaultValue="true"/>
+
     </PreferenceCategory>
 
 

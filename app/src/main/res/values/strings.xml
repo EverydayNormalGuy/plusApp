@@ -22,6 +22,9 @@
     <string name="preference_key_coverphoto">coverphoto</string>
     <string name="preference_description_coverphoto">Das zuletzt gemachte Foto wird im Seitenmenü angezeigt</string>
     <string name="preference_title_coverphoto">Foto im Seitenmenü anzeigen</string>
+    <string name="preference_title_showdate">Datum anzeigen</string>
+    <string name="preference_description_showdate">Zu jedem Moment, das Datum anzeigen</string>
+    <string name="preference_key_showdate">showdate</string>
 
 
     <string-array name="sortDialog">
