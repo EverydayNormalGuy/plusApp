@@ -39,10 +39,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -51,6 +56,7 @@ import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
+import com.plusapp.pocketbiceps.app.helperclasses.ViewTargets;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -144,6 +150,10 @@ public class MainActivity extends AppCompatActivity
         sp = getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
         sortOrder = sp.getInt("sort_mode", 0);
 
+
+
+
+
         //Permissions Abfragen
         isStoragePermissionGranted();
         grantLocationPermission();
@@ -168,6 +178,56 @@ public class MainActivity extends AppCompatActivity
         // An den MemoryAdapter wird Liste an den Konstruktor weitergegeben
         this.ca = new MemoryAdapter(createList2(), this);
         this.recList.setAdapter(ca);
+
+
+        com.github.amlcurran.showcaseview.targets.Target target2 = new ViewTarget(R.id.fab_menu,this);
+
+
+        /*
+        Hier kommt spaeter das tutorial rein bzw. sollte in eine eigene methode ausgelagert werden
+         */
+
+//        fab_Menu.toggle(true);
+
+
+//        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//// This aligns button to the bottom left side of screen
+//        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//        lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//// Set margins to the button, we add 16dp margins here
+//        int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
+//        lps.setMargins(margin, margin, margin, margin);
+//
+//
+//        ShowcaseView sv = new ShowcaseView.Builder(this)
+//                .setTarget(target2)
+//                .setContentTitle("ShowcaseView")
+//                .setContentText("This is highlighting the Home button")
+//                .setStyle(R.style.CustomShowcaseTheme2)
+//                .hideOnTouchOutside()
+//                .singleShot(4211)
+//                .build();
+//
+//        sv.show();
+
+
+//
+//        sv.setButtonPosition(lps);
+
+        // Fuer den NavigationDrawer Button
+//        try {
+//            ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
+//            new ShowcaseView.Builder(this)
+//                    .withMaterialShowcase()
+//                    .setTarget(navigationButtonViewTarget)
+//                    .setStyle(R.style.CustomShowcaseTheme2)
+//                    .setContentText("Here's how to highlight items on a toolbar")
+//                    .build()
+//                    .show();
+//        } catch (ViewTargets.MissingViewException e) {
+//            e.printStackTrace();
+//        }
+
 
 
         /*
