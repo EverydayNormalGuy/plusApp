@@ -68,7 +68,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private GoogleApiClient googleApiClient;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
@@ -85,6 +85,9 @@ public class MainActivity extends AppCompatActivity
 
     public Bitmap bmp;
     public NavigationView navigationView;
+
+    private int counterTut = 0;
+    ShowcaseView sv;
 
     RecyclerView recList;
 
@@ -119,6 +122,7 @@ public class MainActivity extends AppCompatActivity
 
     private static int RESULT_LOAD_IMG = 2;
     String imgDecodableString;
+    Toolbar toolbar;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -143,7 +147,7 @@ public class MainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -180,54 +184,13 @@ public class MainActivity extends AppCompatActivity
         this.recList.setAdapter(ca);
 
 
-        com.github.amlcurran.showcaseview.targets.Target target2 = new ViewTarget(R.id.fab_menu,this);
-
-
-        /*
-        Hier kommt spaeter das tutorial rein bzw. sollte in eine eigene methode ausgelagert werden
-         */
-
-//        fab_Menu.toggle(true);
-
-
-//        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//// This aligns button to the bottom left side of screen
-//        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//        lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//// Set margins to the button, we add 16dp margins here
-//        int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
-//        lps.setMargins(margin, margin, margin, margin);
-//
-//
-//        ShowcaseView sv = new ShowcaseView.Builder(this)
-//                .setTarget(target2)
-//                .setContentTitle("ShowcaseView")
-//                .setContentText("This is highlighting the Home button")
-//                .setStyle(R.style.CustomShowcaseTheme2)
-//                .hideOnTouchOutside()
-//                .singleShot(4211)
-//                .build();
-//
-//        sv.show();
-
-
-//
-//        sv.setButtonPosition(lps);
-
-        // Fuer den NavigationDrawer Button
-//        try {
-//            ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
-//            new ShowcaseView.Builder(this)
-//                    .withMaterialShowcase()
-//                    .setTarget(navigationButtonViewTarget)
-//                    .setStyle(R.style.CustomShowcaseTheme2)
-//                    .setContentText("Here's how to highlight items on a toolbar")
-//                    .build()
-//                    .show();
-//        } catch (ViewTargets.MissingViewException e) {
-//            e.printStackTrace();
-//        }
-
+        final String PREFS_NAME = "MyPrefsFile";
+        SharedPreferences firstPref = getSharedPreferences(PREFS_NAME, 0);
+        if (firstPref.getBoolean("First_Time", true)) {
+            //Do first operation
+            showMainTutorial();
+            firstPref.edit().putBoolean("First_Time", false).apply();
+        }
 
 
         /*
@@ -316,10 +279,6 @@ public class MainActivity extends AppCompatActivity
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         bmp = bitmap;
 
-//                        headNavView = navigationView.getHeaderView(0);
-//
-//                        nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
-
                         // Setzt das Bild in den NavHeader wenn bmp not null ist
                         if (bmp != null) {
                             nav_image_head.setImageBitmap(bmp);
@@ -353,6 +312,73 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+    private void showMainTutorial(){
+        com.github.amlcurran.showcaseview.targets.Target targetFab = new ViewTarget(R.id.fab_menu,this);
+
+
+        /*
+        Hier kommt spaeter das tutorial rein bzw. sollte in eine eigene methode ausgelagert werden
+         */
+
+        fab_Menu.toggle(true);
+
+
+        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+// This aligns button to the bottom left side of screen
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+// Set margins to the button, we add 16dp margins here
+        int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
+        lps.setMargins(margin, margin, margin, margin);
+
+
+        sv = new ShowcaseView.Builder(this)
+                .setTarget(targetFab)
+                .setContentTitle("Erste Schritte..")
+                .setContentText("Um ein erstes Foto zu erstellen, drücke bitte auf das Symbol rechts unten im Bild und wähle dann 'Foto aufnehmen' aus \nWeiterhin kann über das Symbol die Karte geöffnet werden, um sich die aufgenommen Fotos auf der GoogleMap Karte anzeigen zu lassen, falls man den Standort gespeichert hat.")
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .setOnClickListener(this)
+//                .singleShot(4211)
+                .build();
+
+        sv.setButtonText("Weiter");
+
+        sv.setButtonPosition(lps);
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+
+        switch (counterTut){
+            case 0:
+                try {
+                    fab_Menu.toggle(false);
+                    ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
+                    sv.setShowcase(navigationButtonViewTarget, true);
+                    sv.setContentTitle("Seitenmenü benutzen");
+                    sv.setContentText("Über dieses Symbol oder durch ein Wischen von links nach rechts, \nkann das Seitenmenü geöffnet werden. Über das Seitenmenü können zum Beispiel Bilder aus dem Smartphone importiert werden oder alle Moments angezeigt werden");
+                    sv.setButtonText("Weiter");
+                    break;
+                } catch (ViewTargets.MissingViewException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 1:
+                sv.setTarget(com.github.amlcurran.showcaseview.targets.Target.NONE);
+                sv.setContentTitle("Viel Spaß");
+                sv.setContentText("Es gibt noch weitere Funktionen am Besten du stöberst einfach durch die App. \nDenke bitte dran dass die Rechte für den Standort und für den Speicher gegeben werden müssen \num diese App zu verwenden. /n Viel Spaß");
+                sv.setButtonText("Alles klar!");
+                break;
+            case 2:
+                sv.hide();
+                break;
+        }
+        counterTut++;
+    }
 
     private void initializeCountDrawer() {
         //Gravity property aligns the text
@@ -675,4 +701,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
