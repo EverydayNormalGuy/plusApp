@@ -19,13 +19,13 @@
 
     <application
         android:allowBackup="true"
-        android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/iconwobg"
         android:label="@string/app_name"
-        android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:windowSoftInputMode="adjustResize"> <!-- android:largeHeap="true"  android:hardwareAccelerated="false" -->
+        android:windowSoftInputMode="adjustResize"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme"> <!-- android:largeHeap="true"  android:hardwareAccelerated="false" -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -43,8 +43,8 @@
         </activity>
         <activity
             android:name=".AddActivity"
-            android:label="Moment hinzufügen"
             android:screenOrientation="portrait"
+            android:label="Moment hinzufügen"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ActivityPreference"
@@ -57,12 +57,11 @@
             android:label="@string/title_activity_details_full_screen"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".ActivityGallery" />
-        <activity
-            android:name=".ActivityImageSlider"
-            android:theme="@style/FullscreenTheme"/>
-        <activity
-            android:name=".ActivityEdit"
-            android:label="Moment bearbeiten"/>
+        <activity android:name=".ActivityImageSlider"
+            android:theme="@style/FullscreenTheme">
+        </activity>
+        <activity android:name=".ActivityEdit"
+            android:label="Bearbeiten"/>
     </application>
 
 </manifest>

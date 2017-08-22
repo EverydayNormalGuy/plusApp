@@ -24,22 +24,6 @@
             android:orientation="vertical"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/logoblackgold" />
-        <TextView
-            android:id="@+id/tvNavHeaderTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/ivNavHead"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Special Moments"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="18dp" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="24dp"
-            android:text="Metin Gümüssu" />
 
     </RelativeLayout>
 
