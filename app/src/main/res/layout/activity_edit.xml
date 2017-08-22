@@ -43,14 +43,6 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/cast_album_art_placeholder" />
 
-                <ProgressBar
-                    android:id="@+id/progressUpdateView"
-                    android:visibility="visible"
-                    android:layout_gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true" />
 
             </RelativeLayout>
 

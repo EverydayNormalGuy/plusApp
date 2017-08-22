@@ -22,6 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.helperclasses.Blur;
@@ -41,13 +43,6 @@ public class ActivityEdit extends AppCompatActivity {
     boolean isDarkTheme;
     Toolbar toolbarAdd;
     MarkerDataSource data;
-    long dbvCurrTime;
-    String galleryPathName;
-    String dbPath;
-    EditText etTitle;
-    EditText etDescription;
-    ImageView imageViewAdd;
-    MemoryAdapter memAdapter;
     private static List<MyMarkerObj> m;
     private static int index;
     public MyMarkerObj mmo;
@@ -120,24 +115,28 @@ public class ActivityEdit extends AppCompatActivity {
                 }
             };
 
-            final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressUpdateView);
-            Picasso.with(this).load(f).resize(100, 100).centerCrop().transform(blurTransformation).into(ivMomentUpdate, new Callback() {
-                @Override
-                public void onSuccess() {
-                    progressBar.setVisibility(View.GONE);
-                    Picasso.with(getBaseContext())
-                            .load(f)
-                            .resize(1080, 1350)
-                            .centerCrop()
-                            .placeholder(ivMomentUpdate.getDrawable())
-                            .into(ivMomentUpdate);
-                }
+//            Picasso.with(this).load(f).resize(100, 100).centerCrop().transform(blurTransformation).into(ivMomentUpdate, new Callback() {
+//                @Override
+//                public void onSuccess() {
+//                    Picasso.with(getBaseContext())
+//                            .load(f)
+//                            .resize(1080, 1350)
+//                            .centerCrop()
+//                            .placeholder(ivMomentUpdate.getDrawable())
+//                            .into(ivMomentUpdate);
+//                }
+//
+//                @Override
+//                public void onError() {
+//                }
+//            });
 
-                @Override
-                public void onError() {
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
+            Glide.with(this)
+                    .load(f)
+                    .error(R.drawable.cast_album_art_placeholder)
+                    .override(1080, 1350)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(ivMomentUpdate);
 
 
             updateTitle.setText(mmo.getTitle());

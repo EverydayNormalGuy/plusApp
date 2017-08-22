@@ -27,12 +27,7 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/cast_album_art_placeholder" />
-    <ProgressBar
-        android:id="@+id/progressDetailsView"
-        android:visibility="visible"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->

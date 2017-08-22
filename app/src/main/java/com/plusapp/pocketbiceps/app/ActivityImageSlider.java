@@ -20,12 +20,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.helperclasses.Photo;
 
+import java.io.File;
 import java.util.List;
 
 public class ActivityImageSlider extends FragmentActivity {
@@ -105,40 +109,18 @@ public class ActivityImageSlider extends FragmentActivity {
             Bundle bundle = getArguments();
             final int position = bundle.getInt("position");
 
-            // Da es sich hier um eine inner class handelt muss auf die rootView die findViewById Methode angesetzt werden. Ausserdem muss es wegen der innerclass final sein
-            final ProgressBar progressBar = (ProgressBar) swipeView.findViewById(R.id.progress);
+
+            GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivSlider);
 
             Glide.with(this)
                     .load(temp[position].getUrl())
-                    .asBitmap()
                     .error(R.drawable.cast_album_art_placeholder)
-                    .listener(new RequestListener<String, Bitmap>() {
-
-                        @Override
-                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            onPalette(Palette.from(resource).generate());
-                            ivSlider.setImageBitmap(resource);
-                            return false;
-                        }
-
-                        public void onPalette(Palette palette) {
-                            if (null != palette) {
-                                ViewGroup parent = (ViewGroup) ivSlider.getParent().getParent();
-//                            parent.setBackgroundColor(palette.getDarkVibrantColor(Color.GRAY)); aendert die Hintergrund farbe
-                            }
-                        }
-                    })
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(ivSlider);
 
-            return swipeView;
+//            Glide.with(this).load(temp[position].getUrl()).into(ivSlider);
+                return swipeView;
+//            }
         }
         static SwipeFragment newInstance(int position) {
             SwipeFragment swipeFragment = new SwipeFragment();

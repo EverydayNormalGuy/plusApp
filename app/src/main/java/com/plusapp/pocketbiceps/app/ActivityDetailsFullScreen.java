@@ -29,12 +29,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.helperclasses.Blur;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
+//import com.squareup.picasso.Callback;
+//import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Transformation;
 
 import java.io.File;
 import java.io.IOException;
@@ -224,60 +230,50 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
             final int size = (int) Math.ceil(Math.sqrt(displaySize.x * displaySize.y));
 
 
-            Transformation blurTransformation = new Transformation() {
-                @Override
-                public Bitmap transform(Bitmap source) {
-                    Bitmap blurred = Blur.fastblur(getBaseContext(),source,5);
-                    source.recycle();
-                    return blurred;
-                }
+//            Transformation blurTransformation = new Transformation() {
+//                @Override
+//                public Bitmap transform(Bitmap source) {
+//                    Bitmap blurred = Blur.fastblur(getBaseContext(),source,5);
+//                    source.recycle();
+//                    return blurred;
+//                }
+//
+//                @Override
+//                public String key() {
+//                    return "blur()";
+//                }
+//            };
 
-                @Override
-                public String key() {
-                    return "blur()";
-                }
-            };
 
-            final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressDetailsView);
-            Picasso.with(this).load(f).resize(100, 100).centerInside().transform(blurTransformation).into(ivMomentDetails, new Callback() {
-                @Override
-                public void onSuccess() {
-                    progressBar.setVisibility(View.GONE);
-                    Picasso.with(getBaseContext())
-                            .load(f)
-                            .resize(size, size)
-                            .centerInside()
-                            .placeholder(ivMomentDetails.getDrawable())
-                            .into(ivMomentDetails);
-                }
-
-                @Override
-                public void onError() {
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
-
-//            Picasso.with(getBaseContext())
+//            Picasso.with(this).load(f).resize(100, 100).centerInside().transform(blurTransformation).into(ivMomentDetails, new Callback() {
+//                @Override
+//                public void onSuccess() {
+//                    progressBar.setVisibility(View.GONE);
+//                    Picasso.with(getBaseContext())
 //                            .load(f)
 //                            .resize(size, size)
 //                            .centerInside()
-//                            .placeholder(R.drawable.cast_mini_controller_progress_drawable)
+//                            .placeholder(ivMomentDetails.getDrawable())
 //                            .into(ivMomentDetails);
+//                }
+//
+//                @Override
+//                public void onError() {
+//                    progressBar.setVisibility(View.GONE);
+//                }
+//            });
 
+            // TODO: f mit mmo.getPath() ersetzen und Performance testen
+            Glide.with(this)
+                    .load(mmo.getPath())
+                    .error(R.drawable.cast_album_art_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(ivMomentDetails);
 
-            //imageView.setImageBitmap(bmp);
-//            textView.setText(mmo.getTitle());
-//            textViewDescr.setText(mmo.getSnippet());
 
             tvDetailsTitle.setText(mmo.getTitle());
             tvDetailsDescr.setText(mmo.getSnippet());
 
-            // Laesst die separator linie verschwinden wenn nichts im Titel drin steht
-//            if (mmo.getTitle().equals("")){
-//                separatorLine.setVisibility(View.GONE);
-//                mControlsView.setVisibility(View.GONE);
-//                Toast.makeText(this, "gone", Toast.LENGTH_SHORT).show();
-//            }
             tvDetailsDescr.setMovementMethod(new ScrollingMovementMethod()); // Dadurch kann man durch die Textview scrollen
             data.updateMarker(mmo);
 

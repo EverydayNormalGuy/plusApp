@@ -29,6 +29,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -130,8 +132,15 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         btnGetLoc = (Button) findViewById(R.id.btnGetLocation);
 
 
-        Picasso.with(getBaseContext()).load(f).resize(1080,1350).centerCrop().into(imageViewAdd);
+//        Picasso.with(getBaseContext()).load(f).resize(1080,1350).centerCrop().into(imageViewAdd);
 
+        Glide.with(this)
+                .load(f)
+                .error(R.drawable.cast_album_art_placeholder)
+                .override(1080, 1350)
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(imageViewAdd);
 
         // Setzt das Bild in die Imageview
         //imageViewAdd.setImageBitmap(bmp);

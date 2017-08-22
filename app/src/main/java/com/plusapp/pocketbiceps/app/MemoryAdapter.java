@@ -26,9 +26,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.DetailsFragment;
+import com.plusapp.pocketbiceps.app.helperclasses.Photo;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -38,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Created by Metin on 19.10.2016.
@@ -168,11 +173,24 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
         File f = new File(mmo.getPath());
 
-        //Picasso uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
+        //Glide uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
         //Context ueber constructor von main activity
-        Picasso.with(mContext).load(f).resize(1080,1080).centerCrop().into(memoryViewHolder.vImage);
+//        Picasso.with(mContext).load(f).resize(1080,1080).centerCrop().into(memoryViewHolder.vImage);
+
+
+        ImageView memImageView = memoryViewHolder.vImage;
+
+        // Hier muss mit Target gearbeitet werden ansonsten werden bei Gifs lediglich placeholder angezeigt
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(memImageView);
+
+        Glide.with(mContext)
+                .load(f)
+                .error(R.drawable.cast_album_art_placeholder)
+                .override(1080,1080)
+                .into(imageViewTarget);
 
     }
+
 
     private void showDeleteDialog(final MyMarkerObj mmo) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

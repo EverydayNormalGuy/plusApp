@@ -5,15 +5,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

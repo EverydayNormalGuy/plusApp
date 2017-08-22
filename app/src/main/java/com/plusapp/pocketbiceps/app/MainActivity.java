@@ -45,6 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -192,11 +193,11 @@ public class MainActivity extends AppCompatActivity
             firstPref.edit().putBoolean("First_Time", false).apply();
         }
 
-
         /*
         Hier wird der clicklListener der weiter unten programmiert ist hinzugefügt
         damit kann man auf Klick events mit einem Switch reagieren
          */
+
         fab1.setOnClickListener(clickListener);
         fab2.setOnClickListener(clickListener);
         fab3.setOnClickListener(clickListener);
@@ -300,6 +301,8 @@ public class MainActivity extends AppCompatActivity
 
                 isCoverPhoto = true;
 
+//                preloadBitmaps();
+
             }
 
         }
@@ -312,6 +315,23 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private void preloadBitmaps(){
+        List<MyMarkerObj> cachedBitmaps = createList2();
+
+        MyMarkerObj mmo;
+
+        for (int i = 0; i <= 10; i++){
+            mmo  = cachedBitmaps.get(i);
+
+            // Das Bild wird in die Variable f initialisiert
+            File f = new File(mmo.getPath());
+
+            Glide.with(this)
+                    .load(f)
+                    .preload();
+        }
+
+    }
 
     private void showMainTutorial(){
         com.github.amlcurran.showcaseview.targets.Target targetFab = new ViewTarget(R.id.fab_menu,this);
