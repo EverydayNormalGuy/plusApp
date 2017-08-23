@@ -110,6 +110,7 @@ public class ActivityImageSlider extends FragmentActivity {
             final int position = bundle.getInt("position");
 
 
+
             GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivSlider);
 
             Glide.with(this)

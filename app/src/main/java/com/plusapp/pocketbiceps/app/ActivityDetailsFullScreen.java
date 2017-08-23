@@ -38,6 +38,7 @@ import com.bumptech.glide.request.target.Target;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.helperclasses.Blur;
+import com.plusapp.pocketbiceps.app.helperclasses.Photo;
 //import com.squareup.picasso.Callback;
 //import com.squareup.picasso.Picasso;
 //import com.squareup.picasso.Transformation;
@@ -77,6 +78,9 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
     private View separatorLine;
     private LinearLayout bottomLayout;
     public MyMarkerObj mmo;
+
+    public static Photo temp[];
+    public static Photo photo;
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -219,49 +223,11 @@ public class ActivityDetailsFullScreen extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-//            if (orientation.equals("1")){
-//                Picasso.with(getBaseContext()).load(f).fit().into(ivMomentDetails);
-//            }
-//            else if (orientation.equals("6")){
-//                Picasso.with(getBaseContext()).load(f).fit().into(ivMomentDetails);
-//            }
 
             final Point displaySize = getDisplaySize(getWindowManager().getDefaultDisplay());
             final int size = (int) Math.ceil(Math.sqrt(displaySize.x * displaySize.y));
 
 
-//            Transformation blurTransformation = new Transformation() {
-//                @Override
-//                public Bitmap transform(Bitmap source) {
-//                    Bitmap blurred = Blur.fastblur(getBaseContext(),source,5);
-//                    source.recycle();
-//                    return blurred;
-//                }
-//
-//                @Override
-//                public String key() {
-//                    return "blur()";
-//                }
-//            };
-
-
-//            Picasso.with(this).load(f).resize(100, 100).centerInside().transform(blurTransformation).into(ivMomentDetails, new Callback() {
-//                @Override
-//                public void onSuccess() {
-//                    progressBar.setVisibility(View.GONE);
-//                    Picasso.with(getBaseContext())
-//                            .load(f)
-//                            .resize(size, size)
-//                            .centerInside()
-//                            .placeholder(ivMomentDetails.getDrawable())
-//                            .into(ivMomentDetails);
-//                }
-//
-//                @Override
-//                public void onError() {
-//                    progressBar.setVisibility(View.GONE);
-//                }
-//            });
 
             // TODO: f mit mmo.getPath() ersetzen und Performance testen
             Glide.with(this)

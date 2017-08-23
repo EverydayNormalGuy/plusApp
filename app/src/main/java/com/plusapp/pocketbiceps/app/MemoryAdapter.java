@@ -130,10 +130,16 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(mContext, ActivityDetailsFullScreen.class);
-                intent.putExtra("index",i);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                mContext.startActivity(intent);
+//                Intent intent = new Intent(mContext, ActivityDetailsFullScreen.class);
+//                intent.putExtra("index",i);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                mContext.startActivity(intent);
+//
+
+                    Intent intent = new Intent(mContext, ActivityDetailsSlider.class);
+                    intent.putExtra("position", i);
+                    mContext.startActivity(intent);
+
             }
         });
 
@@ -188,7 +194,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                 .error(R.drawable.cast_album_art_placeholder)
                 .override(1080,1080)
                 .into(imageViewTarget);
-
     }
 
 

@@ -390,7 +390,7 @@ public class MainActivity extends AppCompatActivity
             case 1:
                 sv.setTarget(com.github.amlcurran.showcaseview.targets.Target.NONE);
                 sv.setContentTitle("Viel Spaß");
-                sv.setContentText("Es gibt noch weitere Funktionen am Besten du stöberst einfach durch die App. \nDenke bitte dran dass die Rechte für den Standort und für den Speicher gegeben werden müssen \num diese App zu verwenden. /n Viel Spaß");
+                sv.setContentText("Es gibt noch weitere Funktionen am Besten du stöberst einfach durch die App. \nDenke bitte dran dass die Rechte für den Standort und für den Speicher gegeben werden müssen \num diese App zu verwenden. \n Viel Spaß");
                 sv.setButtonText("Alles klar!");
                 break;
             case 2:
