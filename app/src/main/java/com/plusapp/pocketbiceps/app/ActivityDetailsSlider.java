@@ -175,6 +175,10 @@ public class ActivityDetailsSlider extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getActivity().getBaseContext(), "editieren..", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity().getBaseContext(), ActivityEdit.class);
+                    intent.putExtra("index", position);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    getActivity().startActivity(intent);
                 }
             });
 
