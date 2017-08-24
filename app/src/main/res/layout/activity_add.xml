@@ -45,12 +45,23 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/cast_album_art_placeholder" />
 
+                <Button
+                    android:id="@+id/btnGetLocation"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="Standort speichern"
+                    android:textColor="#03A9F4"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true" />
+
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.5">
+                android:layout_weight="0.61">
 
                 <EditText
                     android:id="@+id/editDescription"
@@ -74,17 +85,6 @@
                     android:ems="10"
                     android:hint="Titel?"
                     android:inputType="textPersonName" />
-
-                <Button
-                    android:id="@+id/btnGetLocation"
-                    style="?android:buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/editDescription"
-                    android:gravity="right"
-                    android:text="Standort speichern"
-                    android:textColor="#03A9F4" />
 
 
             </RelativeLayout>

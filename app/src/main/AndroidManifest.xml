@@ -45,7 +45,7 @@
             android:name=".AddActivity"
             android:label="Moment hinzufügen"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ActivityPreference"
             android:label="@string/title_activity_details"

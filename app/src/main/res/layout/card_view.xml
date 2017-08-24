@@ -59,7 +59,7 @@
             android:layout_below="@+id/tvDescription"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
-            android:text="Delete"
+            android:text="Löschen"
             android:textColor="@android:color/holo_orange_dark" />
 
         <Button
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDescription"
             android:layout_toRightOf="@id/btnDelete"
-            android:text="Edit"
+            android:text="Bearbeiten"
             android:textColor="#03A9F4" />
 
         <TextView
@@ -83,16 +83,18 @@
             android:textColor="#fff" />
 
         <ImageView
+            android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:src="@drawable/ic_eye"
             android:layout_alignBottom="@+id/tvCounter"
+            android:layout_marginBottom="10dp"
             android:layout_toStartOf="@+id/tvCounter"
-            android:layout_marginBottom="10dp" />
+            android:gravity="center"
+            android:src="@drawable/ic_eye" />
 
         <TextView
             android:id="@+id/tvCounter"
+            style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/btnEdit"
@@ -100,10 +102,19 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="8dp"
             android:gravity="center"
-            style="?android:buttonBarButtonStyle"
-            android:text="TextView"
+            android:text="444"
             android:textColor="#03A9F4"
             tools:background="#ffffff" />
+
+        <ImageButton
+            style="?android:buttonBarButtonStyle"
+            android:id="@+id/ibShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_menu_share_blue"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/btnEdit" />
 
     </RelativeLayout>
 

@@ -31,6 +31,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -78,18 +81,16 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
     View.OnClickListener sbOnClickListener; // Snackbar OnClickListener
 
 
-
-
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String theme_key = getString(R.string.preference_key_darktheme);
-        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key, false);
 
-        if(isSetToDarkTheme==true){
+        if (isSetToDarkTheme == true) {
             setTheme(R.style.DarkTheme);
-            isDarkTheme=true;
+            isDarkTheme = true;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
@@ -105,7 +106,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         if (extras != null) {
             // Das Key Argument "currTime" muss mit dem Key aus der MainAct. uebereinstimmen
             this.dbvCurrTime = extras.getLong("currTime");
-            if(extras.getString("pathName")!=null){
+            if (extras.getString("pathName") != null) {
                 this.galleryPathName = extras.getString("pathName");
             }
         }
@@ -117,8 +118,8 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
         File f = new File(MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
         dbPath = MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg";
-        if (this.galleryPathName != null){
-             f = new File(galleryPathName);
+        if (this.galleryPathName != null) {
+            f = new File(galleryPathName);
             this.dbPath = galleryPathName;
             String asd = dbPath;
         }
@@ -131,9 +132,6 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         etDescription = (EditText) findViewById(R.id.editDescription);
         btnGetLoc = (Button) findViewById(R.id.btnGetLocation);
 
-
-//        Picasso.with(getBaseContext()).load(f).resize(1080,1350).centerCrop().into(imageViewAdd);
-
         Glide.with(this)
                 .load(f)
                 .error(R.drawable.cast_album_art_placeholder)
@@ -142,8 +140,21 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(imageViewAdd);
 
-        // Setzt das Bild in die Imageview
-        //imageViewAdd.setImageBitmap(bmp);
+        com.github.amlcurran.showcaseview.targets.Target targetGetLoc = new ViewTarget(R.id.btnGetLocation, this);
+
+        ShowcaseView sv;
+        sv = new ShowcaseView.Builder(this)
+                .setTarget(targetGetLoc)
+                .setContentTitle("Standort speichern")
+                .setContentText("Nachdem du das Foto aufgenommen hast, hast du die Möglichkeit über 'Standort speichern' den Ort der Aufnahme zu speichern und später über die GoogleMap anzeigen zu lassen. " +
+                        "Für das Speichern des Ortes wird die Berechtigung der Standort Abfrage benötigt. \n" +
+                        "Hier kannst du weiterhin einen Titel und eine Beschreibung zu deinem Foto angeben, allerdings ist das kein muss")
+                .singleShot(4311)
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .build();
+
+        sv.setButtonText("Alles klar!");
+
 
         btnGetLoc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,7 +166,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
                             PERMISSION_ACCESS_COARSE_LOCATION);
                     // Snackbar wird benötigt dass das Android System genug Zeit hat nach der Permissionsabfrage die aktuelle Position zu bekommen.
                     // Der sbOnClickListener triggert onLocationChanged an, so dass bei betaetigen von Okay die aktuelle Position nochmals abgefragt wird.
-                    Snackbar.make(findViewById(android.R.id.content),"Der Standort wird nur beim Speichern abgefragt",Snackbar.LENGTH_INDEFINITE).setAction("Okay", sbOnClickListener).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Der Standort wird nur beim Speichern abgefragt", Snackbar.LENGTH_INDEFINITE).setAction("Okay", sbOnClickListener).show();
 
                 }
                 if (ContextCompat.checkSelfPermission(getBaseContext(),
@@ -167,7 +178,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
             }
         });
 
-        sbOnClickListener = new View.OnClickListener(){
+        sbOnClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -227,11 +238,10 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         dbCounter = 1;
         data.open();
         // Setzt einen Eintrag mit den eingegeben Daten in die Datenbank
-        if (dbLongi==null){
+        if (dbLongi == null) {
             data.addMarker(new MyMarkerObj(dbTitle, dbDescription, "position", dbvCurrTime, dbCounter, dbPath));
-        }
-        else{
-            data.addMarker(new MyMarkerObj(dbTitle, dbDescription, dbLongi+" "+dbLati, dbvCurrTime, dbCounter, dbPath));
+        } else {
+            data.addMarker(new MyMarkerObj(dbTitle, dbDescription, dbLongi + " " + dbLati, dbvCurrTime, dbCounter, dbPath));
         }
         data.close();
 

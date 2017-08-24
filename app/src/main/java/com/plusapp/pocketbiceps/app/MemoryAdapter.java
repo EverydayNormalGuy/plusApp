@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -112,6 +114,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params.addRule(RelativeLayout.BELOW, R.id.cvImage);
             RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) memoryViewHolder.btnEdit.getLayoutParams();
             params2.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) memoryViewHolder.ibShare.getLayoutParams();
+            params3.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
         else if (mmo.getTitle().equals("")){
@@ -122,6 +126,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params.addRule(RelativeLayout.BELOW, R.id.cvImage);
             RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) memoryViewHolder.btnEdit.getLayoutParams();
             params2.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) memoryViewHolder.ibShare.getLayoutParams();
+            params3.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
 
@@ -129,12 +135,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         memoryViewHolder.mem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                Intent intent = new Intent(mContext, ActivityDetailsFullScreen.class);
-//                intent.putExtra("index",i);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//                mContext.startActivity(intent);
-//
 
                     Intent intent = new Intent(mContext, ActivityDetailsSlider.class);
                     intent.putExtra("position", i);
@@ -162,6 +162,21 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                 mContext.startActivity(intent);
             }
         });
+
+        memoryViewHolder.ibShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mmo = m.get(i);
+                Uri uri = Uri.parse("file://" + "/" + mmo.getPath());
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                share.setType("image/*");
+                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                mContext.startActivity(Intent.createChooser(share, "Share image File"));
+            }
+        });
+
+
 
         //Konvertiert LongDate aus der DB in eine normale Date View
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -291,6 +306,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         protected ImageView vImage;
         protected Button btnDelete;
         protected Button btnEdit;
+        protected ImageButton ibShare;
         protected View mem;
 
         public MemoryViewHolder(View v) {
@@ -302,6 +318,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             vImage = (ImageView) v.findViewById(R.id.cvImage);
             btnDelete = (Button) v.findViewById(R.id.btnDelete);
             btnEdit = (Button) v.findViewById(R.id.btnEdit);
+            ibShare = (ImageButton) v.findViewById(R.id.ibShare);
             mem = v;
         }
     }
