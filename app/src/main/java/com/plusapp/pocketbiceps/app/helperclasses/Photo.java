@@ -20,6 +20,7 @@ public class Photo implements Parcelable {
     private static MarkerDataSource data;
     private String mUrl;
     private String mTitle;
+    private String mDescription;
     MyMarkerObj mmo;
     static List<MyMarkerObj> mList;
 
@@ -29,9 +30,18 @@ public class Photo implements Parcelable {
         mTitle = title;
     }
 
+
+
+    public Photo (String url, String title, String description){
+        mUrl = url;
+        mTitle = title;
+        mDescription = description;
+    }
+
     protected Photo(Parcel in) {
         mUrl = in.readString();
         mTitle = in.readString();
+        mDescription = in.readString();
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {
@@ -62,6 +72,14 @@ public class Photo implements Parcelable {
         mTitle = title;
     }
 
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(String description) {
+        this.mDescription = description;
+    }
+
     public static  Photo[] getPhotos(Context context) {
 
         data = new MarkerDataSource(context);
@@ -71,7 +89,7 @@ public class Photo implements Parcelable {
         Photo temp[] = new Photo[mList.size()];
 
         for (int i = 0; i < mList.size(); i++){
-            temp[i] = new Photo(mList.get(i).getPath(), mList.get(i).getTitle());
+            temp[i] = new Photo(mList.get(i).getPath(), mList.get(i).getTitle(), mList.get(i).getSnippet());
         }
 
         return temp;
@@ -86,5 +104,6 @@ public class Photo implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(mUrl);
         parcel.writeString(mTitle);
+        parcel.writeString(mDescription);
     }
 }

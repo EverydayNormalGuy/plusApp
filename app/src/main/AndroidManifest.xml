@@ -64,6 +64,7 @@
             android:name=".ActivityEdit"
             android:label="Bearbeiten" />
         <activity android:name=".ActivityDetailsSlider"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenTheme"/>
     </application>
 

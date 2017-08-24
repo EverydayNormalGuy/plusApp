@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,89 +55,6 @@ public class ActivityDetailsSlider extends AppCompatActivity {
     int clickedPosition;
 
 
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = false;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 50;
-
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 50;
-    private final Handler mHideHandler = new Handler();
-    private static View mContentView2;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            mContentView2.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
-    private static View mControlsView2;
-    private static View mControlsViewTop2;
-
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-//            ActionBar actionBar = getSupportActionBar();
-//            if (actionBar != null) {
-//                actionBar.show();
-//            }
-
-            // Versteckt das LinearLayout vom Titel und der Beschreibung wenn der Titel leer ist
-            if (temp[clickedPosition].getTitle().equals("") /* && mmo.getSnippet().equals("")**/){
-                separatorLine2.setVisibility(View.GONE);
-                mControlsView2.setVisibility(View.GONE);
-            }
-            else {
-                mControlsView2.setVisibility(View.VISIBLE);
-            }
-//            mControlsView2.setVisibility(View.VISIBLE);
-            mControlsViewTop2.setVisibility(View.VISIBLE);
-        }
-    };
-    static boolean mVisible2;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide2();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private static final View.OnTouchListener mDelayHideTouchListener2 = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                ActivityDetailsSlider ads = new ActivityDetailsSlider();
-                ads.delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
-
 
 
     @Override
@@ -167,22 +85,8 @@ public class ActivityDetailsSlider extends AppCompatActivity {
 
 
         for (int i = 0; i < mList.size(); i++){
-            temp[i] = new Photo(mList.get(i).getPath(), mList.get(i).getTitle());
+            temp[i] = new Photo(mList.get(i).getPath(), mList.get(i).getTitle(), mList.get(i).getSnippet());
         }
-
-//        
-//        mVisible2 = true;
-//        mControlsView2 = findViewById(R.id.fullscreen_content_controls);
-//        mContentView2 = findViewById(R.id.fullscreen_content);
-//        mControlsViewTop2 = findViewById(R.id.fullscreen_content_controls_top_buttons);
-//
-//        // Set up the user interaction to manually show or hide the system UI.
-//        mContentView2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toggle2();
-//            }
-//        });
 
         imageFragmentPagerAdapter = new ImageFragmentPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -196,7 +100,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
 
     public static class ImageFragmentPagerAdapter extends FragmentPagerAdapter {
 
-        public ImageFragmentPagerAdapter(FragmentManager fm){
+        private ImageFragmentPagerAdapter(FragmentManager fm){
             super(fm);
         }
 
@@ -204,6 +108,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
         public Fragment getItem(int position) {
             SwipeFragment fragment = new SwipeFragment();
 
+            fragment.mVisible2 = true;
             return SwipeFragment.newInstance(position);
         }
 
@@ -222,20 +127,18 @@ public class ActivityDetailsSlider extends AppCompatActivity {
             Bundle bundle = getArguments();
             final int position = bundle.getInt("position");
 
-
-
             mVisible2 = true;
             mControlsView2 = swipeView.findViewById(R.id.fullscreen_content_controls2);
             mContentView2 = swipeView.findViewById(R.id.fullscreen_content2);
             mControlsViewTop2 = swipeView.findViewById(R.id.fullscreen_content_controls_top_buttons2);
-//
-//            // Set up the user interaction to manually show2 or hide2 the system UI.
-//            mContentView2.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    toggle2();
-//                }
-//            });
+
+            // Set up the user interaction to manually show2 or hide2 the system UI.
+            mContentView2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    toggle2();
+                }
+            });
 
             // Upon interacting with UI controls, delay any scheduled hide2()
             // operations to prevent the jarring behavior of controls going away
@@ -260,6 +163,9 @@ public class ActivityDetailsSlider extends AppCompatActivity {
                     .into(ivSlider);
 
             tvDetailsTitle.setText(temp[position].getTitle());
+            tvDetailsDescr.setText(temp[position].getDescription());
+
+            tvDetailsDescr.setMovementMethod(new ScrollingMovementMethod()); // Dadurch kann man durch die Textview scrollen
 
 
             Button btn_EditDetails = (Button) swipeView.findViewById(R.id.btnEditDetails);
@@ -275,7 +181,6 @@ public class ActivityDetailsSlider extends AppCompatActivity {
             btn_ShareDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Uri uri = Uri.parse("file://" + "/" + MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
 
                     Uri uri = Uri.parse("file://" + "/" + temp[position].getUrl());
                     Intent share = new Intent(Intent.ACTION_SEND);
@@ -299,62 +204,136 @@ public class ActivityDetailsSlider extends AppCompatActivity {
             swipeFragment.setArguments(bundle);
             return swipeFragment;
         }
-    }
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
 
-        // Trigger the initial hide2() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
-    }
-    private static void toggle2() {
-        if (mVisible2) {
-            ActivityDetailsSlider ads = new ActivityDetailsSlider();
-            ads.hide2();
-        } else {
-            // Warum? https://stackoverflow.com/questions/4922145/non-static-method-cannot-be-referenced-from-a-static-context-error
-            ActivityDetailsSlider ads = new ActivityDetailsSlider();
-            ads.show2();
+        /**
+         * Whether or not the system UI should be auto-hidden after
+         * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
+         */
+        private static final boolean AUTO_HIDE = false;
 
+        /**
+         * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
+         * user interaction before hiding the system UI.
+         */
+        private static final int AUTO_HIDE_DELAY_MILLIS = 50;
+
+        /**
+         * Some older devices needs a small delay between UI widget updates
+         * and a change of the status and navigation bar.
+         */
+        private static final int UI_ANIMATION_DELAY = 50;
+        private final Handler mHideHandler = new Handler();
+        private  View mContentView2;
+        private final Runnable mHidePart2Runnable = new Runnable() {
+            @SuppressLint("InlinedApi")
+            @Override
+            public void run() {
+                // Delayed removal of status and navigation bar
+
+                // Note that some of these constants are new as of API 16 (Jelly Bean)
+                // and API 19 (KitKat). It is safe to use them, as they are inlined
+                // at compile-time and do nothing on earlier devices.
+                mContentView2.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            }
+        };
+        private  View mControlsView2;
+        private  View mControlsViewTop2;
+
+        private final Runnable mShowPart2Runnable = new Runnable() {
+            @Override
+            public void run() {
+                // Delayed display of UI elements
+                // Da vom Fragment aufgerufen muss getActivity davor stehen
+            ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.show();
+            }
+
+                // Versteckt das LinearLayout vom Titel und der Beschreibung wenn der Titel leer ist
+//                if (temp[position].getTitle().equals("") /* && mmo.getSnippet().equals("")**/){
+//                    separatorLine2.setVisibility(View.GONE);
+//                    mControlsView2.setVisibility(View.GONE);
+//                }
+//                else {
+//                    mControlsView2.setVisibility(View.VISIBLE);
+//                }
+            mControlsView2.setVisibility(View.VISIBLE);
+                mControlsViewTop2.setVisibility(View.VISIBLE);
+            }
+        };
+        boolean mVisible2;
+        private final Runnable mHideRunnable = new Runnable() {
+            @Override
+            public void run() {
+                hide2();
+            }
+        };
+        /**
+         * Touch listener to use for in-layout UI controls to delay hiding the
+         * system UI. This is to prevent the jarring behavior of controls going away
+         * while interacting with activity UI.
+         */
+        private final View.OnTouchListener mDelayHideTouchListener2 = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (AUTO_HIDE) {
+                    delayedHide(AUTO_HIDE_DELAY_MILLIS);
+                }
+                return false;
+            }
+        };
+
+        private void toggle2() {
+            if (mVisible2) {
+                hide2();
+            } else {
+                show2();
+
+            }
         }
-    }
 
-    private void hide2() {
-        // Hide UI first
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.hide();
-//        }
-        mControlsView2.setVisibility(View.GONE);
-        mControlsViewTop2.setVisibility(View.GONE);
-        mVisible2 = false;
+        private void hide2() {
+            // Hide UI first
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+            mControlsView2.setVisibility(View.GONE);
+            mControlsViewTop2.setVisibility(View.GONE);
+            mVisible2 = false;
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
+            // Schedule a runnable to remove the status and navigation bar after a delay
+            mHideHandler.removeCallbacks(mShowPart2Runnable);
+            mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
+        }
 
-    @SuppressLint("InlinedApi")
-    private void show2() {
-        // Show the system bar
-        mContentView2.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible2 = true;
+        @SuppressLint("InlinedApi")
+        private void show2() {
+            // Show the system bar
+            mContentView2.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            mVisible2 = true;
 
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
+            // Schedule a runnable to display UI elements after a delay
+            mHideHandler.removeCallbacks(mHidePart2Runnable);
+            mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+        }
 
-    /**
-     * Schedules a call to hide2() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+        /**
+         * Schedules a call to hide2() in [delay] milliseconds, canceling any
+         * previously scheduled calls.
+         */
+        private void delayedHide(int delayMillis) {
+            mHideHandler.removeCallbacks(mHideRunnable);
+            mHideHandler.postDelayed(mHideRunnable, delayMillis);
+        }
+
+
     }
 
     // Sorgt dafuer dass der Stack der Activities geloescht wird
