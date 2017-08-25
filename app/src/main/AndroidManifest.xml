@@ -59,12 +59,15 @@
         <activity android:name=".ActivityGallery" />
         <activity
             android:name=".ActivityImageSlider"
-            android:theme="@style/FullscreenTheme"/>
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ActivityEdit"
             android:label="Bearbeiten" />
-        <activity android:name=".ActivityDetailsSlider"
+        <activity
+            android:name=".ActivityDetailsSlider"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".ActivityImageFromMarker"
             android:theme="@style/FullscreenTheme"/>
     </application>
 

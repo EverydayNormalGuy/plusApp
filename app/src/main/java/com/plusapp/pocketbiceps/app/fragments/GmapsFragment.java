@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -54,6 +55,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.plusapp.pocketbiceps.app.ActivityImageFromMarker;
 import com.plusapp.pocketbiceps.app.MainActivity;
 import com.plusapp.pocketbiceps.app.MemoryAdapter;
 import com.plusapp.pocketbiceps.app.R;
@@ -260,6 +262,24 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                         .icon(BitmapDescriptorFactory
                                 .fromBitmap(getMarkerBitmapFromView(mCustomMarkerView, bmpDecoded))));
 
+
+                gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+
+                        String locForDB;
+                        String loc;
+                        loc = marker.getPosition().toString();
+
+
+
+                        Intent intent = new Intent(getActivity().getApplicationContext(), ActivityImageFromMarker.class);
+                        intent.putExtra("location", loc);
+                        getActivity().getApplicationContext().startActivity(intent);
+
+                        return false;
+                    }
+                });
             }
 
         }
