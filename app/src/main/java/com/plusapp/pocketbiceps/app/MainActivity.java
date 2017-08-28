@@ -27,9 +27,11 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -40,6 +42,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -156,9 +159,6 @@ public class MainActivity extends AppCompatActivity
         sortOrder = sp.getInt("sort_mode", 0);
 
 
-
-
-
         //Permissions Abfragen
         isStoragePermissionGranted();
         grantLocationPermission();
@@ -249,10 +249,9 @@ public class MainActivity extends AppCompatActivity
         headNavView = navigationView.getHeaderView(0);
         nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
 
-        if (isDarkTheme){
+        if (isDarkTheme) {
             nav_image_head.setImageResource(R.drawable.logoblackgold);
-        }
-        else {
+        } else {
             nav_image_head.setImageResource(R.drawable.logoblackwhite);
         }
 
@@ -315,13 +314,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void preloadBitmaps(){
+    private void preloadBitmaps() {
         List<MyMarkerObj> cachedBitmaps = createList2();
 
         MyMarkerObj mmo;
 
-        for (int i = 0; i <= 10; i++){
-            mmo  = cachedBitmaps.get(i);
+        for (int i = 0; i <= 10; i++) {
+            mmo = cachedBitmaps.get(i);
 
             // Das Bild wird in die Variable f initialisiert
             File f = new File(mmo.getPath());
@@ -333,8 +332,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void showMainTutorial(){
-        com.github.amlcurran.showcaseview.targets.Target targetFab = new ViewTarget(R.id.fab_menu,this);
+    private void showMainTutorial() {
+        com.github.amlcurran.showcaseview.targets.Target targetFab = new ViewTarget(R.id.fab_menu, this);
 
 
         /*
@@ -373,7 +372,7 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
 
 
-        switch (counterTut){
+        switch (counterTut) {
             case 0:
                 try {
                     fab_Menu.toggle(false);
@@ -433,7 +432,6 @@ public class MainActivity extends AppCompatActivity
                     fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
 
 
-
                     // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
                     if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
@@ -446,17 +444,16 @@ public class MainActivity extends AppCompatActivity
                 case R.id.fab3:
                     Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     File file = getFile();
-                    if(Build.VERSION.SDK_INT>=24){
-                        try{
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        try {
                             Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
                             m.invoke(null);
                             camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                             startActivityForResult(camera_intent, CAM_REQUEST);
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                    else {
+                    } else {
                         camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                         startActivityForResult(camera_intent, CAM_REQUEST);
                     }
@@ -521,31 +518,31 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch(requestCode) {
+        switch (requestCode) {
 
             case 1:
-            // Wenn nicht auf Abbrechen in der CameraAct. gedrückt wurde passiert werden die daten gespeichert
-            // und die AddActivity wird gestartet
-            if (resultCode == RESULT_OK) {
+                // Wenn nicht auf Abbrechen in der CameraAct. gedrückt wurde passiert werden die daten gespeichert
+                // und die AddActivity wird gestartet
+                if (resultCode == RESULT_OK) {
 
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
-                String dateString = formatter.format(new Date(currTime));
-                //Speichert das gemachte Bild im path
-                String path = IMAGE_PATH_URI + IMAGE_NAME_PREFIX + dateString + ".jpg";
-                Drawable.createFromPath(path);
-                Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
-                intent.putExtra("currTime", currTime);
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+                    String dateString = formatter.format(new Date(currTime));
+                    //Speichert das gemachte Bild im path
+                    String path = IMAGE_PATH_URI + IMAGE_NAME_PREFIX + dateString + ".jpg";
+                    Drawable.createFromPath(path);
+                    Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                    // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
+                    intent.putExtra("currTime", currTime);
 
-                startActivity(intent);
-            }
-            break;
+                    startActivity(intent);
+                }
+                break;
             case 2:
                 super.onActivityResult(requestCode, resultCode, data);
 
-                try{
+                try {
                     // Wenn das Bild ausgewaehlt wurde
-                    if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data){
+                    if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data) {
 
                         // Hole das Bild von data
                         Uri selectedImage = data.getData();
@@ -570,15 +567,13 @@ public class MainActivity extends AppCompatActivity
 
                         startActivity(intent);
 
-                    }
-                    else {
+                    } else {
                         Toast.makeText(this, "Kein Bild zum importieren ausgewählt", Toast.LENGTH_SHORT).show();
                     }
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(this, "Fehler", Toast.LENGTH_SHORT).show();
-            }
-            break;
+                }
+                break;
 
         }
 
@@ -678,8 +673,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             startActivity(intent);
-        }
-        else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_gallery) {
 
             // Create intent to Open Image applications like Gallery, Google Photos
             Intent galleryIntent = new Intent(Intent.ACTION_PICK);
@@ -687,7 +681,7 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
 //            galleryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        } else if (id == R.id.nav_moments_gallery){
+        } else if (id == R.id.nav_moments_gallery) {
             Intent intent = new Intent(MainActivity.this, ActivityGallery.class);
             startActivity(intent);
 
@@ -721,6 +715,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
 }

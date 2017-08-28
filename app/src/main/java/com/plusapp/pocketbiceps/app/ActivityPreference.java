@@ -8,6 +8,9 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import java.util.prefs.PreferenceChangeListener;
@@ -36,6 +39,7 @@ public class ActivityPreference extends PreferenceActivity implements Preference
 
         darkTheme.setOnPreferenceChangeListener(this);
 
+        MainActivity ma = new MainActivity();
 
         final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) getPreferenceManager().findPreference(getString(R.string.preference_key_darktheme));
         checkBoxPreference.
@@ -66,8 +70,52 @@ public class ActivityPreference extends PreferenceActivity implements Preference
                     }
                 });
 
+
+        // Open-Source Libs
+        Preference openSource = findPreference("showOpenSourceLibs");
+        openSource.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                displayLicensesAlertDialog();
+                return false;
+            }
+        });
+
+        // About Dialog
+        Preference about = findPreference("about");
+        about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                displayAboutAlertDialog();
+                return false;
+            }
+        });
     }
 
+    // Open-Source Dialog
+    private void displayLicensesAlertDialog() {
+        WebView view = (WebView) LayoutInflater.from(this).inflate(R.layout.dialog_licenses, null);
+        view.loadUrl("file:///android_asset/open_source_licenses.html");
+        AlertDialog mAlertDialog;
+        mAlertDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                .setTitle("Licenses")
+                .setView(view)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
+
+
+    // About Dialog
+    private void displayAboutAlertDialog() {
+
+        AlertDialog mAlertDialog;
+        mAlertDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                .setTitle("Über")
+                .setIcon(R.drawable.iconwobg)
+                .setMessage("Das ist eine kostenfreie App für die private Nutzung")
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
 
     @Override
     public void onBackPressed() {

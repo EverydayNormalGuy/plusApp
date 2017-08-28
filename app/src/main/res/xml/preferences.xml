@@ -34,4 +34,16 @@
             android:title="@string/preference_title_gmapviewtype" />
     </PreferenceCategory>
 
+
+    <PreferenceCategory android:title="Informationen">
+
+        <Preference
+            android:title="Über"
+            android:key="about"/>
+       <Preference
+           android:title="Open-Source Libraries"
+           android:key="showOpenSourceLibs"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
