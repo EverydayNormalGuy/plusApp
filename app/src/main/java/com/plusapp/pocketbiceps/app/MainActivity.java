@@ -697,8 +697,8 @@ public class MainActivity extends AppCompatActivity
             // Create intent to Open Image applications like Gallery, Google Photos
             Intent galleryIntent = new Intent(Intent.ACTION_PICK);
             galleryIntent.setType("image/*");
+            galleryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
-//            galleryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         } else if (id == R.id.nav_moments_gallery) {
             Intent intent = new Intent(MainActivity.this, ActivityGallery.class);

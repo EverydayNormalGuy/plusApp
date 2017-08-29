@@ -53,13 +53,14 @@ public class SortDialogFragment extends DialogFragment {
                                 break;
                             case 3:
                                 saveSortOrder(3); //am wenigsten gesehen
-
+                                break;
+                            default:
                                 break;
                         }
                         mainActivity = ((MainActivity) getActivity());
+                        dialog.dismiss();
                         mainActivity.refresh();
 
-                        dialog.dismiss();
                     }
                 });
         return builder.create();
