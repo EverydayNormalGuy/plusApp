@@ -3,6 +3,8 @@ package com.plusapp.pocketbiceps.app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -108,11 +110,15 @@ public class ActivityPreference extends PreferenceActivity implements Preference
     // About Dialog
     private void displayAboutAlertDialog() {
 
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+
+
         AlertDialog mAlertDialog;
         mAlertDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
-                .setTitle("Über")
+                .setTitle("Über die App")
                 .setIcon(R.drawable.iconwobg)
-                .setMessage("Das ist eine kostenfreie App für die private Nutzung")
+                .setMessage("Das ist eine kostenfreie App für die private Nutzung\nVersion: "+ versionCode)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }

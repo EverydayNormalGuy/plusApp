@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
 import android.location.Location;
 import android.os.Build;
@@ -21,12 +22,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -100,6 +103,21 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
         toolbarAdd = (Toolbar) findViewById(R.id.toolbar2); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbarAdd);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
+
+
+        for(int i = 0; i < toolbarAdd.getChildCount(); i++){
+            View view = toolbarAdd.getChildAt(i);
+            if(view instanceof TextView){
+                TextView tv = (TextView) view;
+                Typeface titleFont = Typeface.
+                        createFromAsset(getAssets(), "fonts/extra_light.ttf");
+                if(tv.getText().equals(toolbarAdd.getTitle())){
+                    tv.setTypeface(titleFont);
+//                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+                    break;
+                }
+            }
+        }
 
         // Holt sich die currTime Variable die aus der MainActivity weitergegeben wurde
         Bundle extras = getIntent().getExtras();

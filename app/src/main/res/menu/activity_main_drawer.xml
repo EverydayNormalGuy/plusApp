@@ -11,7 +11,7 @@
             android:title="Anzahl der Momente" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/import_gallery"
             android:choiceMode="none"
             android:title="Von Gallery importieren" />
         <item
@@ -20,7 +20,7 @@
             android:title="Alle Moments anzeigen" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/karten48"
+            android:icon="@drawable/google_maps"
             android:title="Map öffnen" />
         <item
             android:id="@+id/nav_manage"
@@ -32,11 +32,11 @@
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Kontakt" />
+                android:icon="@drawable/star_half"
+                android:title="App bewerten" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/information"
                 android:title="Impressum" />
         </menu>
     </item>

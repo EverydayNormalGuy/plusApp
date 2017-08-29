@@ -39,9 +39,9 @@ import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.helperclasses.Blur;
 import com.plusapp.pocketbiceps.app.helperclasses.Photo;
-//import com.squareup.picasso.Callback;
-//import com.squareup.picasso.Picasso;
-//import com.squareup.picasso.Transformation;
+//import_gallery com.squareup.picasso.Callback;
+//import_gallery com.squareup.picasso.Picasso;
+//import_gallery com.squareup.picasso.Transformation;
 
 import java.io.File;
 import java.io.IOException;

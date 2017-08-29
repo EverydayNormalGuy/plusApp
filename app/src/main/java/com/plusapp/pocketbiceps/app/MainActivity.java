@@ -30,6 +30,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +84,8 @@ public class MainActivity extends AppCompatActivity
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     public static final String IMAGE_PATH_URI = "sdcard/Special_Moments/";
+    private final static String PACKAGE_NAME = "com.plusapp.pocketbiceps.app";
+    private final static String PLAYSTORE_LINK = "market://details?id=";
     public long currTime = 0;
     public MemoryAdapter memAdapter;
     public MemoryAdapter ca;
@@ -153,6 +156,22 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Aenderd den Textfont von der Toolbar
+        for(int i = 0; i < toolbar.getChildCount(); i++){
+            View view = toolbar.getChildAt(i);
+            if(view instanceof TextView){
+                TextView tv = (TextView) view;
+                Typeface titleFont = Typeface.
+                        createFromAsset(getAssets(), "fonts/extra_light.ttf");
+                if(tv.getText().equals(toolbar.getTitle())){
+                    tv.setTypeface(titleFont);
+                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+                    break;
+                }
+            }
+        }
+
 
 
         sp = getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
@@ -706,16 +725,27 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
-            Toast.makeText(getBaseContext(), "In Arbeit..", Toast.LENGTH_SHORT).show();
+
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PLAYSTORE_LINK + this.getPackageName())));
 
         } else if (id == R.id.nav_send) {
-            Toast.makeText(getBaseContext(), "In Arbeit..", Toast.LENGTH_SHORT).show();
+
+            displayImpressumAlertDialog();
+
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-
-
+    private void displayImpressumAlertDialog() {
+        WebView view = (WebView) LayoutInflater.from(this).inflate(R.layout.dialog_licenses, null);
+        view.loadUrl("file:///android_asset/impressum.html");
+        AlertDialog mAlertDialog;
+        mAlertDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                .setView(view)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
 }

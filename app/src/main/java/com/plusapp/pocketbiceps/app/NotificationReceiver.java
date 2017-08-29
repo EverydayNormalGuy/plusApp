@@ -4,18 +4,18 @@
 // * Created by guemuesm on 02.03.2017.
 // */
 //
-//import android.app.NotificationManager;
-//import android.app.PendingIntent;
-//import android.content.BroadcastReceiver;
-//import android.content.Context;
-//import android.content.Intent;
-//import android.support.v4.app.NotificationCompat;
+//import_gallery android.app.NotificationManager;
+//import_gallery android.app.PendingIntent;
+//import_gallery android.content.BroadcastReceiver;
+//import_gallery android.content.Context;
+//import_gallery android.content.Intent;
+//import_gallery android.support.v4.app.NotificationCompat;
 //
-//import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
-//import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+//import_gallery com.plusapp.pocketbiceps.app.database.MarkerDataSource;
+//import_gallery com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 //
-//import java.util.Calendar;
-//import java.util.List;
+//import_gallery java.util.Calendar;
+//import_gallery java.util.List;
 //
 //
 ///**

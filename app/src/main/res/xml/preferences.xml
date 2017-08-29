@@ -38,7 +38,7 @@
     <PreferenceCategory android:title="Informationen">
 
         <Preference
-            android:title="Über"
+            android:title="Über die App"
             android:key="about"/>
        <Preference
            android:title="Open-Source Libraries"

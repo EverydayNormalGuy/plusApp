@@ -63,7 +63,7 @@
             android:id="@+id/fab2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu_gallery"
+            android:src="@drawable/google_maps"
             fab:fab_size="mini"
             fab:fab_label="Karte öffnen" />
 

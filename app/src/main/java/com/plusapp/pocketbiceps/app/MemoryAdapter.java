@@ -116,6 +116,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params2.addRule(RelativeLayout.BELOW, R.id.cvImage);
             RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) memoryViewHolder.ibShare.getLayoutParams();
             params3.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) memoryViewHolder.vCounter.getLayoutParams();
+            params4.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
         else if (mmo.getTitle().equals("")){
@@ -128,6 +130,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params2.addRule(RelativeLayout.BELOW, R.id.cvImage);
             RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) memoryViewHolder.ibShare.getLayoutParams();
             params3.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) memoryViewHolder.vCounter.getLayoutParams();
+            params4.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
 
