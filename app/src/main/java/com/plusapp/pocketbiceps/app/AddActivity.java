@@ -139,7 +139,6 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         if (this.galleryPathName != null) {
             f = new File(galleryPathName);
             this.dbPath = galleryPathName;
-            String asd = dbPath;
         }
 
         memAdapter = new MemoryAdapter();
@@ -264,6 +263,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         data.close();
 
         Intent intent = new Intent(AddActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }

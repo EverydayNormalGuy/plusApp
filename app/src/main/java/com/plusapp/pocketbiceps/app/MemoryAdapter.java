@@ -229,9 +229,12 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                         m = data.getMyMarkers(MainActivity.sortOrder);
                         updateAdapter(m); //Ruft notify auf
 
+
                         Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         mContext.startActivity(i);
+                        mainActivity.finish();
+
                     }
                 })
                 .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
