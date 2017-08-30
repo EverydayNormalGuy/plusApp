@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 
@@ -24,7 +25,7 @@ public class ActivityImageFromMarker extends AppCompatActivity {
     MyMarkerObj mmo;
     List<MyMarkerObj> m;
     String locFromMarker;
-    ImageView ivMarkerImage;
+    PhotoView ivMarkerImage;
     int index;
     File f;
     boolean isSetToDarkTheme;
@@ -57,7 +58,7 @@ public class ActivityImageFromMarker extends AppCompatActivity {
             m = data.getMyMarkers(MainActivity.sortOrder);
 
 
-            ivMarkerImage = (ImageView) findViewById(R.id.ivImageMarker);
+            ivMarkerImage = (PhotoView) findViewById(R.id.ivImageMarker);
 
             for (int i = 0; i < m.size(); i++){
 

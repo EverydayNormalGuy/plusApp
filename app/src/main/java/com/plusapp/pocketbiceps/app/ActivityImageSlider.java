@@ -25,8 +25,10 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+import com.plusapp.pocketbiceps.app.helperclasses.HackyViewPager;
 import com.plusapp.pocketbiceps.app.helperclasses.Photo;
 
 import java.io.File;
@@ -37,7 +39,7 @@ public class ActivityImageSlider extends FragmentActivity {
     public static final String EXTRA_PHOTO = "ActivityImageSlider.PHOTO";
     static int NUM_ITEMS = 5;
     ImageFragmentPagerAdapter imageFragmentPagerAdapter;
-    ViewPager viewPager;
+    HackyViewPager viewPager;
     public static final String[] IMAGE_NAME = {"lak","kla","lkja"};
     MarkerDataSource data;
     public static List<MyMarkerObj> mList;
@@ -75,7 +77,7 @@ public class ActivityImageSlider extends FragmentActivity {
 
 
         imageFragmentPagerAdapter = new ImageFragmentPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (HackyViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(imageFragmentPagerAdapter);
         // Von wo der Pager starten soll
         viewPager.setCurrentItem(clickedPosition);
@@ -105,7 +107,7 @@ public class ActivityImageSlider extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState){
             View swipeView = inflater.inflate(R.layout.swipe_fragment, container, false);
-            final ImageView ivSlider = (ImageView) swipeView.findViewById(R.id.ivSlider);
+            final PhotoView ivSlider = (PhotoView) swipeView.findViewById(R.id.ivSlider);
             Bundle bundle = getArguments();
             final int position = bundle.getInt("position");
 

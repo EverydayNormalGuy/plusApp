@@ -26,8 +26,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+import com.plusapp.pocketbiceps.app.helperclasses.HackyViewPager;
 import com.plusapp.pocketbiceps.app.helperclasses.Photo;
 
 import java.util.List;
@@ -41,7 +43,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
     public static final String EXTRA_PHOTO = "ActivityImageSlider.PHOTO";
     static int NUM_ITEMS = 5;
     ImageFragmentPagerAdapter imageFragmentPagerAdapter;
-    ViewPager viewPager;
+    HackyViewPager viewPager;
     public static final String[] IMAGE_NAME = {"lak","kla","lkja"};
     MarkerDataSource data;
     public static List<MyMarkerObj> mList;
@@ -89,7 +91,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
         }
 
         imageFragmentPagerAdapter = new ImageFragmentPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (HackyViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(imageFragmentPagerAdapter);
         // Von wo der Pager starten soll
         viewPager.setCurrentItem(clickedPosition);
@@ -123,7 +125,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState){
             View swipeView = inflater.inflate(R.layout.activity_details_slider, container, false);
-            final ImageView ivSlider = (ImageView) swipeView.findViewById(R.id.ivMomentDetails);
+            final PhotoView ivSlider = (PhotoView) swipeView.findViewById(R.id.ivMomentDetails);
             Bundle bundle = getArguments();
             final int position = bundle.getInt("position");
 

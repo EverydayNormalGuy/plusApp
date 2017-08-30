@@ -246,12 +246,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         alert.show();
     }
 
-
-
-
-
-
-
     // Decodes ImageFile und skalliert es um den Speicher zu entlasten
     // Wird nur noch fuer die Marker in der Gmaps benutzt um das Bild anzuzeigen
     public Bitmap decodeFile(File bmpFile){

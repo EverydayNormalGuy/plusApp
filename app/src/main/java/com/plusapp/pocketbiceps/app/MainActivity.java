@@ -691,7 +691,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+
         } else if (id == R.id.nav_gallery) {
 
             // Create intent to Open Image applications like Gallery, Google Photos
@@ -702,6 +704,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_moments_gallery) {
             Intent intent = new Intent(MainActivity.this, ActivityGallery.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
@@ -722,6 +725,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(MainActivity.this, ActivityPreference.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
@@ -731,7 +735,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
             displayImpressumAlertDialog();
-
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
