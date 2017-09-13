@@ -101,6 +101,8 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     private Bitmap bmpDecoded;
 
     public static Bitmap rotateBitmap(Bitmap source, float angle) {
+
+
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -245,15 +247,30 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
 
 
+
+
+
                 Bitmap bmpDecoded = memAdapter.decodeFile(f);
 
                 Bitmap rotatedBmp;
 
                 // Wird benoetigt damit die Bilder in den Marker auf der Map richtig rum gedreht sind
+                // Maincamera in Landscape aufgenommen
                 if (orientation == 6) {
                      rotatedBmp = rotateBitmap(bmpDecoded, 90);
                     bmpDecoded = rotatedBmp;
                 }
+                // Frontcamera in Portrait aufgenommen
+                if (orientation == 8){
+                    rotatedBmp = rotateBitmap(bmpDecoded, 270);
+                    bmpDecoded = rotatedBmp;
+                }
+                // Frontcamera in Landscape aufgenommen
+                if (orientation == 3){
+                    rotatedBmp = rotateBitmap(bmpDecoded, 180);
+                    bmpDecoded = rotatedBmp;
+                }
+
 
                 gMap.addMarker(new MarkerOptions()
                         .title(m.get(i).getTitle())
