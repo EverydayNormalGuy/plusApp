@@ -52,12 +52,6 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <!-- <receiver android:name=".NotificationReceiver"/> -->
-        <activity
-            android:name=".ActivityDetailsFullScreen"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_details_full_screen"
-            android:theme="@style/FullscreenTheme" />
         <activity android:name=".ActivityGallery" />
         <activity
             android:name=".ActivityImageSlider"

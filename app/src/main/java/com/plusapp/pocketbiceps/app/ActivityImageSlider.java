@@ -40,7 +40,6 @@ public class ActivityImageSlider extends FragmentActivity {
     static int NUM_ITEMS = 5;
     ImageFragmentPagerAdapter imageFragmentPagerAdapter;
     HackyViewPager viewPager;
-    public static final String[] IMAGE_NAME = {"lak","kla","lkja"};
     MarkerDataSource data;
     public static List<MyMarkerObj> mList;
     public static Photo temp[];

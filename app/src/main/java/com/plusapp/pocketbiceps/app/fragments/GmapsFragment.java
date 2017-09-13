@@ -148,6 +148,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
 
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        // Der String hier muss seltsamerweise hardcoded sein, sonst kann man den Typ nicht mehr aendern
         String gMapViewType = sPrefs.getString("gmapviewtype", "2");
 
         /**

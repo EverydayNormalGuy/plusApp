@@ -116,9 +116,9 @@ public class ActivityPreference extends PreferenceActivity implements Preference
 
         AlertDialog mAlertDialog;
         mAlertDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
-                .setTitle("Über die App")
+                .setTitle(R.string.about)
                 .setIcon(R.drawable.iconwobg)
-                .setMessage("Das ist eine kostenfreie App für die private Nutzung\nVersion: "+ versionCode)
+                .setMessage(getString(R.string.about_desc)+ versionCode)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }

@@ -373,14 +373,14 @@ public class MainActivity extends AppCompatActivity
 
         sv = new ShowcaseView.Builder(this)
                 .setTarget(targetFab)
-                .setContentTitle("Erste Schritte..")
-                .setContentText("Um ein erstes Foto zu erstellen, drücke bitte auf das Symbol rechts unten im Bild und wähle dann 'Foto aufnehmen' aus \nWeiterhin kann über das Symbol die Karte geöffnet werden, um sich die aufgenommen Fotos auf der GoogleMap Karte anzeigen zu lassen, falls man den Standort gespeichert hat.")
+                .setContentTitle(getString(R.string.getting_started))
+                .setContentText(getString(R.string.getting_started_desc))
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .setOnClickListener(this)
 //                .singleShot(4211)
                 .build();
 
-        sv.setButtonText("Weiter");
+        sv.setButtonText(getString(R.string.next));
 
         sv.setButtonPosition(lps);
 
@@ -397,9 +397,9 @@ public class MainActivity extends AppCompatActivity
                     fab_Menu.toggle(false);
                     ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
                     sv.setShowcase(navigationButtonViewTarget, true);
-                    sv.setContentTitle("Seitenmenü benutzen");
-                    sv.setContentText("Über dieses Symbol oder durch ein Wischen von links nach rechts, \nkann das Seitenmenü geöffnet werden. Über das Seitenmenü können zum Beispiel Bilder aus dem Smartphone importiert werden oder alle Moments angezeigt werden");
-                    sv.setButtonText("Weiter");
+                    sv.setContentTitle(getString(R.string.sidemenu));
+                    sv.setContentText(getString(R.string.sidemenu_desc));
+                    sv.setButtonText(getString(R.string.next));
                     break;
                 } catch (ViewTargets.MissingViewException e) {
                     e.printStackTrace();
@@ -407,9 +407,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case 1:
                 sv.setTarget(com.github.amlcurran.showcaseview.targets.Target.NONE);
-                sv.setContentTitle("Viel Spaß");
-                sv.setContentText("Es gibt noch weitere Funktionen am Besten du stöberst einfach durch die App. \nDenke bitte dran dass die Rechte für den Standort und für den Speicher gegeben werden müssen \num diese App zu verwenden. \n Viel Spaß");
-                sv.setButtonText("Alles klar!");
+                sv.setContentTitle(getString(R.string.have_fun));
+                sv.setContentText(getString(R.string.have_fun_desc));
+                sv.setButtonText(getString(R.string.got_it));
                 break;
             case 2:
                 sv.hide();
@@ -587,10 +587,10 @@ public class MainActivity extends AppCompatActivity
                         startActivity(intent);
 
                     } else {
-                        Toast.makeText(this, "Kein Bild zum importieren ausgewählt", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.no_pic_chosen, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(this, "Fehler", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -721,7 +721,7 @@ public class MainActivity extends AppCompatActivity
                         PERMISSION_ACCESS_COARSE_LOCATION);
             }
 
-            Toast.makeText(getBaseContext(), "Map startet", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getBaseContext(), "Map startet", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(MainActivity.this, ActivityPreference.class);

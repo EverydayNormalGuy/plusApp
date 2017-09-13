@@ -165,7 +165,7 @@ public class ActivityEdit extends AppCompatActivity {
         }
         if (id == R.id.delete_edit) {
             finish();
-            Toast.makeText(getApplicationContext(), "Abgebrochen..", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.canceled, Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);

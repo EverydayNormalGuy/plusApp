@@ -162,15 +162,13 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         ShowcaseView sv;
         sv = new ShowcaseView.Builder(this)
                 .setTarget(targetGetLoc)
-                .setContentTitle("Standort speichern")
-                .setContentText("Nachdem du das Foto aufgenommen hast, hast du die Möglichkeit über 'Standort speichern' den Ort der Aufnahme zu speichern und später über die GoogleMap anzeigen zu lassen. " +
-                        "Für das Speichern des Ortes wird die Berechtigung der Standort Abfrage benötigt. \n" +
-                        "Hier kannst du weiterhin einen Titel und eine Beschreibung zu deinem Foto angeben, allerdings ist das kein muss")
+                .setContentTitle(getString(R.string.save_loc))
+                .setContentText(getString(R.string.save_loc_tut))
                 .singleShot(4311)
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
 
-        sv.setButtonText("Alles klar!");
+        sv.setButtonText(getString(R.string.got_it));
 
 
         btnGetLoc.setOnClickListener(new View.OnClickListener() {
@@ -183,7 +181,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
                             PERMISSION_ACCESS_COARSE_LOCATION);
                     // Snackbar wird benötigt dass das Android System genug Zeit hat nach der Permissionsabfrage die aktuelle Position zu bekommen.
                     // Der sbOnClickListener triggert onLocationChanged an, so dass bei betaetigen von Okay die aktuelle Position nochmals abgefragt wird.
-                    Snackbar.make(findViewById(android.R.id.content), "Der Standort wird nur beim Speichern abgefragt", Snackbar.LENGTH_INDEFINITE).setAction("Okay", sbOnClickListener).show();
+                    Snackbar.make(findViewById(android.R.id.content), R.string.snachbar_loc, Snackbar.LENGTH_INDEFINITE).setAction(R.string.got_it, sbOnClickListener).show();
 
                 }
                 if (ContextCompat.checkSelfPermission(getBaseContext(),
@@ -232,7 +230,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         }
         if (id == R.id.delete_add) {
             finish();
-            Toast.makeText(getApplicationContext(), "Abgebrochen..", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.canceled, Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);

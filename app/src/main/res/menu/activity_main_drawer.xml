@@ -8,36 +8,36 @@
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
             app:actionLayout="@layout/nav_moments_counter"
-            android:title="Anzahl der Momente" />
+            android:title="@string/total_moments" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/import_gallery"
             android:choiceMode="none"
-            android:title="Von Gallery importieren" />
+            android:title="@string/import_from_gallery" />
         <item
             android:id="@+id/nav_moments_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Alle Moments anzeigen" />
+            android:title="@string/show_all_moments" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/google_maps"
-            android:title="Map öffnen" />
+            android:title="@string/open_map" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Einstellungen" />
+            android:title="@string/settings_xml" />
     </group>
 
-    <item android:title="Kommunikation">
+    <item android:title="@string/communication">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/star_half"
-                android:title="App bewerten" />
+                android:title="@string/rate_app" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/information"
-                android:title="Impressum" />
+                android:title="@string/imprint" />
         </menu>
     </item>
 

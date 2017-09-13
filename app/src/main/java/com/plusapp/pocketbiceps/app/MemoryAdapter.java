@@ -230,9 +230,9 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
     private void showDeleteDialog(final MyMarkerObj mmo) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("Diesen Eintrag löschen?")
+        builder.setMessage(R.string.delete_message)
                 .setCancelable(false)
-                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         data = new MarkerDataSource(mContext);
                         data.open();
@@ -249,7 +249,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
                     }
                 })
-                .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.canceled, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

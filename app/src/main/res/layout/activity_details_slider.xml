@@ -95,7 +95,7 @@
                 android:layout_weight="0.5"
                 android:layout_gravity="end"
                 android:clickable="true"
-                android:text="Bearbeiten"
+                android:text="@string/edit"
                 android:textColor="#FFFFFF"
                 />
             <Button
@@ -106,7 +106,7 @@
                 android:clickable="true"
                 android:layout_weight="0.5"
                 android:layout_gravity="end"
-                android:text="Teilen"
+                android:text="@string/share"
                 android:textColor="#FFFFFF"
                 />
 

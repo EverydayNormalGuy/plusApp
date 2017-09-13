@@ -53,7 +53,6 @@ public class ActivityDetailsSlider extends AppCompatActivity {
     static int NUM_ITEMS = 5;
     ImageFragmentPagerAdapter imageFragmentPagerAdapter;
     HackyViewPager viewPager;
-    public static final String[] IMAGE_NAME = {"lak","kla","lkja"};
     MarkerDataSource data;
     public static List<MyMarkerObj> mList;
     public static Photo temp[];
@@ -204,7 +203,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
             btn_EditDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity().getBaseContext(), "editieren..", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity().getBaseContext(), "editieren..", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity().getBaseContext(), ActivityEdit.class);
                     intent.putExtra("index", position);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

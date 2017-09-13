@@ -37,7 +37,7 @@ public class SortDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle("Sortieren nach ")
+        builder.setTitle(R.string.sort_by)
                 .setItems(R.array.sortDialog, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
