@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     private Context mContext;
     boolean isShowDate;
     boolean isSetToShowDate;
+    boolean isHighResolution;
+    boolean isSetToHighResolution;
     public MemoryAdapter(){
 
     }
@@ -99,7 +102,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         String theme_key = mContext.getString(R.string.preference_key_showdate);
         isSetToShowDate = sPrefs.getBoolean(theme_key, true);
 
-
+        String resolution_key = mContext.getString(R.string.preference_key_resolution);
+        isSetToHighResolution = sPrefs.getBoolean(resolution_key, false);
 
          mmo = m.get(i);
         // Setzt die Werte aus der Datenbank in die CardView Felder
@@ -180,13 +184,10 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             }
         });
 
+        CharSequence elapsedTime = DateUtils.getRelativeTimeSpanString(mmo.getTimestamp(), System.currentTimeMillis(), 0);
 
-
-        //Konvertiert LongDate aus der DB in eine normale Date View
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        String readablyDate = formatter.format(new Date(mmo.getTimestamp()));
         if (isSetToShowDate == true) {
-            memoryViewHolder.vDate.setText(readablyDate);
+            memoryViewHolder.vDate.setText(elapsedTime);
             isShowDate = true;
         }
 
@@ -208,11 +209,22 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         // Hier muss mit Target gearbeitet werden ansonsten werden bei Gifs lediglich placeholder angezeigt
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(memImageView);
 
-        Glide.with(mContext)
-                .load(f)
-                .error(R.drawable.cast_album_art_placeholder)
-                .override(1080,1080)
-                .into(imageViewTarget);
+        if (isSetToHighResolution == true){
+            isHighResolution = true;
+            Glide.with(mContext)
+                    .load(f)
+                    .error(R.drawable.cast_album_art_placeholder)
+                    .override(1080,1080)
+                    .into(imageViewTarget);
+        }
+        else {
+            Glide.with(mContext)
+                    .load(f)
+                    .error(R.drawable.cast_album_art_placeholder)
+                    .override(612,612)
+                    .into(imageViewTarget);
+        }
+
     }
 
 

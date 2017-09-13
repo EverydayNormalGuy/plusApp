@@ -49,25 +49,31 @@
         <activity
             android:name=".ActivityPreference"
             android:label="@string/title_activity_details"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <!-- <receiver android:name=".NotificationReceiver"/> -->
         <activity
             android:name=".ActivityDetailsFullScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_details_full_screen"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".ActivityGallery" />
         <activity
             android:name=".ActivityImageSlider"
+            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ActivityEdit"
+            android:screenOrientation="portrait"
             android:label="Bearbeiten" />
         <activity
             android:name=".ActivityDetailsSlider"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".ActivityImageFromMarker"
+            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"/>
     </application>
 

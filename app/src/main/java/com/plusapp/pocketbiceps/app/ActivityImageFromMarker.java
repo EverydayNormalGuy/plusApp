@@ -30,6 +30,8 @@ public class ActivityImageFromMarker extends AppCompatActivity {
     File f;
     boolean isSetToDarkTheme;
     boolean isDarkTheme;
+    boolean isHighResolution;
+    boolean isSetToHighResolution;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,10 @@ public class ActivityImageFromMarker extends AppCompatActivity {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String theme_key = getString(R.string.preference_key_darktheme);
         isSetToDarkTheme = sPrefs.getBoolean(theme_key, false);
+
+        String resolution_key = getString(R.string.preference_key_resolution);
+        isSetToHighResolution = sPrefs.getBoolean(resolution_key, false);
+
 
         if (isSetToDarkTheme == true) {
             setTheme(R.style.DarkTheme);
@@ -76,11 +82,22 @@ public class ActivityImageFromMarker extends AppCompatActivity {
                 }
             }
 
-            Glide.with(this)
-                    .load(f)
-                    .error(R.drawable.cast_album_art_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(ivMarkerImage);
+            if (isSetToHighResolution == true){
+                isHighResolution = true;
+                Glide.with(this)
+                        .load(f)
+                        .error(R.drawable.cast_album_art_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(ivMarkerImage);
+            } else {
+                Glide.with(this)
+                        .load(f)
+                        .error(R.drawable.cast_album_art_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .override(612,612)
+                        .into(ivMarkerImage);
+            }
+
 
         }
     }

@@ -23,6 +23,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Bildauflösung">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/preference_key_resolution"
+            android:summary="@string/preference_description_resolution"
+            android:title="@string/preference_title_resolution"/>
+
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="Google Map Optionen">
         <ListPreference

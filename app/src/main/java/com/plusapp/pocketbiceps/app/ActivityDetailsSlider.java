@@ -3,6 +3,7 @@ package com.plusapp.pocketbiceps.app;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,17 +21,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
+import com.plusapp.pocketbiceps.app.helperclasses.Blur;
+import com.plusapp.pocketbiceps.app.helperclasses.BlurTransformation;
 import com.plusapp.pocketbiceps.app.helperclasses.HackyViewPager;
 import com.plusapp.pocketbiceps.app.helperclasses.Photo;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -51,6 +60,9 @@ public class ActivityDetailsSlider extends AppCompatActivity {
     public static Photo photo;
     boolean isSetToDarkTheme;
     boolean isDarkTheme;
+    static boolean isHighResolution;
+    static boolean isSetToHighResolution;
+
     private static View separatorLine2;
     MyMarkerObj mmo;
 
@@ -64,6 +76,10 @@ public class ActivityDetailsSlider extends AppCompatActivity {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String theme_key = getString(R.string.preference_key_darktheme);
         isSetToDarkTheme = sPrefs.getBoolean(theme_key, false);
+
+        String resolution_key = getString(R.string.preference_key_resolution);
+        isSetToHighResolution = sPrefs.getBoolean(resolution_key, false);
+
 
         if (isSetToDarkTheme == true) {
             setTheme(R.style.DarkTheme);
@@ -153,16 +169,28 @@ public class ActivityDetailsSlider extends AppCompatActivity {
 
             TextView tvDetailsTitle = (TextView) swipeView.findViewById(R.id.tvMomentsTitle);
             TextView tvDetailsDescr= (TextView) swipeView.findViewById(R.id.tvMomentsDetails);
-            separatorLine2 = swipeView.findViewById(R.id.separatorLine);
 
 
             GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivSlider);
 
-            Glide.with(this)
-                    .load(temp[position].getUrl())
-                    .error(R.drawable.cast_album_art_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(ivSlider);
+            if (isSetToHighResolution == true){
+                isHighResolution = true;
+                Glide.with(this)
+                        .load(temp[position].getUrl())
+                        .error(R.drawable.cast_album_art_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(ivSlider);
+            } else {
+                Glide.with(this)
+                        .load(temp[position].getUrl())
+                        .error(R.drawable.cast_album_art_placeholder)
+                        .override(612,612)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(ivSlider);
+            }
+
+
+
 
             tvDetailsTitle.setText(temp[position].getTitle());
             tvDetailsDescr.setText(temp[position].getDescription());
