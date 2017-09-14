@@ -60,6 +60,16 @@
             android:text="@string/delete"
             android:textColor="@android:color/holo_orange_dark" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/btnDelete"
+            android:background="@drawable/separator_line"
+            android:rotation="180"
+            android:layout_alignBottom="@+id/imageView4"
+            android:layout_alignTop="@+id/imageView4" />
+
         <Button
             android:id="@+id/btnEdit"
             style="?android:buttonBarButtonStyle"
@@ -69,6 +79,17 @@
             android:layout_toRightOf="@id/btnDelete"
             android:text="@string/edit_cardview"
             android:textColor="#03A9F4" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/btnEdit"
+            android:background="@drawable/separator_line"
+            android:rotation="180"
+            android:layout_alignBottom="@+id/imageView4"
+            android:layout_alignTop="@+id/imageView4"/>
 
         <TextView
             android:id="@+id/tvDate"
@@ -95,21 +116,32 @@
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="#03A9F4"
-            tools:background="#ffffff"
             android:layout_below="@+id/tvDescription"
-            android:layout_toEndOf="@+id/ibShare" />
+            android:layout_toEndOf="@+id/ibShare"
+            android:gravity="center"
+            android:text="444"
+            android:textColor="#03A9F4" />
 
         <ImageButton
-            style="?android:buttonBarButtonStyle"
             android:id="@+id/ibShare"
+            style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:src="@drawable/ic_menu_share_blue"
             android:layout_below="@+id/tvDescription"
-            android:layout_toEndOf="@+id/btnEdit" />
+            android:layout_toEndOf="@+id/btnEdit"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_menu_share_blue" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/ibShare"
+            android:background="@drawable/separator_line"
+            android:rotation="180"
+            android:layout_alignBottom="@+id/imageView4"
+            android:layout_alignTop="@+id/imageView4"/>
 
     </RelativeLayout>
 

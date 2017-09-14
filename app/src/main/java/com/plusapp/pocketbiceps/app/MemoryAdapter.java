@@ -122,6 +122,12 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params3.addRule(RelativeLayout.BELOW, R.id.cvImage);
             RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) memoryViewHolder.vCounter.getLayoutParams();
             params4.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params5 = (RelativeLayout.LayoutParams) memoryViewHolder.divider1.getLayoutParams();
+            params5.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params6 = (RelativeLayout.LayoutParams) memoryViewHolder.divider2.getLayoutParams();
+            params6.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params7 = (RelativeLayout.LayoutParams) memoryViewHolder.divider3.getLayoutParams();
+            params7.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
         else if (mmo.getTitle().equals("")){
@@ -136,6 +142,12 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params3.addRule(RelativeLayout.BELOW, R.id.cvImage);
             RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) memoryViewHolder.vCounter.getLayoutParams();
             params4.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params5 = (RelativeLayout.LayoutParams) memoryViewHolder.divider1.getLayoutParams();
+            params5.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params6 = (RelativeLayout.LayoutParams) memoryViewHolder.divider2.getLayoutParams();
+            params6.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params7 = (RelativeLayout.LayoutParams) memoryViewHolder.divider3.getLayoutParams();
+            params7.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
 
@@ -224,9 +236,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                     .override(612,612)
                     .into(imageViewTarget);
         }
-
     }
-
 
     private void showDeleteDialog(final MyMarkerObj mmo) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -240,7 +250,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                         dialog.dismiss();
                         m = data.getMyMarkers(MainActivity.sortOrder);
                         updateAdapter(m); //Ruft notify auf
-
 
                         Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -320,6 +329,9 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         protected Button btnDelete;
         protected Button btnEdit;
         protected ImageButton ibShare;
+        protected View divider1;
+        protected View divider2;
+        protected View divider3;
         protected View mem;
 
         public MemoryViewHolder(View v) {
@@ -332,6 +344,9 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             btnDelete = (Button) v.findViewById(R.id.btnDelete);
             btnEdit = (Button) v.findViewById(R.id.btnEdit);
             ibShare = (ImageButton) v.findViewById(R.id.ibShare);
+            divider1 = v.findViewById(R.id.divider);
+            divider2 = v.findViewById(R.id.divider2);
+            divider3 = v.findViewById(R.id.divider3);
             mem = v;
         }
     }
