@@ -25,6 +25,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
@@ -165,6 +166,12 @@ public class MainActivity extends AppCompatActivity
                 Typeface titleFont = Typeface.
                         createFromAsset(getAssets(), "fonts/extra_light.ttf");
                 if(tv.getText().equals(toolbar.getTitle())){
+
+                    // Zum zentrieren
+//                    Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.MATCH_PARENT);
+//                    params.gravity = Gravity.CENTER_HORIZONTAL;
+//                    tv.setLayoutParams(params);
+                    // Zum aendern der Schriftart
                     tv.setTypeface(titleFont);
                     tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
                     break;
@@ -446,17 +453,28 @@ public class MainActivity extends AppCompatActivity
 
                 case R.id.fab2:
 
-                    FragmentManager fm = getFragmentManager();
 
-                    fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
+                        FragmentManager fm = getFragmentManager();
+
+                        GmapsFragment gmap = (GmapsFragment) getFragmentManager().findFragmentByTag("GMAP_TAG");
+
+                        if (gmap != null && gmap.isVisible()){
+                            // Es muss ueberprueft werden ob das Gmap Fragment schon sichtbar ist, falls das der Fall ist darf das Fragment nicht nochmal geoeffnet werden
+                            // ansonsten stuerzt die App bei BackButtonPressed ab
+                        }
+                        else {
+                            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment(), "GMAP_TAG").addToBackStack(null).commit();
+
+                        }
+
+                        // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
+                        if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                    PERMISSION_ACCESS_COARSE_LOCATION);
+                        }
 
 
-                    // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
-                    if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                                PERMISSION_ACCESS_COARSE_LOCATION);
-                    }
                     fab_Menu.toggle(true);
 
                     break;
@@ -709,10 +727,23 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
+
+            GmapsFragment gmap = (GmapsFragment) getFragmentManager().findFragmentByTag("GMAP_TAG");
+
+            if (gmap != null && gmap.isVisible()){
+                // Es muss ueberprueft werden ob das Gmap Fragment schon sichtbar ist, falls das der Fall ist darf das Fragment nicht nochmal geoeffnet werden
+                // ansonsten stuerzt die App bei BackButtonPressed ab
+            }
+            else {
+                fm.beginTransaction().replace(R.id.content_main, new GmapsFragment(), "GMAP_TAG").addToBackStack(null).commit();
+
+            }
+
+
             /**
              * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
              */
-            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).addToBackStack(null).commit();
+//            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).addToBackStack(null).commit();
 
             // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)

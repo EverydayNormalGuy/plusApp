@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Mapix</string>
+    <string name="app_name">Special Moments</string>
     <string name="title_activity_maps">Kartenansicht</string>
-    <string name="title_activity_main">Mapix</string>
+    <string name="title_activity_main">Special Moments</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -54,7 +54,8 @@
     <string name="preference_title_resolution">Hohe Auflösung verwenden</string>
     <string name="canceled">Abgebrochen..</string>
     <string name="about">Über die App</string>
-    <string name="about_desc">Das ist eine kostenfreie App für die private Nutzung Version:</string>
+    <string name="about_desc">Das ist eine kostenfreie App für die private Nutzung
+        Version:</string>
     <string name="save_loc">Standort speichern</string>
     <string name="save_loc_tut">Nachdem du das Foto aufgenommen hast, hast du die Möglichkeit über \'Standort speichern\' den Ort der Aufnahme zu speichern und später über die GoogleMap anzeigen zu lassen. Für das Speichern des Ortes wird die Berechtigung der Standort Abfrage benötigt.  Hier kannst du weiterhin einen Titel und eine Beschreibung zu deinem Foto angeben, allerdings ist das kein muss</string>
     <string name="got_it">Alles klar!</string>

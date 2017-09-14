@@ -22,6 +22,7 @@ public class ActivityGallery extends AppCompatActivity {
 
     boolean isSetToDarkTheme;
     boolean isDarkTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -68,6 +69,7 @@ public class ActivityGallery extends AppCompatActivity {
 
             // Hier muss mit Target gearbeitet werden ansonsten werden bei Gifs lediglich placeholder angezeigt
             GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
+
 
             Glide.with(mContext)
                     .load(photo.getUrl())

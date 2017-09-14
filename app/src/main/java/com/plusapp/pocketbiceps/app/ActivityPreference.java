@@ -118,7 +118,7 @@ public class ActivityPreference extends PreferenceActivity implements Preference
         mAlertDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
                 .setTitle(R.string.about)
                 .setIcon(R.drawable.iconwobg)
-                .setMessage(getString(R.string.about_desc)+ versionCode)
+                .setMessage(getString(R.string.about_desc)+ versionName)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
