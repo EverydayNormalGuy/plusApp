@@ -49,16 +49,17 @@
             android:paddingTop="16dp"
             android:textSize="16sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnDelete"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDescription"
+            android:background="?android:selectableItemBackground"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
-            android:text="@string/delete"
-            android:textColor="@android:color/holo_orange_dark" />
+            android:src="@drawable/ic_delete_orange_24px"
+            />
 
         <View
             android:id="@+id/divider"
@@ -70,14 +71,15 @@
             android:layout_alignBottom="@+id/imageView4"
             android:layout_alignTop="@+id/imageView4" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnEdit"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDescription"
             android:layout_toRightOf="@id/btnDelete"
-            android:text="@string/edit_cardview"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/pencil_blue"
             android:textColor="#03A9F4" />
 
         <View
@@ -117,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDescription"
-            android:layout_toEndOf="@+id/ibShare"
+            android:layout_toEndOf="@+id/ibShowMarker"
             android:gravity="center"
             android:text="444"
             android:textColor="#03A9F4" />
@@ -138,6 +140,27 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/tvDescription"
             android:layout_toEndOf="@+id/ibShare"
+            android:background="@drawable/separator_line"
+            android:rotation="180"
+            android:layout_alignBottom="@+id/imageView4"
+            android:layout_alignTop="@+id/imageView4"/>
+
+        <ImageButton
+            android:id="@+id/ibShowMarker"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/ibShare"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/google_maps_blue" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/ibShowMarker"
             android:background="@drawable/separator_line"
             android:rotation="180"
             android:layout_alignBottom="@+id/imageView4"

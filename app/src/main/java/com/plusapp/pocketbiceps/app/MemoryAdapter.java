@@ -10,12 +10,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -31,10 +35,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.DetailsFragment;
+import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
 import com.plusapp.pocketbiceps.app.helperclasses.Photo;
 import com.squareup.picasso.Picasso;
 
@@ -111,6 +117,11 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         memoryViewHolder.vDescription.setText(mmo.getSnippet());
         memoryViewHolder.vCounter.setText(String.valueOf(mmo.getCounter()));
 
+        // Leasst das GMap Icon Grau darstellen wenn keine position zu einem Bild gespeichert wurde
+        if (mmo.getPosition().equals("position")){
+            DrawableCompat.setTint(memoryViewHolder.ibShowMarker.getDrawable(), ContextCompat.getColor(mContext, R.color.color_grey));
+        }
+
         // Sorge fuer eine dynamische Darstellung der Cardview, je nach dem ob Titel oder Beschreibungen vorhanden sind oder nicht
         if (mmo.getTitle().equals("") && mmo.getSnippet().equals("")){
             memoryViewHolder.vTitle.setVisibility(View.GONE);
@@ -128,6 +139,10 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params6.addRule(RelativeLayout.BELOW, R.id.cvImage);
             RelativeLayout.LayoutParams params7 = (RelativeLayout.LayoutParams) memoryViewHolder.divider3.getLayoutParams();
             params7.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params8 = (RelativeLayout.LayoutParams) memoryViewHolder.divider4.getLayoutParams();
+            params8.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params9 = (RelativeLayout.LayoutParams) memoryViewHolder.ibShowMarker.getLayoutParams();
+            params9.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
         else if (mmo.getTitle().equals("")){
@@ -148,6 +163,10 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params6.addRule(RelativeLayout.BELOW, R.id.cvImage);
             RelativeLayout.LayoutParams params7 = (RelativeLayout.LayoutParams) memoryViewHolder.divider3.getLayoutParams();
             params7.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params8 = (RelativeLayout.LayoutParams) memoryViewHolder.divider4.getLayoutParams();
+            params8.addRule(RelativeLayout.BELOW, R.id.cvImage);
+            RelativeLayout.LayoutParams params9 = (RelativeLayout.LayoutParams) memoryViewHolder.ibShowMarker.getLayoutParams();
+            params9.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
 
@@ -193,6 +212,29 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                 share.setType("image/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 mContext.startActivity(Intent.createChooser(share, "Share image File"));
+
+            }
+        });
+
+        memoryViewHolder.ibShowMarker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mmo = m.get(i);
+                if (mmo.getPosition().equals("position")){
+//                    Snackbar.make()
+                    Snackbar.make(v, "Zu diesem Bild ist kein Ort gespeichert", Snackbar.LENGTH_LONG).show();
+                } else {
+
+                    String position = mmo.getPosition();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("location_key", position);
+                    GmapsFragment gmap = new GmapsFragment();
+                    gmap.setArguments(bundle);
+                    // Mit Activity cast weil es sich hier um eine Adapter Klasse handelt
+                    FragmentManager fm = ((Activity) mContext).getFragmentManager();
+                    // WICHTIG: in replace() muss gmap drin sein nicht new GMapFragment sonst werden die Argumente nicht weitergegeben
+                    fm.beginTransaction().replace(R.id.content_main, gmap, "GMAP_TAG").addToBackStack(null).commit();
+                }
             }
         });
 
@@ -326,12 +368,14 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         protected TextView vCounter;
         protected TextView vDate;
         protected ImageView vImage;
-        protected Button btnDelete;
-        protected Button btnEdit;
+        protected ImageButton btnDelete;
+        protected ImageButton btnEdit;
         protected ImageButton ibShare;
+        protected ImageButton ibShowMarker;
         protected View divider1;
         protected View divider2;
         protected View divider3;
+        protected View divider4;
         protected View mem;
 
         public MemoryViewHolder(View v) {
@@ -341,12 +385,14 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             vCounter = (TextView) v.findViewById(R.id.tvCounter);
             vDate = (TextView) v.findViewById(R.id.tvDate);
             vImage = (ImageView) v.findViewById(R.id.cvImage);
-            btnDelete = (Button) v.findViewById(R.id.btnDelete);
-            btnEdit = (Button) v.findViewById(R.id.btnEdit);
+            btnDelete = (ImageButton) v.findViewById(R.id.btnDelete);
+            btnEdit = (ImageButton) v.findViewById(R.id.btnEdit);
             ibShare = (ImageButton) v.findViewById(R.id.ibShare);
             divider1 = v.findViewById(R.id.divider);
             divider2 = v.findViewById(R.id.divider2);
             divider3 = v.findViewById(R.id.divider3);
+            divider4 = v.findViewById(R.id.divider4);
+            ibShowMarker = (ImageButton) v.findViewById(R.id.ibShowMarker);
             mem = v;
         }
     }

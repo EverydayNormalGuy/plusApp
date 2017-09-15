@@ -99,6 +99,8 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     private MemoryAdapter memAdapter;
     private LatLng positionMarkers;
     private Bitmap bmpDecoded;
+    boolean sentFromCardView;
+    String locationFromCardView;
 
     public static Bitmap rotateBitmap(Bitmap source, float angle) {
 
@@ -113,6 +115,11 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
+        if (getArguments() != null) {
+            locationFromCardView = getArguments().getString("location_key");
+            this.sentFromCardView = true;
+
+        }
         return inflater.inflate(R.layout.fragment_gmaps, container, false);
 
 
@@ -248,9 +255,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
 
 
-
-
-
                 Bitmap bmpDecoded = memAdapter.decodeFile(f);
 
                 Bitmap rotatedBmp;
@@ -258,16 +262,16 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                 // Wird benoetigt damit die Bilder in den Marker auf der Map richtig rum gedreht sind
                 // Maincamera in Landscape aufgenommen
                 if (orientation == 6) {
-                     rotatedBmp = rotateBitmap(bmpDecoded, 90);
+                    rotatedBmp = rotateBitmap(bmpDecoded, 90);
                     bmpDecoded = rotatedBmp;
                 }
                 // Frontcamera in Portrait aufgenommen
-                if (orientation == 8){
+                if (orientation == 8) {
                     rotatedBmp = rotateBitmap(bmpDecoded, 270);
                     bmpDecoded = rotatedBmp;
                 }
                 // Frontcamera in Landscape aufgenommen
-                if (orientation == 3){
+                if (orientation == 3) {
                     rotatedBmp = rotateBitmap(bmpDecoded, 180);
                     bmpDecoded = rotatedBmp;
                 }
@@ -290,11 +294,12 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                         loc = marker.getPosition().toString();
 
 
-
                         Intent intent = new Intent(getActivity().getApplicationContext(), ActivityImageFromMarker.class);
                         intent.putExtra("location", loc);
+                        // Flag muss gesetzt werden ansonsten:
+                        // AndroidRuntimeException: Calling startActivity() from outside of an Activity  context requires the FLAG_ACTIVITY_NEW_TASK flag. Is this really what you want?
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         getActivity().getApplicationContext().startActivity(intent);
-
                         return false;
                     }
                 });
@@ -339,8 +344,19 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         gMap.getUiSettings().setMapToolbarEnabled(false);
         //move map camera
-        gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        gMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+        if (sentFromCardView) {
+
+            String[] sLatLng = locationFromCardView.split(" ");
+            //Stelle 1 ist Lat und Stelle 0 Long
+            LatLng locFromCardViewMarker = new LatLng(Double.valueOf(sLatLng[1]), Double.valueOf(sLatLng[0]));
+            gMap.moveCamera(CameraUpdateFactory.newLatLng(locFromCardViewMarker));
+            gMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+
+        } else {
+            gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            gMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        }
+
 
         //stop location updates
         if (googleApiClient != null) {
