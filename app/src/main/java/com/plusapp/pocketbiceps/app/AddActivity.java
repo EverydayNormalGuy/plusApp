@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -105,13 +106,13 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         setSupportActionBar(toolbarAdd);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
 
-        for(int i = 0; i < toolbarAdd.getChildCount(); i++){
+        for (int i = 0; i < toolbarAdd.getChildCount(); i++) {
             View view = toolbarAdd.getChildAt(i);
-            if(view instanceof TextView){
+            if (view instanceof TextView) {
                 TextView tv = (TextView) view;
                 Typeface titleFont = Typeface.
                         createFromAsset(getAssets(), "fonts/extra_light.ttf");
-                if(tv.getText().equals(toolbarAdd.getTitle())){
+                if (tv.getText().equals(toolbarAdd.getTitle())) {
                     tv.setTypeface(titleFont);
 //                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
                     break;
@@ -258,7 +259,17 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         } else {
             data.addMarker(new MyMarkerObj(dbTitle, dbDescription, dbLongi + " " + dbLati, dbvCurrTime, dbCounter, dbPath));
         }
+
+        // Laesst den Media Scanner nach neuen Bildern scannen damit die in der Gallery angezeigt werden koennen
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(dbPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+
+
         data.close();
+
 
         Intent intent = new Intent(AddActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

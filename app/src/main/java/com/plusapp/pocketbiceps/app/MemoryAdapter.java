@@ -120,6 +120,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         // Leasst das GMap Icon Grau darstellen wenn keine position zu einem Bild gespeichert wurde
         if (mmo.getPosition().equals("position")){
             DrawableCompat.setTint(memoryViewHolder.ibShowMarker.getDrawable(), ContextCompat.getColor(mContext, R.color.color_grey));
+        } else {
+            DrawableCompat.setTint(memoryViewHolder.ibShowMarker.getDrawable(), ContextCompat.getColor(mContext, R.color.colorCardViewBlue));
         }
 
         // Sorge fuer eine dynamische Darstellung der Cardview, je nach dem ob Titel oder Beschreibungen vorhanden sind oder nicht

@@ -7,6 +7,8 @@ import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,6 +74,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity
     Context context;
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
-    public static final String IMAGE_PATH_URI = "sdcard/Special_Moments/";
+    public static final String IMAGE_PATH_URI = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Special_Moments/";
     private final static String PACKAGE_NAME = "com.plusapp.pocketbiceps.app";
     private final static String PLAYSTORE_LINK = "market://details?id=";
     public long currTime = 0;
