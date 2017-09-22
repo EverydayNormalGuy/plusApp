@@ -49,6 +49,7 @@
     <string name="title_activity_details_full_screen">ActivityDetailsFullScreen</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="abort">Abbrechen</string>
     <string name="preference_key_resolution">resolution</string>
     <string name="preference_description_resolution">Die Bilder werden in hoher Qualität angezeigt. Dadurch kann es passieren, dass die Bilder länger zum Laden brauchen</string>
     <string name="preference_title_resolution">Hohe Auflösung verwenden</string>
@@ -91,5 +92,16 @@
     <string name="edit_sts">edit</string>
     <string name="search_sts">Search</string>
     <string name="user_sts">User</string>
+    <string name="no_loc_saved">Zu diesem Bild ist kein Ort gespeichert</string>
+    <string name="layout_options">Layout Optionen</string>
+    <string name="resolution">Bildauflösung</string>
+    <string name="google_map_options">Google Map Optionen</string>
+    <string name="about_app">Über die App</string>
+    <string name="information">Informationen</string>
+    <string name="adding_moment">Moment hinzufügen</string>
+    <string name="Menu">Menü</string>
+    <string name="settings_fab">Einstellungen</string>
+    <string name="take_picture">Foto aufnehmen</string>
+
 
 </resources>

@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Mapix</string>
+    <string name="app_name">Special Moments</string>
     <string name="title_activity_maps">Map View</string>
-    <string name="title_activity_main">MAPIX</string>
+    <string name="title_activity_main">Special Moments</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -46,6 +46,7 @@
         <item>3</item>
     </string-array>
 
+    <string name="abort">Abort</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="preference_key_resolution">resolution</string>
@@ -56,16 +57,20 @@
     <string name="about_desc">It is a free to use App
         Version:</string>
     <string name="save_loc">Save location</string>
-    <string name="save_loc_tut">Nachdem du das Foto aufgenommen hast, hast du die Möglichkeit über \'Standort speichern\' den Ort der Aufnahme zu speichern und später über die GoogleMap anzeigen zu lassen. Für das Speichern des Ortes wird die Berechtigung der Standort Abfrage benötigt.  Hier kannst du weiterhin einen Titel und eine Beschreibung zu deinem Foto angeben, allerdings ist das kein muss</string>
+    <string name="save_loc_tut">With the \'Save location\' button, is it possible to save the current location. The picture will be then displayed in the Google Map feature.
+        Title or description text is not necessary</string>
     <string name="got_it">Got it!</string>
-    <string name="snachbar_loc">Der Standort wird nur beim Speichern abgefragt</string>
+    <string name="snachbar_loc">The permission must be granted to use this feature</string>
     <string name="getting_started">Getting Started..</string>
-    <string name="getting_started_desc">Um ein erstes Foto zu erstellen, drücke bitte auf das Symbol rechts unten im Bild und wähle dann \'Foto aufnehmen\' aus  Weiterhin kann über das Symbol die Karte geöffnet werden, um sich die aufgenommen Fotos auf der GoogleMap Karte anzeigen zu lassen, falls man den Standort gespeichert hat.</string>
+    <string name="getting_started_desc">To take the first picture, press on the Button on the bottom right corner and choose \'Take a Pic\'. You can also open the Map to see the location of your taken pictures
+        or you can open the Settings.</string>
     <string name="next">Next</string>
     <string name="sidemenu">Using Sidemenu</string>
-    <string name="sidemenu_desc">Über dieses Symbol oder durch ein Wischen von links nach rechts,  kann das Seitenmenü geöffnet werden. Über das Seitenmenü können zum Beispiel Bilder aus dem Smartphone importiert werden oder alle Moments angezeigt werden</string>
+    <string name="sidemenu_desc">This Button opens the Sidemenu you can also swipe from left to right to open the Sidemenu. The Sidemenu gives you more options just check them out.
+        </string>
     <string name="have_fun">Have Fun!</string>
-    <string name="have_fun_desc">Es gibt noch weitere Funktionen am Besten du stöberst einfach durch die App.  Denke bitte dran dass die Rechte für den Standort und für den Speicher gegeben werden müssen  um diese App zu verwenden.   Viel Spaß</string>
+    <string name="have_fun_desc">There is a lot more to see. Just explore the App and have fun saving your important Memories!
+        </string>
     <string name="no_pic_chosen">No Picture has been chosen for the import</string>
     <string name="error">Error</string>
     <string name="delete_message">Delete this entry?</string>
@@ -90,5 +95,16 @@
     <string name="edit_sts">edit</string>
     <string name="search_sts">Search</string>
     <string name="user_sts">User</string>
+    <string name="no_loc_saved">There is no location saved for this picture</string>
+    <string name="layout_options">Layout Options</string>
+    <string name="resolution">Image Resolution</string>
+    <string name="google_map_options">Google Map Options</string>
+    <string name="about_app">About the App</string>
+    <string name="information">Information</string>
+    <string name="adding_moment">Add Memorie</string>
+    <string name="edit_pic">Edit</string>
+    <string name="Menu">Menu</string>
+    <string name="settings_fab">Settings</string>
+    <string name="take_picture">Take a Picture</string>
 
 </resources>

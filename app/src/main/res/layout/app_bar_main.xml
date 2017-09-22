@@ -49,7 +49,7 @@
         app:layout_behavior="com.plusapp.pocketbiceps.app.FloatingActionMenuBehavior"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
-        fab:menu_fab_label="Menü">
+        fab:menu_fab_label="@string/Menu">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab1"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_menu_manage"
             fab:fab_size="mini"
-            fab:fab_label="Einstellungen" />
+            fab:fab_label="@string/title_activity_preference" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab2"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/google_maps"
             fab:fab_size="mini"
-            fab:fab_label="Karte öffnen" />
+            fab:fab_label="@string/open_map" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab3"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_menu_camera"
             fab:fab_size="mini"
-            fab:fab_label="Foto aufnehmen" />
+            fab:fab_label="@string/take_picture" />
 
     </com.github.clans.fab.FloatingActionMenu>
 

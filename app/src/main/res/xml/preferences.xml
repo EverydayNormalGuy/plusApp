@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true">
 
-    <PreferenceCategory android:title="Layout Optionen">
+    <PreferenceCategory android:title="@string/layout_options">
 
 
         <CheckBoxPreference
@@ -23,7 +23,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Bildauflösung">
+    <PreferenceCategory android:title="@string/resolution">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/preference_key_resolution"
@@ -32,7 +32,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Google Map Optionen">
+    <PreferenceCategory android:title="@string/google_map_options">
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/gmapTypeDialog"
@@ -43,10 +43,10 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="Informationen">
+    <PreferenceCategory android:title="@string/information">
 
         <Preference
-            android:title="Über die App"
+            android:title="@string/about_app"
             android:key="about"/>
        <Preference
            android:title="Open-Source Libraries"

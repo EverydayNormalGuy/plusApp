@@ -224,7 +224,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
                 mmo = m.get(i);
                 if (mmo.getPosition().equals("position")){
 //                    Snackbar.make()
-                    Snackbar.make(v, "Zu diesem Bild ist kein Ort gespeichert", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, R.string.no_loc_saved, Snackbar.LENGTH_LONG).show();
                 } else {
 
                     String position = mmo.getPosition();
@@ -302,7 +302,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
                     }
                 })
-                .setNegativeButton(R.string.canceled, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
