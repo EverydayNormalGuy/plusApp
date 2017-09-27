@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
     Context context;
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
-    public static final String IMAGE_PATH_URI = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Special_Moments/";
+    public static final String IMAGE_PATH_URI = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Mapix/";
     private final static String PACKAGE_NAME = "com.plusapp.pocketbiceps.app";
     private final static String PLAYSTORE_LINK = "market://details?id=";
     public long currTime = 0;
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity
             if(view instanceof TextView){
                 TextView tv = (TextView) view;
                 Typeface titleFont = Typeface.
-                        createFromAsset(getAssets(), "fonts/extra_light.ttf");
+                        createFromAsset(getAssets(), "fonts/Antonio-Light.ttf");
                 if(tv.getText().equals(toolbar.getTitle())){
 
                     // Zum zentrieren
@@ -279,9 +279,9 @@ public class MainActivity extends AppCompatActivity
         nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
 
         if (isDarkTheme) {
-            nav_image_head.setImageResource(R.drawable.logoblackgold);
+            nav_image_head.setImageResource(R.drawable.headerblack);
         } else {
-            nav_image_head.setImageResource(R.drawable.logoblackwhite);
+            nav_image_head.setImageResource(R.drawable.headerblue);
         }
 
 

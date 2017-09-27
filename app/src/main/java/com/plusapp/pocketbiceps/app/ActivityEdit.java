@@ -78,7 +78,7 @@ public class ActivityEdit extends AppCompatActivity {
             if(view instanceof TextView){
                 TextView tv = (TextView) view;
                 Typeface titleFont = Typeface.
-                        createFromAsset(getAssets(), "fonts/extra_light.ttf");
+                        createFromAsset(getAssets(), "fonts/Antonio-Light.ttf");
                 if(tv.getText().equals(toolbarAdd.getTitle())){
                     tv.setTypeface(titleFont);
 //                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);

@@ -20,7 +20,7 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@drawable/iconwobg"
+        android:icon="@mipmap/mapix_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"

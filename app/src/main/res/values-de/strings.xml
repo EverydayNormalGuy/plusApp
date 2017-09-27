@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Special Moments</string>
+    <string name="app_name">MAPIX</string>
     <string name="title_activity_maps">Kartenansicht</string>
-    <string name="title_activity_main">Special Moments</string>
+    <string name="title_activity_main">MAPIX</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -11,7 +11,6 @@
     <string name="title_activity_add_moment">Memory hinzufügen</string>
     <string name="title_activity_details">Details</string>
     <string name="section_format">Hello World from section: %1$d</string>
-
     <string name="title_activity_preference">Einstellungen</string>
     <string name="preference_title_darktheme">Dark Theme benutzen</string>
     <string name="preference_key_darktheme">darktheme</string>
@@ -25,7 +24,6 @@
     <string name="preference_title_showdate">Datum anzeigen</string>
     <string name="preference_description_showdate">Zu jedem Moment, das Datum anzeigen</string>
     <string name="preference_key_showdate">showdate</string>
-
 
     <string-array name="sortDialog">
         <item>Neuste</item>
@@ -65,7 +63,7 @@
     <string name="getting_started_desc">Um ein erstes Foto zu erstellen, drücke bitte auf das Symbol rechts unten im Bild und wähle dann \'Foto aufnehmen\' aus  Weiterhin kann über das Symbol die Karte geöffnet werden, um sich die aufgenommen Fotos auf der GoogleMap Karte anzeigen zu lassen, falls man den Standort gespeichert hat.</string>
     <string name="next">Weiter</string>
     <string name="sidemenu">Seitenmenü benutzen</string>
-    <string name="sidemenu_desc">Über dieses Symbol oder durch ein Wischen von links nach rechts,  kann das Seitenmenü geöffnet werden. Über das Seitenmenü können zum Beispiel Bilder aus dem Smartphone importiert werden oder alle Moments angezeigt werden</string>
+    <string name="sidemenu_desc">Über dieses Symbol oder durch ein Wischen von links nach rechts, kann das Seitenmenü geöffnet werden. Um weitere Funktionen zu öffnen</string>
     <string name="have_fun">Viel Spaß</string>
     <string name="have_fun_desc">Es gibt noch weitere Funktionen am Besten du stöberst einfach durch die App.  Denke bitte dran dass die Rechte für den Standort und für den Speicher gegeben werden müssen  um diese App zu verwenden.   Viel Spaß</string>
     <string name="no_pic_chosen">Kein Bild zum importieren ausgewählt</string>
@@ -78,9 +76,9 @@
     <string name="title">Titel?</string>
     <string name="edit">Bearbeiten</string>
     <string name="share">Teilen</string>
-    <string name="total_moments">Anzahl der Momente</string>
+    <string name="total_moments">Anzahl der Einträge</string>
     <string name="import_from_gallery">Von Gallery importieren</string>
-    <string name="show_all_moments">Alle Moments anzeigen</string>
+    <string name="show_all_moments">Alle Einträge anzeigen</string>
     <string name="open_map">Map öffnen</string>
     <string name="settings_xml">Einstellungen</string>
     <string name="communication">Kommunikation</string>
@@ -98,7 +96,7 @@
     <string name="google_map_options">Google Map Optionen</string>
     <string name="about_app">Über die App</string>
     <string name="information">Informationen</string>
-    <string name="adding_moment">Moment hinzufügen</string>
+    <string name="adding_moment">Eintrag hinzufügen</string>
     <string name="Menu">Menü</string>
     <string name="settings_fab">Einstellungen</string>
     <string name="take_picture">Foto aufnehmen</string>
