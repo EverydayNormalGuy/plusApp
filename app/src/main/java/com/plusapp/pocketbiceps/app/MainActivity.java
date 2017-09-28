@@ -3,12 +3,8 @@ package com.plusapp.pocketbiceps.app;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
-import android.app.PendingIntent;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,25 +22,24 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -54,7 +49,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -71,20 +65,15 @@ import com.squareup.picasso.Target;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private GoogleApiClient googleApiClient;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
 
     public MarkerDataSource data;
-    public MarkerDataSource data2;
-    Context context;
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
     public static final String IMAGE_PATH_URI = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Mapix/";
@@ -102,7 +91,6 @@ public class MainActivity extends AppCompatActivity
 
     RecyclerView recList;
 
-
     FloatingActionMenu fab_Menu;
     FloatingActionButton fab1;
     FloatingActionButton fab2;
@@ -111,7 +99,6 @@ public class MainActivity extends AppCompatActivity
     private List<FloatingActionMenu> fab_Submenus = new ArrayList<>();
     private Handler mUiHandler = new Handler();
 
-
     TextView momentsCounter;
     int momentsCount;
 
@@ -119,9 +106,6 @@ public class MainActivity extends AppCompatActivity
     boolean isSetToDarkTheme;
     boolean isCoverPhoto;
     boolean isSettoCoverPhoto;
-
-    public MyMarkerObj mmoForCache;
-
 
     View headNavView;
     ImageView nav_image_head;
@@ -155,20 +139,19 @@ public class MainActivity extends AppCompatActivity
         data = new MarkerDataSource(this);
         data.open();  //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Aenderd den Textfont von der Toolbar
-        for(int i = 0; i < toolbar.getChildCount(); i++){
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
             View view = toolbar.getChildAt(i);
-            if(view instanceof TextView){
+            if (view instanceof TextView) {
                 TextView tv = (TextView) view;
                 Typeface titleFont = Typeface.
                         createFromAsset(getAssets(), "fonts/Antonio-Light.ttf");
-                if(tv.getText().equals(toolbar.getTitle())){
+                if (tv.getText().equals(toolbar.getTitle())) {
 
                     // Zum zentrieren
 //                    Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.MATCH_PARENT);
@@ -182,16 +165,12 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-
-
         sp = getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
         sortOrder = sp.getInt("sort_mode", 0);
-
 
         //Permissions Abfragen
         isStoragePermissionGranted();
         grantLocationPermission();
-
 
         // Erstellt die RecylerView
         recList = (RecyclerView) findViewById(R.id.lvMemories);
@@ -200,9 +179,7 @@ public class MainActivity extends AppCompatActivity
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-
         momentsCount = createList2().size();
-
 
         fab_Menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
@@ -212,7 +189,6 @@ public class MainActivity extends AppCompatActivity
         // An den MemoryAdapter wird Liste an den Konstruktor weitergegeben
         this.ca = new MemoryAdapter(createList2(), this);
         this.recList.setAdapter(ca);
-
 
         final String PREFS_NAME = "MyPrefsFile";
         SharedPreferences firstPref = getSharedPreferences(PREFS_NAME, 0);
@@ -261,13 +237,11 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 //            TextView nav_user = (TextView) headNavView.findViewById(R.id.tvNavHeaderTitle);
@@ -284,12 +258,11 @@ public class MainActivity extends AppCompatActivity
             nav_image_head.setImageResource(R.drawable.headerblue);
         }
 
-
-        if (isSettoCoverPhoto == true) {
+        if (isSettoCoverPhoto) {
 
             // NavDrawer Header manipulieren
             List<MyMarkerObj> navHeaderGetImage = createList2();
-            // Falls mind. ein Moment Eintrag existiert, wird das Foto dass als letztes gemacht wurde
+            // Falls mind. ein Eintrag existiert, wird das Foto dass als letztes gemacht wurde
             // in den NavHeader eingefügt
             if (navHeaderGetImage.size() != 0) {
                 MyMarkerObj mmo = navHeaderGetImage.get(0);
@@ -329,13 +302,11 @@ public class MainActivity extends AppCompatActivity
 
                 isCoverPhoto = true;
 
-//                preloadBitmaps();
-
             }
-
         }
+
         momentsCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
-        //This method will initialize the count value
+        // Damit wird der Counter initialisiert
         initializeCountDrawer();
 
         FragmentManager fm = getFragmentManager();
@@ -343,44 +314,23 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void preloadBitmaps() {
-        List<MyMarkerObj> cachedBitmaps = createList2();
-
-        MyMarkerObj mmo;
-
-        for (int i = 0; i <= 10; i++) {
-            mmo = cachedBitmaps.get(i);
-
-            // Das Bild wird in die Variable f initialisiert
-            File f = new File(mmo.getPath());
-
-            Glide.with(this)
-                    .load(f)
-                    .preload();
-        }
-
-    }
-
+    // Tutorial fuer den User beim ersten Starten der App
     private void showMainTutorial() {
+        // Nimmt das FAB Menue als Target
         com.github.amlcurran.showcaseview.targets.Target targetFab = new ViewTarget(R.id.fab_menu, this);
 
-
-        /*
-        Hier kommt spaeter das tutorial rein bzw. sollte in eine eigene methode ausgelagert werden
-         */
-
+        // Oeffnet das FAB Menue
         fab_Menu.toggle(true);
 
-
         RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-// This aligns button to the bottom left side of screen
+        // This aligns button to the bottom left side of screen
         lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-// Set margins to the button, we add 16dp margins here
+        // Set margins to the button, we add 16dp margins here
         int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
         lps.setMargins(margin, margin, margin, margin);
 
-
+        // Startet das Tutorial
         sv = new ShowcaseView.Builder(this)
                 .setTarget(targetFab)
                 .setContentTitle(getString(R.string.getting_started))
@@ -392,19 +342,19 @@ public class MainActivity extends AppCompatActivity
 
         sv.setButtonText(getString(R.string.next));
 
+        // Button wird nach linksunten verschoben
         sv.setButtonPosition(lps);
-
-
     }
 
     @Override
     public void onClick(View v) {
 
-
+        // Nach dem die erste Setite vom Tutorial gestartet wurde wird der Counter auf 0 gesetzt und wird dann um eins hochgezaehlt jedesmal wenn man auf Next klickt
         switch (counterTut) {
             case 0:
                 try {
                     fab_Menu.toggle(false);
+                    // Nimmt den Sidemenu Button als naechsten Fokus
                     ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
                     sv.setShowcase(navigationButtonViewTarget, true);
                     sv.setContentTitle(getString(R.string.sidemenu));
@@ -428,11 +378,12 @@ public class MainActivity extends AppCompatActivity
         counterTut++;
     }
 
+    // Zeigt die Gesamtzahl der Eintraege, im Sidemenu an
     private void initializeCountDrawer() {
-        //Gravity property aligns the text
+        // Gravity property aligns the text
         momentsCounter.setGravity(Gravity.CENTER_VERTICAL);
         momentsCounter.setTypeface(null, Typeface.BOLD);
-        if (isDarkTheme == true) {
+        if (isDarkTheme) {
             momentsCounter.setTextColor(getResources().getColor(R.color.colorCardViewBlue));
         } else {
             momentsCounter.setTextColor(getResources().getColor(R.color.colorAccent));
@@ -456,27 +407,22 @@ public class MainActivity extends AppCompatActivity
 
                 case R.id.fab2:
 
+                    FragmentManager fm = getFragmentManager();
+                    GmapsFragment gmap = (GmapsFragment) getFragmentManager().findFragmentByTag("GMAP_TAG");
 
-                        FragmentManager fm = getFragmentManager();
+                    if (gmap != null && gmap.isVisible()) {
+                        // Es muss ueberprueft werden ob das Gmap Fragment schon sichtbar ist, falls das der Fall ist darf das Fragment nicht nochmal geoeffnet werden
+                        // ansonsten stuerzt die App bei BackButtonPressed ab
+                    } else {
+                        fm.beginTransaction().replace(R.id.content_main, new GmapsFragment(), "GMAP_TAG").addToBackStack(null).commit();
+                    }
 
-                        GmapsFragment gmap = (GmapsFragment) getFragmentManager().findFragmentByTag("GMAP_TAG");
-
-                        if (gmap != null && gmap.isVisible()){
-                            // Es muss ueberprueft werden ob das Gmap Fragment schon sichtbar ist, falls das der Fall ist darf das Fragment nicht nochmal geoeffnet werden
-                            // ansonsten stuerzt die App bei BackButtonPressed ab
-                        }
-                        else {
-                            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment(), "GMAP_TAG").addToBackStack(null).commit();
-
-                        }
-
-                        // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
-                        if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                                != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                                    PERMISSION_ACCESS_COARSE_LOCATION);
-                        }
-
+                    // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
+                    if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                PERMISSION_ACCESS_COARSE_LOCATION);
+                    }
 
                     fab_Menu.toggle(true);
 
@@ -503,7 +449,7 @@ public class MainActivity extends AppCompatActivity
     };
 
     /**
-     * Aktualisiert die Listview. Die SP von sortDialog werden hiern nochmal
+     * Aktualisiert die Listview. Die SharedPreferences von sortDialog werden hiern nochmal
      * aufgerufen und in sortorder gespeichert. danach kann die neue Liste mit der
      * Sortierunge aufgerufen werden
      */
@@ -553,15 +499,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    // RequestCodes: 1 = Bild mit Kamera aufnehmen, 2 = Bild von Gallerie importieren
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
 
+            // Nach dem man ein Foto mit der Kamera aufgenommen hat wird onActivityResult aufgerufen, bei dem ueberprueft wird ob man das Bild mit Ok oder mit Abbrechen bestaetigt hat
             case 1:
-                // Wenn nicht auf Abbrechen in der CameraAct. gedrückt wurde passiert werden die daten gespeichert
+                // Wenn nicht auf Abbrechen in der CameraAct. gedrueckt wurde, werden die daten gespeichert
                 // und die AddActivity wird gestartet
                 if (resultCode == RESULT_OK) {
 
@@ -577,6 +524,8 @@ public class MainActivity extends AppCompatActivity
                     startActivity(intent);
                 }
                 break;
+
+            // Bild von der Gallerie importieren
             case 2:
                 super.onActivityResult(requestCode, resultCode, data);
 
@@ -630,9 +579,7 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String dateString = formatter.format(new Date(currTime));
 
-
         File folder = new File(IMAGE_PATH_URI);
-
 
         if (!folder.exists()) {
             //Make Directory
@@ -645,7 +592,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Erstellt eine Liste aus den Markern (Moments) in der Datenbank
+     * Erstellt eine Liste aus den Markern (Eintraegen) in der Datenbank
      *
      * @return Marker Liste aus der DB
      */
@@ -653,7 +600,6 @@ public class MainActivity extends AppCompatActivity
         List<MyMarkerObj> m = data.getMyMarkers(sortOrder);
         return m;
     }
-
 
     @Override
     public void onBackPressed() {
@@ -666,7 +612,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -674,6 +619,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    // Die Sortierungsoption in der Toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -681,20 +627,11 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            Intent i = new Intent(this, ActivityPreference.class);
-//            startActivity(i);
-//            return true;
-//        }
         if (id == R.id.menu_sort) {
             showSortDialog();
-
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 
     private void showSortDialog() {
         FragmentManager fm = getFragmentManager();
@@ -730,23 +667,18 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
-
             GmapsFragment gmap = (GmapsFragment) getFragmentManager().findFragmentByTag("GMAP_TAG");
 
-            if (gmap != null && gmap.isVisible()){
+            if (gmap != null && gmap.isVisible()) {
                 // Es muss ueberprueft werden ob das Gmap Fragment schon sichtbar ist, falls das der Fall ist darf das Fragment nicht nochmal geoeffnet werden
                 // ansonsten stuerzt die App bei BackButtonPressed ab
-            }
-            else {
+            } else {
+                /**
+                 * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
+                 */
                 fm.beginTransaction().replace(R.id.content_main, new GmapsFragment(), "GMAP_TAG").addToBackStack(null).commit();
 
             }
-
-
-            /**
-             * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
-             */
-//            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).addToBackStack(null).commit();
 
             // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -754,8 +686,6 @@ public class MainActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                         PERMISSION_ACCESS_COARSE_LOCATION);
             }
-
-//            Toast.makeText(getBaseContext(), "Map startet", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(MainActivity.this, ActivityPreference.class);

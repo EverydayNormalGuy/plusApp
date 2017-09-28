@@ -3,24 +3,19 @@ package com.plusapp.pocketbiceps.app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
-import android.media.ExifInterface;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,16 +24,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.helperclasses.Blur;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-
-import static com.plusapp.pocketbiceps.app.MainActivity.IMAGE_NAME_PREFIX;
 
 public class ActivityEdit extends AppCompatActivity {
 

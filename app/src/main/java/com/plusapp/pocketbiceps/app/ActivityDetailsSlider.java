@@ -3,7 +3,6 @@ package com.plusapp.pocketbiceps.app;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -20,32 +18,24 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
-import com.plusapp.pocketbiceps.app.helperclasses.Blur;
-import com.plusapp.pocketbiceps.app.helperclasses.BlurTransformation;
 import com.plusapp.pocketbiceps.app.helperclasses.HackyViewPager;
 import com.plusapp.pocketbiceps.app.helperclasses.Photo;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Hierhin gelangt man nachdem man einen Eintrag in der MainActivity auswaehlt.
+ * Der User bekommt das Bild in Originalgroeße mit Titel, Beschreibung und den Optionen Teilen und Bearbeiten, angezeigt
+ * Hier liegen noch Codezeilen von der Funktion "hideUIControls.onClick" mit der es moeglich sein sollte den Titel die Beschreibung und die Buttons per Klick auf das Bild
+ * zu verstecken. An dieser Funktion wird aber nicht mehr weitergearbeitet.
  */
 public class ActivityDetailsSlider extends AppCompatActivity {
 
@@ -62,13 +52,9 @@ public class ActivityDetailsSlider extends AppCompatActivity {
     static boolean isHighResolution;
     static boolean isSetToHighResolution;
 
-    private static View separatorLine2;
     MyMarkerObj mmo;
 
     int clickedPosition;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +65,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
         String resolution_key = getString(R.string.preference_key_resolution);
         isSetToHighResolution = sPrefs.getBoolean(resolution_key, false);
 
-
-        if (isSetToDarkTheme == true) {
+        if (isSetToDarkTheme) {
             setTheme(R.style.DarkTheme);
             isDarkTheme = true;
         }
@@ -90,7 +75,6 @@ public class ActivityDetailsSlider extends AppCompatActivity {
         data = new MarkerDataSource(this);
         data.open();
 
-
         photo = getIntent().getParcelableExtra(EXTRA_PHOTO);
         // bundle2 wird benoetigt um die position des angeklickten elements auslesen zu koennen
         Bundle bundle2 = getIntent().getExtras();
@@ -99,7 +83,6 @@ public class ActivityDetailsSlider extends AppCompatActivity {
         mmo = mList.get(clickedPosition);
         NUM_ITEMS = mList.size();
         temp = new Photo[mList.size()];
-
 
         for (int i = 0; i < mList.size(); i++){
             temp[i] = new Photo(mList.get(i).getPath(), mList.get(i).getTitle(), mList.get(i).getSnippet());
@@ -111,8 +94,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
         // Von wo der Pager starten soll
         viewPager.setCurrentItem(clickedPosition);
 //        viewPager.setOffscreenPageLimit(6);
-        data.updateMarker(mmo);
-
+        data.updateMarker(mmo); // Zaehlt lediglich den Counter von "Gesehen" hoch
     }
 
     public static class ImageFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -131,7 +113,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return NUM_ITEMS;
+            return NUM_ITEMS; // Groesse der Liste von allen Eintraegen
         }
     }
 
@@ -145,9 +127,9 @@ public class ActivityDetailsSlider extends AppCompatActivity {
             final int position = bundle.getInt("position");
 
             mVisible2 = true;
-            mControlsView2 = swipeView.findViewById(R.id.fullscreen_content_controls2);
+            mControlsView2 = swipeView.findViewById(R.id.fullscreen_content_controls2); // Titel und Beschreibung
             mContentView2 = swipeView.findViewById(R.id.fullscreen_content2);
-            mControlsViewTop2 = swipeView.findViewById(R.id.fullscreen_content_controls_top_buttons2);
+            mControlsViewTop2 = swipeView.findViewById(R.id.fullscreen_content_controls_top_buttons2); // Buttons Teilen und Bearbeiten
 
             // Set up the user interaction to manually show2 or hide2 the system UI.
             mContentView2.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +154,7 @@ public class ActivityDetailsSlider extends AppCompatActivity {
 
             GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivSlider);
 
-            if (isSetToHighResolution == true){
+            if (isSetToHighResolution){
                 isHighResolution = true;
                 Glide.with(this)
                         .load(temp[position].getUrl())
@@ -188,22 +170,16 @@ public class ActivityDetailsSlider extends AppCompatActivity {
                         .into(ivSlider);
             }
 
-
-
-
             tvDetailsTitle.setText(temp[position].getTitle());
             tvDetailsDescr.setText(temp[position].getDescription());
 
             tvDetailsDescr.setMovementMethod(new ScrollingMovementMethod()); // Dadurch kann man durch die Textview scrollen
-
-
             Button btn_EditDetails = (Button) swipeView.findViewById(R.id.btnEditDetails);
             Button btn_ShareDetails = (Button) swipeView.findViewById(R.id.btnShareDetails);
 
             btn_EditDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(getActivity().getBaseContext(), "editieren..", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity().getBaseContext(), ActivityEdit.class);
                     intent.putExtra("index", position);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -225,10 +201,8 @@ public class ActivityDetailsSlider extends AppCompatActivity {
                 }
             });
 
-
 //            Glide.with(this).load(temp[position].getUrl()).into(ivSlider);
             return swipeView;
-//            }
         }
         static SwipeFragment newInstance(int position) {
             SwipeFragment swipeFragment = new SwipeFragment();
@@ -287,14 +261,6 @@ public class ActivityDetailsSlider extends AppCompatActivity {
                 actionBar.show();
             }
 
-                // Versteckt das LinearLayout vom Titel und der Beschreibung wenn der Titel leer ist
-//                if (temp[position].getTitle().equals("") /* && mmo.getSnippet().equals("")**/){
-//                    separatorLine2.setVisibility(View.GONE);
-//                    mControlsView2.setVisibility(View.GONE);
-//                }
-//                else {
-//                    mControlsView2.setVisibility(View.VISIBLE);
-//                }
             mControlsView2.setVisibility(View.VISIBLE);
                 mControlsViewTop2.setVisibility(View.VISIBLE);
             }
@@ -320,16 +286,13 @@ public class ActivityDetailsSlider extends AppCompatActivity {
                 return false;
             }
         };
-
         private void toggle2() {
             if (mVisible2) {
                 hide2();
             } else {
                 show2();
-
             }
         }
-
         private void hide2() {
             // Hide UI first
         ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
@@ -365,8 +328,6 @@ public class ActivityDetailsSlider extends AppCompatActivity {
             mHideHandler.removeCallbacks(mHideRunnable);
             mHideHandler.postDelayed(mHideRunnable, delayMillis);
         }
-
-
     }
 
     // Sorgt dafuer dass der Stack der Activities geloescht wird
