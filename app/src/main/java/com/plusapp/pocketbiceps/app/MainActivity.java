@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -63,7 +65,9 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -537,6 +541,8 @@ public class MainActivity extends AppCompatActivity
                         Uri selectedImage = data.getData();
                         String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
+                        String time = "";
+                        long originalTimeInMilli = 0;
                         // Cursor holen
                         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
                         // Move to first row
@@ -550,9 +556,29 @@ public class MainActivity extends AppCompatActivity
                         this.currTime = System.currentTimeMillis();
 
 
+                        ExifInterface exif = new ExifInterface(imgDecodableString);
+                        if (exif != null) {
+                            time = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                            if (time != null) {
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
+                                try {
+                                    Date mDate = sdf.parse(time);
+                                    originalTimeInMilli = mDate.getTime();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    time = null;
+                                }
+                            }
+                        }
+
                         Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                        intent.putExtra("currTime", currTime);
+                        if (time == null) {
+                            intent.putExtra("currTime", currTime);
+                        } else {
+                            intent.putExtra("currTime", originalTimeInMilli);
+                        }
                         intent.putExtra("pathName", imgDecodableString);
+
 
                         startActivity(intent);
 
@@ -560,6 +586,7 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(this, R.string.no_pic_chosen, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
                 break;
