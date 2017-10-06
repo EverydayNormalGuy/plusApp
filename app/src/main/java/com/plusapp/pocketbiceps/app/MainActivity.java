@@ -623,7 +623,7 @@ public class MainActivity extends AppCompatActivity
      *
      * @return Marker Liste aus der DB
      */
-    private List<MyMarkerObj> createList2() {
+    public List<MyMarkerObj> createList2() {
         List<MyMarkerObj> m = data.getMyMarkers(sortOrder);
         return m;
     }

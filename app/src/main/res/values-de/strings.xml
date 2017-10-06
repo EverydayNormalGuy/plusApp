@@ -100,6 +100,7 @@
     <string name="Menu">Menü</string>
     <string name="settings_fab">Einstellungen</string>
     <string name="take_picture">Foto aufnehmen</string>
+    <string name="emptypage">"&#128577; \nNoch kein Eintrag vorhanden. \nNimmm jetzt ein Foto auf"</string>
 
 
 </resources>

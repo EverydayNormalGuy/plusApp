@@ -106,5 +106,6 @@
     <string name="Menu">Menu</string>
     <string name="settings_fab">Settings</string>
     <string name="take_picture">Take a Picture</string>
+    <string name="emptypage">"&#128577; \nThere is no Entry yet.\naTake a picture."</string>
 
 </resources>

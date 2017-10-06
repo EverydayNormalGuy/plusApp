@@ -84,10 +84,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         this.mContext=context;
 
     }
-
-
-
-
     // Löscht die Liste des Adapters um sie mit den neuen Daten zu füllen und auszugeben
     public void updateAdapter(List<MyMarkerObj> mx){
 
