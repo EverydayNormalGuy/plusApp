@@ -136,6 +136,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         mMarkerImageView = (ImageView) mCustomMarkerView.findViewById(R.id.placeholder_image_marker);
 
         data = new MarkerDataSource(getActivity().getBaseContext());
+
     }
 
     //Wird fuer die LocationGoogleApi gebraucht

@@ -635,6 +635,14 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+
+            try{
+                for (int i = 0; i <navigationView.getMenu().size() ; i++) {
+                    navigationView.getMenu().getItem(i).setChecked(false);
+                }
+            } catch (Exception e){
+
+            }
         }
 
     }
@@ -700,6 +708,15 @@ public class MainActivity extends AppCompatActivity
                 // Es muss ueberprueft werden ob das Gmap Fragment schon sichtbar ist, falls das der Fall ist darf das Fragment nicht nochmal geoeffnet werden
                 // ansonsten stuerzt die App bei BackButtonPressed ab
             } else {
+
+
+                try{
+                    for (int i = 0; i <navigationView.getMenu().size() ; i++) {
+                        navigationView.getMenu().getItem(i).setChecked(false);
+                    }
+                } catch (Exception e){
+
+                }
                 /**
                  * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
                  */
@@ -713,6 +730,7 @@ public class MainActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                         PERMISSION_ACCESS_COARSE_LOCATION);
             }
+
 
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(MainActivity.this, ActivityPreference.class);
@@ -741,5 +759,17 @@ public class MainActivity extends AppCompatActivity
                 .setView(view)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try{
+            for (int i = 0; i <navigationView.getMenu().size() ; i++) {
+                navigationView.getMenu().getItem(i).setChecked(false);
+            }
+        } catch (Exception e){
+
+        }
+
     }
 }
