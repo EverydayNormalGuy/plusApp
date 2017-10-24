@@ -100,7 +100,9 @@
     <string name="Menu">Menü</string>
     <string name="settings_fab">Einstellungen</string>
     <string name="take_picture">Foto aufnehmen</string>
-    <string name="emptypage">"&#128577; \nNoch kein Eintrag vorhanden. \nNimmm jetzt ein Foto auf"</string>
-
+    <string name="emptypage">"&#128577; \nNoch kein Eintrag vorhanden. \nNimmm jetzt ein Foto auf oder importiere eines aus der Galerie"</string>
+    <string name="preference_key_cardviewlayout">cardviewlayout</string>
+    <string name="preference_title_cardviewlayout">Zeigt die Einträge in einer Kachelansicht mit Rahmen</string>
+    <string name="preference_description_cardviewlayout">Alternativ kann auch ein moderneres Layout benutzt werden ohne Rahmen</string>
 
 </resources>

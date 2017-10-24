@@ -21,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +77,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
     boolean isSetToShowDate;
     boolean isHighResolution;
     boolean isSetToHighResolution;
+    boolean isCardViewBorderLayout;
+    boolean isSettoCardViewBorderLayout;
     public MemoryAdapter(){
 
     }
@@ -118,6 +122,21 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             DrawableCompat.setTint(memoryViewHolder.ibShowMarker.getDrawable(), ContextCompat.getColor(mContext, R.color.color_grey));
         } else {
             DrawableCompat.setTint(memoryViewHolder.ibShowMarker.getDrawable(), ContextCompat.getColor(mContext, R.color.colorCardViewBlue));
+        }
+
+        String cardviewlayout_key = mContext.getString(R.string.preference_key_cardviewlayout);
+        isSettoCardViewBorderLayout = sPrefs.getBoolean(cardviewlayout_key, true);
+
+        if (isSettoCardViewBorderLayout){
+            isCardViewBorderLayout=true;
+        }
+
+        if (!isCardViewBorderLayout) {
+            LinearLayout.LayoutParams cvparams =
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+            cvparams.setMargins(0, 0, 0, 10);
+            memoryViewHolder.cardView.setLayoutParams(cvparams);
         }
 
         // Sorge fuer eine dynamische Darstellung der Cardview, je nach dem ob Titel oder Beschreibungen vorhanden sind oder nicht
@@ -352,6 +371,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.card_view, viewGroup, false);
+        
 
         return new MemoryViewHolder(itemView);
     }
@@ -374,6 +394,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         protected View divider2;
         protected View divider3;
         protected View divider4;
+        protected CardView cardView;
         protected View mem;
 
         public MemoryViewHolder(View v) {
@@ -391,6 +412,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             divider3 = v.findViewById(R.id.divider3);
             divider4 = v.findViewById(R.id.divider4);
             ibShowMarker = (ImageButton) v.findViewById(R.id.ibShowMarker);
+            cardView = (CardView) v.findViewById(R.id.cardViewLayout);
             mem = v;
         }
     }

@@ -72,6 +72,19 @@ public class ActivityPreference extends PreferenceActivity implements Preference
                     }
                 });
 
+        final CheckBoxPreference checkBoxPreferenceCardviewLayout = (CheckBoxPreference) getPreferenceManager().findPreference(getString(R.string.preference_key_cardviewlayout));
+        checkBoxPreferenceCardviewLayout.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if (newValue.toString().equals("true")){
+
+                } else {
+
+                }
+                return true;
+            }
+        });
+
 
         // Open-Source Libs
         Preference openSource = findPreference("showOpenSourceLibs");
