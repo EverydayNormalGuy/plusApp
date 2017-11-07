@@ -3,36 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:id="@+id/fragment_details_container"
     android:background="#000000"
-    tools:context="com.plusapp.pocketbiceps.app.ActivityDetailsFullScreen">
+    tools:context="com.plusapp.pocketbiceps.app.ActivityDetailsSlider">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
 
     <TextView
-        android:id="@+id/fullscreen_content"
+        android:id="@+id/fullscreen_content2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:fitsSystemWindows="true"
         android:keepScreenOn="true"
         android:textColor="#33b5e5"
         android:textSize="30sp"
         android:textStyle="bold" />
 
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/ivMomentDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/cast_album_art_placeholder" />
-    <ProgressBar
-        android:id="@+id/progressDetailsView"
-        android:visibility="visible"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
@@ -44,12 +42,11 @@
         android:fitsSystemWindows="true">
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
+            android:id="@+id/fullscreen_content_controls2"
             style="?metaButtonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
             android:orientation="vertical"
             tools:ignore="UselessParent">
 
@@ -61,18 +58,10 @@
                 android:textAllCaps="false"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="asdffasdf"
+                android:text=""
                 android:textSize="18dp"
                 android:textColor="#FFFFFF" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:id="@+id/separatorLine"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="#bebebe"
-                />
 
             <TextView
                 android:id="@+id/tvMomentsDetails"
@@ -83,7 +72,7 @@
                 android:maxLines="5"
                 android:scrollbars="vertical"
                 android:layout_weight="1"
-                android:text="ssdfgs"
+                android:text=""
                 android:gravity="left"
                 android:textColor="#FFFFFF" />
 
@@ -92,9 +81,10 @@
 
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_controls_top_buttons"
+            android:id="@+id/fullscreen_content_controls_top_buttons2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             android:orientation="horizontal"
             android:layout_gravity="top|end">
 
@@ -106,7 +96,7 @@
                 android:layout_weight="0.5"
                 android:layout_gravity="end"
                 android:clickable="true"
-                android:text="Bearbeiten"
+                android:text="@string/edit"
                 android:textColor="#FFFFFF"
                 />
             <Button
@@ -117,7 +107,7 @@
                 android:clickable="true"
                 android:layout_weight="0.5"
                 android:layout_gravity="end"
-                android:text="Teilen"
+                android:text="@string/share"
                 android:textColor="#FFFFFF"
                 />
 

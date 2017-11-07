@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -21,14 +23,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -76,18 +85,16 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
     View.OnClickListener sbOnClickListener; // Snackbar OnClickListener
 
 
-
-
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String theme_key = getString(R.string.preference_key_darktheme);
-        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key,false);
+        boolean isSetToDarkTheme = sPrefs.getBoolean(theme_key, false);
 
-        if(isSetToDarkTheme==true){
+        if (isSetToDarkTheme == true) {
             setTheme(R.style.DarkTheme);
-            isDarkTheme=true;
+            isDarkTheme = true;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
@@ -98,12 +105,27 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         toolbarAdd = (Toolbar) findViewById(R.id.toolbar2); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbarAdd);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
+
+        for (int i = 0; i < toolbarAdd.getChildCount(); i++) {
+            View view = toolbarAdd.getChildAt(i);
+            if (view instanceof TextView) {
+                TextView tv = (TextView) view;
+                Typeface titleFont = Typeface.
+                        createFromAsset(getAssets(), "fonts/Antonio-Light.ttf");
+                if (tv.getText().equals(toolbarAdd.getTitle())) {
+                    tv.setTypeface(titleFont);
+//                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+                    break;
+                }
+            }
+        }
+
         // Holt sich die currTime Variable die aus der MainActivity weitergegeben wurde
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             // Das Key Argument "currTime" muss mit dem Key aus der MainAct. uebereinstimmen
             this.dbvCurrTime = extras.getLong("currTime");
-            if(extras.getString("pathName")!=null){
+            if (extras.getString("pathName") != null) {
                 this.galleryPathName = extras.getString("pathName");
             }
         }
@@ -115,10 +137,9 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
         File f = new File(MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg");
         dbPath = MainActivity.IMAGE_PATH_URI + IMAGE_NAME_PREFIX + imageDate + ".jpg";
-        if (this.galleryPathName != null){
-             f = new File(galleryPathName);
+        if (this.galleryPathName != null) {
+            f = new File(galleryPathName);
             this.dbPath = galleryPathName;
-            String asd = dbPath;
         }
 
         memAdapter = new MemoryAdapter();
@@ -129,12 +150,27 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         etDescription = (EditText) findViewById(R.id.editDescription);
         btnGetLoc = (Button) findViewById(R.id.btnGetLocation);
 
+        Glide.with(this)
+                .load(f)
+                .error(R.drawable.cast_album_art_placeholder)
+                .override(1080, 1350)
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(imageViewAdd);
 
-        Picasso.with(getBaseContext()).load(f).resize(1080,1350).centerCrop().into(imageViewAdd);
+        com.github.amlcurran.showcaseview.targets.Target targetGetLoc = new ViewTarget(R.id.btnGetLocation, this);
 
+        ShowcaseView sv;
+        sv = new ShowcaseView.Builder(this)
+                .setTarget(targetGetLoc)
+                .setContentTitle(getString(R.string.save_loc))
+                .setContentText(getString(R.string.save_loc_tut))
+                .singleShot(4311)
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .build();
 
-        // Setzt das Bild in die Imageview
-        //imageViewAdd.setImageBitmap(bmp);
+        sv.setButtonText(getString(R.string.got_it));
+
 
         btnGetLoc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +182,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
                             PERMISSION_ACCESS_COARSE_LOCATION);
                     // Snackbar wird benötigt dass das Android System genug Zeit hat nach der Permissionsabfrage die aktuelle Position zu bekommen.
                     // Der sbOnClickListener triggert onLocationChanged an, so dass bei betaetigen von Okay die aktuelle Position nochmals abgefragt wird.
-                    Snackbar.make(findViewById(android.R.id.content),"Der Standort wird nur beim Speichern abgefragt",Snackbar.LENGTH_INDEFINITE).setAction("Okay", sbOnClickListener).show();
+                    Snackbar.make(findViewById(android.R.id.content), R.string.snachbar_loc, Snackbar.LENGTH_INDEFINITE).setAction(R.string.got_it, sbOnClickListener).show();
 
                 }
                 if (ContextCompat.checkSelfPermission(getBaseContext(),
@@ -158,7 +194,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
             }
         });
 
-        sbOnClickListener = new View.OnClickListener(){
+        sbOnClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -195,7 +231,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         }
         if (id == R.id.delete_add) {
             finish();
-            Toast.makeText(getApplicationContext(), "Abgebrochen..", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.canceled, Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -218,15 +254,25 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         dbCounter = 1;
         data.open();
         // Setzt einen Eintrag mit den eingegeben Daten in die Datenbank
-        if (dbLongi==null){
+        if (dbLongi == null) {
             data.addMarker(new MyMarkerObj(dbTitle, dbDescription, "position", dbvCurrTime, dbCounter, dbPath));
+        } else {
+            data.addMarker(new MyMarkerObj(dbTitle, dbDescription, dbLongi + " " + dbLati, dbvCurrTime, dbCounter, dbPath));
         }
-        else{
-            data.addMarker(new MyMarkerObj(dbTitle, dbDescription, dbLongi+" "+dbLati, dbvCurrTime, dbCounter, dbPath));
-        }
+
+        // Laesst den Media Scanner nach neuen Bildern scannen damit die in der Gallery angezeigt werden koennen
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(dbPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+
+
         data.close();
 
+
         Intent intent = new Intent(AddActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }

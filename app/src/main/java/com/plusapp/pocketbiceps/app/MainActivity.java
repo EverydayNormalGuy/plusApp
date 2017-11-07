@@ -3,10 +3,8 @@ package com.plusapp.pocketbiceps.app;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,25 +23,36 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -51,28 +61,29 @@ import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
 import com.plusapp.pocketbiceps.app.fragments.MainFragment;
 import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
+import com.plusapp.pocketbiceps.app.helperclasses.ViewTargets;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private GoogleApiClient googleApiClient;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
 
     public MarkerDataSource data;
-    public MarkerDataSource data2;
-    Context context;
     static final int CAM_REQUEST = 1;
     protected static final String IMAGE_NAME_PREFIX = "Moments_";
-    public static final String IMAGE_PATH_URI = "sdcard/Special_Moments/";
+    public static final String IMAGE_PATH_URI = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Mapix/";
+    private final static String PACKAGE_NAME = "com.plusapp.pocketbiceps.app";
+    private final static String PLAYSTORE_LINK = "market://details?id=";
     public long currTime = 0;
     public MemoryAdapter memAdapter;
     public MemoryAdapter ca;
@@ -80,8 +91,11 @@ public class MainActivity extends AppCompatActivity
     public Bitmap bmp;
     public NavigationView navigationView;
 
-    RecyclerView recList;
+    private int counterTut = 0;
+    ShowcaseView sv;
 
+    RecyclerView recList;
+    CardView cardView;
 
     FloatingActionMenu fab_Menu;
     FloatingActionButton fab1;
@@ -91,7 +105,6 @@ public class MainActivity extends AppCompatActivity
     private List<FloatingActionMenu> fab_Submenus = new ArrayList<>();
     private Handler mUiHandler = new Handler();
 
-
     TextView momentsCounter;
     int momentsCount;
 
@@ -99,9 +112,6 @@ public class MainActivity extends AppCompatActivity
     boolean isSetToDarkTheme;
     boolean isCoverPhoto;
     boolean isSettoCoverPhoto;
-
-    public MyMarkerObj mmoForCache;
-
 
     View headNavView;
     ImageView nav_image_head;
@@ -113,6 +123,7 @@ public class MainActivity extends AppCompatActivity
 
     private static int RESULT_LOAD_IMG = 2;
     String imgDecodableString;
+    Toolbar toolbar;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -134,12 +145,31 @@ public class MainActivity extends AppCompatActivity
         data = new MarkerDataSource(this);
         data.open();  //        data.addMarker(new MyMarkerObj("Test", "Test2", "48.49766 9.19881", 1234234));
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Aenderd den Textfont von der Toolbar
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            View view = toolbar.getChildAt(i);
+            if (view instanceof TextView) {
+                TextView tv = (TextView) view;
+                Typeface titleFont = Typeface.
+                        createFromAsset(getAssets(), "fonts/Antonio-Light.ttf");
+                if (tv.getText().equals(toolbar.getTitle())) {
+
+                    // Zum zentrieren
+//                    Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.MATCH_PARENT);
+//                    params.gravity = Gravity.CENTER_HORIZONTAL;
+//                    tv.setLayoutParams(params);
+                    // Zum aendern der Schriftart
+                    tv.setTypeface(titleFont);
+                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+                    break;
+                }
+            }
+        }
 
         sp = getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
         sortOrder = sp.getInt("sort_mode", 0);
@@ -147,7 +177,6 @@ public class MainActivity extends AppCompatActivity
         //Permissions Abfragen
         isStoragePermissionGranted();
         grantLocationPermission();
-
 
         // Erstellt die RecylerView
         recList = (RecyclerView) findViewById(R.id.lvMemories);
@@ -159,7 +188,6 @@ public class MainActivity extends AppCompatActivity
 
         momentsCount = createList2().size();
 
-
         fab_Menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
@@ -169,11 +197,19 @@ public class MainActivity extends AppCompatActivity
         this.ca = new MemoryAdapter(createList2(), this);
         this.recList.setAdapter(ca);
 
+        final String PREFS_NAME = "MyPrefsFile";
+        SharedPreferences firstPref = getSharedPreferences(PREFS_NAME, 0);
+        if (firstPref.getBoolean("First_Time", true)) {
+            //Do first operation
+            showMainTutorial();
+            firstPref.edit().putBoolean("First_Time", false).apply();
+        }
 
         /*
         Hier wird der clicklListener der weiter unten programmiert ist hinzugefügt
         damit kann man auf Klick events mit einem Switch reagieren
          */
+
         fab1.setOnClickListener(clickListener);
         fab2.setOnClickListener(clickListener);
         fab3.setOnClickListener(clickListener);
@@ -208,13 +244,11 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 //            TextView nav_user = (TextView) headNavView.findViewById(R.id.tvNavHeaderTitle);
@@ -225,19 +259,17 @@ public class MainActivity extends AppCompatActivity
         headNavView = navigationView.getHeaderView(0);
         nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
 
-        if (isDarkTheme){
-            nav_image_head.setImageResource(R.drawable.logoblackgold);
-        }
-        else {
-            nav_image_head.setImageResource(R.drawable.logoblackwhite);
+        if (isDarkTheme) {
+            nav_image_head.setImageResource(R.drawable.headerblack);
+        } else {
+            nav_image_head.setImageResource(R.drawable.headerblue);
         }
 
-
-        if (isSettoCoverPhoto == true) {
+        if (isSettoCoverPhoto) {
 
             // NavDrawer Header manipulieren
             List<MyMarkerObj> navHeaderGetImage = createList2();
-            // Falls mind. ein Moment Eintrag existiert, wird das Foto dass als letztes gemacht wurde
+            // Falls mind. ein Eintrag existiert, wird das Foto dass als letztes gemacht wurde
             // in den NavHeader eingefügt
             if (navHeaderGetImage.size() != 0) {
                 MyMarkerObj mmo = navHeaderGetImage.get(0);
@@ -255,10 +287,6 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         bmp = bitmap;
-
-//                        headNavView = navigationView.getHeaderView(0);
-//
-//                        nav_image_head = (ImageView) headNavView.findViewById(R.id.ivNavHead);
 
                         // Setzt das Bild in den NavHeader wenn bmp not null ist
                         if (bmp != null) {
@@ -282,10 +310,10 @@ public class MainActivity extends AppCompatActivity
                 isCoverPhoto = true;
 
             }
-
         }
+
         momentsCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_camera));
-        //This method will initialize the count value
+        // Damit wird der Counter initialisiert
         initializeCountDrawer();
 
         FragmentManager fm = getFragmentManager();
@@ -293,12 +321,76 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    // Tutorial fuer den User beim ersten Starten der App
+    private void showMainTutorial() {
+        // Nimmt das FAB Menue als Target
+        com.github.amlcurran.showcaseview.targets.Target targetFab = new ViewTarget(R.id.fab_menu, this);
 
+        // Oeffnet das FAB Menue
+        fab_Menu.toggle(true);
+
+        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        // This aligns button to the bottom left side of screen
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        // Set margins to the button, we add 16dp margins here
+        int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
+        lps.setMargins(margin, margin, margin, margin);
+
+        // Startet das Tutorial
+        sv = new ShowcaseView.Builder(this)
+                .setTarget(targetFab)
+                .setContentTitle(getString(R.string.getting_started))
+                .setContentText(getString(R.string.getting_started_desc))
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .setOnClickListener(this)
+//                .singleShot(4211)
+                .build();
+
+        sv.setButtonText(getString(R.string.next));
+
+        // Button wird nach linksunten verschoben
+        sv.setButtonPosition(lps);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        // Nach dem die erste Setite vom Tutorial gestartet wurde wird der Counter auf 0 gesetzt und wird dann um eins hochgezaehlt jedesmal wenn man auf Next klickt
+        switch (counterTut) {
+            case 0:
+                try {
+                    fab_Menu.toggle(false);
+                    // Nimmt den Sidemenu Button als naechsten Fokus
+                    ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
+                    sv.setShowcase(navigationButtonViewTarget, true);
+                    sv.setContentTitle(getString(R.string.sidemenu));
+                    sv.setContentText(getString(R.string.sidemenu_desc));
+                    sv.setButtonText(getString(R.string.next));
+                    break;
+                } catch (ViewTargets.MissingViewException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 1:
+                sv.setTarget(com.github.amlcurran.showcaseview.targets.Target.NONE);
+                sv.setContentTitle(getString(R.string.have_fun));
+                sv.setContentText(getString(R.string.have_fun_desc));
+                sv.setButtonText(getString(R.string.got_it));
+                break;
+            case 2:
+                sv.hide();
+                break;
+        }
+        counterTut++;
+    }
+
+    // Zeigt die Gesamtzahl der Eintraege, im Sidemenu an
     private void initializeCountDrawer() {
-        //Gravity property aligns the text
+        // Gravity property aligns the text
         momentsCounter.setGravity(Gravity.CENTER_VERTICAL);
         momentsCounter.setTypeface(null, Typeface.BOLD);
-        if (isDarkTheme == true) {
+        if (isDarkTheme) {
             momentsCounter.setTextColor(getResources().getColor(R.color.colorCardViewBlue));
         } else {
             momentsCounter.setTextColor(getResources().getColor(R.color.colorAccent));
@@ -323,10 +415,14 @@ public class MainActivity extends AppCompatActivity
                 case R.id.fab2:
 
                     FragmentManager fm = getFragmentManager();
+                    GmapsFragment gmap = (GmapsFragment) getFragmentManager().findFragmentByTag("GMAP_TAG");
 
-                    fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).commit();
-
-
+                    if (gmap != null && gmap.isVisible()) {
+                        // Es muss ueberprueft werden ob das Gmap Fragment schon sichtbar ist, falls das der Fall ist darf das Fragment nicht nochmal geoeffnet werden
+                        // ansonsten stuerzt die App bei BackButtonPressed ab
+                    } else {
+                        fm.beginTransaction().replace(R.id.content_main, new GmapsFragment(), "GMAP_TAG").addToBackStack(null).commit();
+                    }
 
                     // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
                     if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -334,23 +430,23 @@ public class MainActivity extends AppCompatActivity
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                                 PERMISSION_ACCESS_COARSE_LOCATION);
                     }
+
                     fab_Menu.toggle(true);
 
                     break;
                 case R.id.fab3:
                     Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     File file = getFile();
-                    if(Build.VERSION.SDK_INT>=24){
-                        try{
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        try {
                             Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
                             m.invoke(null);
                             camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                             startActivityForResult(camera_intent, CAM_REQUEST);
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                    else {
+                    } else {
                         camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                         startActivityForResult(camera_intent, CAM_REQUEST);
                     }
@@ -360,7 +456,7 @@ public class MainActivity extends AppCompatActivity
     };
 
     /**
-     * Aktualisiert die Listview. Die SP von sortDialog werden hiern nochmal
+     * Aktualisiert die Listview. Die SharedPreferences von sortDialog werden hiern nochmal
      * aufgerufen und in sortorder gespeichert. danach kann die neue Liste mit der
      * Sortierunge aufgerufen werden
      */
@@ -410,41 +506,46 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    // RequestCodes: 1 = Bild mit Kamera aufnehmen, 2 = Bild von Gallerie importieren
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch(requestCode) {
+        switch (requestCode) {
 
+            // Nach dem man ein Foto mit der Kamera aufgenommen hat wird onActivityResult aufgerufen, bei dem ueberprueft wird ob man das Bild mit Ok oder mit Abbrechen bestaetigt hat
             case 1:
-            // Wenn nicht auf Abbrechen in der CameraAct. gedrückt wurde passiert werden die daten gespeichert
-            // und die AddActivity wird gestartet
-            if (resultCode == RESULT_OK) {
+                // Wenn nicht auf Abbrechen in der CameraAct. gedrueckt wurde, werden die daten gespeichert
+                // und die AddActivity wird gestartet
+                if (resultCode == RESULT_OK) {
 
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
-                String dateString = formatter.format(new Date(currTime));
-                //Speichert das gemachte Bild im path
-                String path = IMAGE_PATH_URI + IMAGE_NAME_PREFIX + dateString + ".jpg";
-                Drawable.createFromPath(path);
-                Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
-                intent.putExtra("currTime", currTime);
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
+                    String dateString = formatter.format(new Date(currTime));
+                    //Speichert das gemachte Bild im path
+                    String path = IMAGE_PATH_URI + IMAGE_NAME_PREFIX + dateString + ".jpg";
+                    Drawable.createFromPath(path);
+                    Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                    // Die currTime Variable wird in die AddActivity weitergegeben, da sie dort als Index benoetigt wird
+                    intent.putExtra("currTime", currTime);
 
-                startActivity(intent);
-            }
-            break;
+                    startActivity(intent);
+                }
+                break;
+
+            // Bild von der Gallerie importieren
             case 2:
                 super.onActivityResult(requestCode, resultCode, data);
 
-                try{
+                try {
                     // Wenn das Bild ausgewaehlt wurde
-                    if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data){
+                    if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data) {
 
                         // Hole das Bild von data
                         Uri selectedImage = data.getData();
                         String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
+                        String time = "";
+                        long originalTimeInMilli = 0;
                         // Cursor holen
                         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
                         // Move to first row
@@ -458,21 +559,40 @@ public class MainActivity extends AppCompatActivity
                         this.currTime = System.currentTimeMillis();
 
 
+                        ExifInterface exif = new ExifInterface(imgDecodableString);
+                        if (exif != null) {
+                            time = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                            if (time != null) {
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
+                                try {
+                                    Date mDate = sdf.parse(time);
+                                    originalTimeInMilli = mDate.getTime();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    time = null;
+                                }
+                            }
+                        }
+
                         Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                        intent.putExtra("currTime", currTime);
+                        if (time == null) {
+                            intent.putExtra("currTime", currTime);
+                        } else {
+                            intent.putExtra("currTime", originalTimeInMilli);
+                        }
                         intent.putExtra("pathName", imgDecodableString);
+
 
                         startActivity(intent);
 
+                    } else {
+                        Toast.makeText(this, R.string.no_pic_chosen, Toast.LENGTH_SHORT).show();
                     }
-                    else {
-                        Toast.makeText(this, "Kein Bild zum importieren ausgewählt", Toast.LENGTH_SHORT).show();
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
-                catch (Exception e){
-                    Toast.makeText(this, "Fehler", Toast.LENGTH_SHORT).show();
-            }
-            break;
+                break;
 
         }
 
@@ -489,9 +609,7 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String dateString = formatter.format(new Date(currTime));
 
-
         File folder = new File(IMAGE_PATH_URI);
-
 
         if (!folder.exists()) {
             //Make Directory
@@ -504,15 +622,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Erstellt eine Liste aus den Markern (Moments) in der Datenbank
+     * Erstellt eine Liste aus den Markern (Eintraegen) in der Datenbank
      *
      * @return Marker Liste aus der DB
      */
-    private List<MyMarkerObj> createList2() {
+    public List<MyMarkerObj> createList2() {
         List<MyMarkerObj> m = data.getMyMarkers(sortOrder);
         return m;
     }
-
 
     @Override
     public void onBackPressed() {
@@ -521,10 +638,17 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+
+            try{
+                for (int i = 0; i <navigationView.getMenu().size() ; i++) {
+                    navigationView.getMenu().getItem(i).setChecked(false);
+                }
+            } catch (Exception e){
+
+            }
         }
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -533,6 +657,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    // Die Sortierungsoption in der Toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -540,20 +665,11 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            Intent i = new Intent(this, ActivityPreference.class);
-//            startActivity(i);
-//            return true;
-//        }
         if (id == R.id.menu_sort) {
             showSortDialog();
-
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 
     private void showSortDialog() {
         FragmentManager fm = getFragmentManager();
@@ -571,26 +687,45 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        }
-        else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_gallery) {
 
             // Create intent to Open Image applications like Gallery, Google Photos
             Intent galleryIntent = new Intent(Intent.ACTION_PICK);
             galleryIntent.setType("image/*");
+            galleryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
-//            galleryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        } else if (id == R.id.nav_moments_gallery){
+        } else if (id == R.id.nav_moments_gallery) {
             Intent intent = new Intent(MainActivity.this, ActivityGallery.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
 
-            /**
-             * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
-             */
-            fm.beginTransaction().replace(R.id.content_main, new GmapsFragment()).addToBackStack(null).commit();
+            GmapsFragment gmap = (GmapsFragment) getFragmentManager().findFragmentByTag("GMAP_TAG");
+
+            if (gmap != null && gmap.isVisible()) {
+                // Es muss ueberprueft werden ob das Gmap Fragment schon sichtbar ist, falls das der Fall ist darf das Fragment nicht nochmal geoeffnet werden
+                // ansonsten stuerzt die App bei BackButtonPressed ab
+            } else {
+
+
+                try{
+                    for (int i = 0; i <navigationView.getMenu().size() ; i++) {
+                        navigationView.getMenu().getItem(i).setChecked(false);
+                    }
+                } catch (Exception e){
+
+                }
+                /**
+                 * addToBackStack verhindert dass die App sich beim BackPressed im GMap Fragment schließt
+                 */
+                fm.beginTransaction().replace(R.id.content_main, new GmapsFragment(), "GMAP_TAG").addToBackStack(null).commit();
+
+            }
 
             // Damit wird nach den Permissions gefragt bevor die Map aufgebaut wird, somit kann direkt auf den Standort gezoomt werden
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -599,20 +734,45 @@ public class MainActivity extends AppCompatActivity
                         PERMISSION_ACCESS_COARSE_LOCATION);
             }
 
-            Toast.makeText(getBaseContext(), "Map startet", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(MainActivity.this, ActivityPreference.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
-            Toast.makeText(getBaseContext(), "In Arbeit..", Toast.LENGTH_SHORT).show();
+
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PLAYSTORE_LINK + this.getPackageName())));
 
         } else if (id == R.id.nav_send) {
-            Toast.makeText(getBaseContext(), "In Arbeit..", Toast.LENGTH_SHORT).show();
+
+            displayImpressumAlertDialog();
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void displayImpressumAlertDialog() {
+        WebView view = (WebView) LayoutInflater.from(this).inflate(R.layout.dialog_licenses, null);
+        view.loadUrl("file:///android_asset/impressum.html");
+        AlertDialog mAlertDialog;
+        mAlertDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                .setView(view)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try{
+            for (int i = 0; i <navigationView.getMenu().size() ; i++) {
+                navigationView.getMenu().getItem(i).setChecked(false);
+            }
+        } catch (Exception e){
+
+        }
+
     }
 }

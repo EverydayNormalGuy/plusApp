@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true">
 
-    <PreferenceCategory android:title="Layout Optionen">
+    <PreferenceCategory android:title="@string/layout_options">
 
 
         <CheckBoxPreference
@@ -15,10 +15,30 @@
             android:key="@string/preference_key_coverphoto"
             android:summary="@string/preference_description_coverphoto"
             android:title="@string/preference_title_coverphoto" />
+        <CheckBoxPreference
+            android:key="@string/preference_key_showdate"
+            android:summary="@string/preference_description_showdate"
+            android:title="@string/preference_title_showdate"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="@string/preference_key_cardviewlayout"
+            android:title="@string/preference_title_cardviewlayout"
+            android:summary="@string/preference_description_cardviewlayout"
+            android:defaultValue="true"
+            />
+
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/resolution">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/preference_key_resolution"
+            android:summary="@string/preference_description_resolution"
+            android:title="@string/preference_title_resolution"/>
 
-    <PreferenceCategory android:title="Google Map Optionen">
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/google_map_options">
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/gmapTypeDialog"
@@ -26,6 +46,18 @@
             android:key="@string/preference_key_gmapviewtype"
             android:summary="@string/preference_description_gmapviewtype"
             android:title="@string/preference_title_gmapviewtype" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/information">
+
+        <Preference
+            android:title="@string/about_app"
+            android:key="about"/>
+       <Preference
+           android:title="Open-Source Libraries"
+           android:key="showOpenSourceLibs"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

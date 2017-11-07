@@ -14,12 +14,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.plusapp.pocketbiceps.app.helperclasses.Photo;
 
 public class ActivityGallery extends AppCompatActivity {
 
     boolean isSetToDarkTheme;
     boolean isDarkTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -64,10 +67,14 @@ public class ActivityGallery extends AppCompatActivity {
             Photo photo = mPhotos[position];
             ImageView imageView = holder.mPhotoImageView;
 
+            // Hier muss mit Target gearbeitet werden ansonsten werden bei Gifs lediglich placeholder angezeigt
+            GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
+
+
             Glide.with(mContext)
                     .load(photo.getUrl())
                     .placeholder(R.drawable.cast_album_art_placeholder)
-                    .into(imageView);
+                    .into(imageViewTarget);
         }
 
         @Override

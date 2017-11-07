@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardViewLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -24,6 +25,17 @@
             android:scaleType="centerCrop"
             android:src="@drawable/cast_album_art_placeholder" />
 
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="#50000000"
+            android:text=""
+            android:textColor="#fff" />
+
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
@@ -33,9 +45,8 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:paddingLeft="16dp"
-            android:text="Hello World!"
             android:textColor="#fff"
-            android:textSize="22dp" />
+            android:textSize="22sp" />
 
 
         <TextView
@@ -48,62 +59,115 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="16dp"
-            android:text="Random Text Blah Blah Blah"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnDelete"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDescription"
+            android:background="?android:selectableItemBackground"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
-            android:text="Delete"
-            android:textColor="@android:color/holo_orange_dark" />
+            android:src="@drawable/ic_delete_orange_24px"
+            />
 
-        <Button
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/btnDelete"
+            android:background="@drawable/separator_line"
+            android:rotation="180"
+            android:layout_alignBottom="@+id/imageView4"
+            android:layout_alignTop="@+id/imageView4" />
+
+        <ImageButton
             android:id="@+id/btnEdit"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDescription"
             android:layout_toRightOf="@id/btnDelete"
-            android:text="Edit"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/pencil_blue"
             android:textColor="#03A9F4" />
 
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:background="#50000000"
-            android:text="TextView"
-            android:textColor="#fff" />
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/btnEdit"
+            android:background="@drawable/separator_line"
+            android:rotation="180"
+            android:layout_alignBottom="@+id/imageView4"
+            android:layout_alignTop="@+id/imageView4"/>
+
 
         <ImageView
+            android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:src="@drawable/ic_eye"
             android:layout_alignBottom="@+id/tvCounter"
-            android:layout_toStartOf="@+id/tvCounter"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:layout_toEndOf="@+id/tvCounter"
+            android:gravity="center"
+            android:src="@drawable/ic_eye" />
 
         <TextView
             android:id="@+id/tvCounter"
+            style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/btnEdit"
-            android:layout_alignBottom="@+id/btnEdit"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/ibShowMarker"
             android:gravity="center"
+            android:text="444"
+            android:textColor="#03A9F4" />
+
+        <ImageButton
+            android:id="@+id/ibShare"
             style="?android:buttonBarButtonStyle"
-            android:text="TextView"
-            android:textColor="#03A9F4"
-            tools:background="#ffffff" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/btnEdit"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_menu_share_blue" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/ibShare"
+            android:background="@drawable/separator_line"
+            android:rotation="180"
+            android:layout_alignBottom="@+id/imageView4"
+            android:layout_alignTop="@+id/imageView4"/>
+
+        <ImageButton
+            android:id="@+id/ibShowMarker"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/ibShare"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/google_maps_blue" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvDescription"
+            android:layout_toEndOf="@+id/ibShowMarker"
+            android:background="@drawable/separator_line"
+            android:rotation="180"
+            android:layout_alignBottom="@+id/imageView4"
+            android:layout_alignTop="@+id/imageView4"/>
 
     </RelativeLayout>
 

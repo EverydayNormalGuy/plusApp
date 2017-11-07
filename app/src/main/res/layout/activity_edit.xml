@@ -43,14 +43,6 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/cast_album_art_placeholder" />
 
-                <ProgressBar
-                    android:id="@+id/progressUpdateView"
-                    android:visibility="visible"
-                    android:layout_gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true" />
 
             </RelativeLayout>
 
@@ -69,7 +61,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:ems="10"
-                    android:hint="Titel?"
+                    android:hint="@string/title"
                     android:inputType="textPersonName" />
 
                 <EditText
@@ -80,7 +72,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/updateTitle"
                     android:ems="10"
-                    android:hint="Beschreibung?"
+                    android:hint="@string/description"
                     android:inputType="textMultiLine"
                     android:maxLines="6" />
             </RelativeLayout>

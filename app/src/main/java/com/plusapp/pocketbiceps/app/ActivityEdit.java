@@ -3,51 +3,38 @@ package com.plusapp.pocketbiceps.app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Point;
+import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
-import android.media.ExifInterface;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.helperclasses.Blur;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-
-import static com.plusapp.pocketbiceps.app.MainActivity.IMAGE_NAME_PREFIX;
 
 public class ActivityEdit extends AppCompatActivity {
 
     boolean isDarkTheme;
     Toolbar toolbarAdd;
     MarkerDataSource data;
-    long dbvCurrTime;
-    String galleryPathName;
-    String dbPath;
-    EditText etTitle;
-    EditText etDescription;
-    ImageView imageViewAdd;
-    MemoryAdapter memAdapter;
     private static List<MyMarkerObj> m;
     private static int index;
     public MyMarkerObj mmo;
@@ -76,6 +63,19 @@ public class ActivityEdit extends AppCompatActivity {
         toolbarAdd = (Toolbar) findViewById(R.id.toolbar2); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbarAdd);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
+        for(int i = 0; i < toolbarAdd.getChildCount(); i++){
+            View view = toolbarAdd.getChildAt(i);
+            if(view instanceof TextView){
+                TextView tv = (TextView) view;
+                Typeface titleFont = Typeface.
+                        createFromAsset(getAssets(), "fonts/Antonio-Light.ttf");
+                if(tv.getText().equals(toolbarAdd.getTitle())){
+                    tv.setTypeface(titleFont);
+//                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+                    break;
+                }
+            }
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -120,24 +120,12 @@ public class ActivityEdit extends AppCompatActivity {
                 }
             };
 
-            final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressUpdateView);
-            Picasso.with(this).load(f).resize(100, 100).centerCrop().transform(blurTransformation).into(ivMomentUpdate, new Callback() {
-                @Override
-                public void onSuccess() {
-                    progressBar.setVisibility(View.GONE);
-                    Picasso.with(getBaseContext())
-                            .load(f)
-                            .resize(1080, 1350)
-                            .centerCrop()
-                            .placeholder(ivMomentUpdate.getDrawable())
-                            .into(ivMomentUpdate);
-                }
-
-                @Override
-                public void onError() {
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
+            Glide.with(this)
+                    .load(f)
+                    .error(R.drawable.cast_album_art_placeholder)
+                    .override(1080, 1350)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(ivMomentUpdate);
 
 
             updateTitle.setText(mmo.getTitle());
@@ -167,7 +155,7 @@ public class ActivityEdit extends AppCompatActivity {
         }
         if (id == R.id.delete_edit) {
             finish();
-            Toast.makeText(getApplicationContext(), "Abgebrochen..", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.canceled, Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);

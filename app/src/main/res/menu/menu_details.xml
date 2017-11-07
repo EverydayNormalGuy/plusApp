@@ -8,13 +8,13 @@
         android:id="@+id/btn_share"
         android:orderInCategory="200"
         android:icon="@drawable/ic_menu_share"
-        android:title="share"
+        android:title="@string/share_sts"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/btn_edit_details"
         android:orderInCategory="100"
         android:icon="@drawable/ic_create_black_24dp"
-        android:title="edit"
+        android:title="@string/edit_sts"
         app:showAsAction="ifRoom"/>
 
 

@@ -4,10 +4,10 @@
     android:gravity="center_horizontal"
     android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-    <android.support.v4.view.ViewPager
+    <com.plusapp.pocketbiceps.app.helperclasses.HackyViewPager
         android:id="@+id/pager"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    </android.support.v4.view.ViewPager>
+    </com.plusapp.pocketbiceps.app.helperclasses.HackyViewPager>
 
 </LinearLayout>

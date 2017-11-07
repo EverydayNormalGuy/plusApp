@@ -37,7 +37,7 @@ public class SortDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle("Sortieren nach ")
+        builder.setTitle(R.string.sort_by)
                 .setItems(R.array.sortDialog, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -53,13 +53,14 @@ public class SortDialogFragment extends DialogFragment {
                                 break;
                             case 3:
                                 saveSortOrder(3); //am wenigsten gesehen
-
+                                break;
+                            default:
                                 break;
                         }
                         mainActivity = ((MainActivity) getActivity());
+                        dialog.dismiss();
                         mainActivity.refresh();
 
-                        dialog.dismiss();
                     }
                 });
         return builder.create();

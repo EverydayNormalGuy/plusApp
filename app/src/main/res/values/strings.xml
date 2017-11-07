@@ -1,40 +1,43 @@
 <resources>
-    <string name="app_name">+App</string>
-    <string name="title_activity_maps">Kartenansicht</string>
-    <string name="title_activity_main">Special Moments</string>
+    <string name="app_name">MAPIX</string>
+    <string name="title_activity_maps">Map View</string>
+    <string name="title_activity_main">MAPIX</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_gmaps">GMapsActivity</string>
-    <string name="title_activity_add_moment">Memory hinzufügen</string>
+    <string name="title_activity_add_moment">Add Picture</string>
     <string name="title_activity_details">Details</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
-    <string name="title_activity_preference">Einstellungen</string>
-    <string name="preference_title_darktheme">Dark Theme benutzen</string>
+    <string name="title_activity_preference">Settings</string>
+    <string name="preference_title_darktheme">Use Dark Theme</string>
     <string name="preference_key_darktheme">darktheme</string>
-    <string name="preference_description_darktheme">Ein dunkles Layout wird benutzt</string>
+    <string name="preference_description_darktheme">Using a dark Theme for the App</string>
     <string name="preference_key_gmapviewtype">gmapviewtype</string>
-    <string name="preference_title_gmapviewtype">Kartenansicht</string>
-    <string name="preference_description_gmapviewtype">Die Google Map in einer anderen Ansicht anzeigen</string>
+    <string name="preference_title_gmapviewtype">Map View</string>
+    <string name="preference_description_gmapviewtype">Show Google Map in a different view</string>
     <string name="preference_key_coverphoto">coverphoto</string>
-    <string name="preference_description_coverphoto">Das zuletzt gemachte Foto wird im Seitenmenü angezeigt</string>
-    <string name="preference_title_coverphoto">Foto im Seitenmenü anzeigen</string>
+    <string name="preference_description_coverphoto">The newest Picture will be placed as Coverphoto in the sidemenu</string>
+    <string name="preference_title_coverphoto">Show Picture in Sidemenu</string>
+    <string name="preference_title_showdate">Show date</string>
+    <string name="preference_description_showdate">Shows the date to every taken picture</string>
+    <string name="preference_key_showdate">showdate</string>
 
 
     <string-array name="sortDialog">
-        <item>Neuste</item>
-        <item>Älteste</item>
-        <item>Meistgesehen</item>
-        <item>am wenigsten gesehen</item>
+        <item>Newest</item>
+        <item>Oldest</item>
+        <item>Most viewed</item>
+        <item>Least viewed</item>
     </string-array>
 
     <string-array name="gmapTypeDialog">
-        <item>Standard</item>
-        <item>Satelitenansicht</item>
-        <item>Hybrideansicht</item>
+        <item>Standard View</item>
+        <item>Satellite View</item>
+        <item>Hybrid View</item>
     </string-array>
 
     <string-array name="gmapTypeValues">
@@ -43,8 +46,69 @@
         <item>3</item>
     </string-array>
 
-    <string name="title_activity_details_full_screen">ActivityDetailsFullScreen</string>
+    <string name="abort">Abort</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="preference_key_resolution">resolution</string>
+    <string name="preference_description_resolution">Show Pictures in High Quality. May slow down the performance of the App</string>
+    <string name="preference_title_resolution">Use High Quality Pictures</string>
+    <string name="canceled">Canceled..</string>
+    <string name="about">About</string>
+    <string name="about_desc">It is a free to use App
+        Version:</string>
+    <string name="save_loc">Save location</string>
+    <string name="save_loc_tut">With the \'Save location\' button, is it possible to save the current location. The picture will be then displayed in the Google Map feature.
+        Title or description text is not necessary</string>
+    <string name="got_it">Got it!</string>
+    <string name="snachbar_loc">The permission must be granted to use this feature</string>
+    <string name="getting_started">Getting Started..</string>
+    <string name="getting_started_desc">To take the first picture, press on the Button on the bottom right corner and choose \'Take a Pic\'. You can also open the Map to see the location of your taken pictures
+        or you can open the Settings.</string>
+    <string name="next">Next</string>
+    <string name="sidemenu">Using Sidemenu</string>
+    <string name="sidemenu_desc">This Button opens the Sidemenu you can also swipe from left to right to open the Sidemenu. The Sidemenu gives you more options just check them out.
+        </string>
+    <string name="have_fun">Have Fun!</string>
+    <string name="have_fun_desc">There is a lot more to see. Just explore the App and have fun saving your important Memories!
+        </string>
+    <string name="no_pic_chosen">No Picture has been chosen for the import</string>
+    <string name="error">Error</string>
+    <string name="delete_message">Delete this entry?</string>
+    <string name="yes">Yes</string>
+    <string name="sort_by">Sort by..</string>
+    <string name="save_loc_xml">Save Location</string>
+    <string name="description">Description?</string>
+    <string name="title">Title?</string>
+    <string name="edit">Edit</string>
+    <string name="share">Share</string>
+    <string name="total_moments">Number of Entries</string>
+    <string name="import_from_gallery">Import from Gallery</string>
+    <string name="show_all_moments">Show all Entries</string>
+    <string name="open_map">Start Map</string>
+    <string name="settings_xml">Settings</string>
+    <string name="communication">Communication</string>
+    <string name="rate_app">Rate App</string>
+    <string name="imprint">Imprint</string>
+    <string name="delete">Delete</string>
+    <string name="edit_cardview">Edit</string>
+    <string name="share_sts">share</string>
+    <string name="edit_sts">edit</string>
+    <string name="search_sts">Search</string>
+    <string name="user_sts">User</string>
+    <string name="no_loc_saved">There is no location saved for this picture</string>
+    <string name="layout_options">Layout Options</string>
+    <string name="resolution">Image Resolution</string>
+    <string name="google_map_options">Google Map Options</string>
+    <string name="about_app">About the App</string>
+    <string name="information">Information</string>
+    <string name="adding_moment">Add Memorie</string>
+    <string name="edit_pic">Edit</string>
+    <string name="Menu">Menu</string>
+    <string name="settings_fab">Settings</string>
+    <string name="take_picture">Take a Picture</string>
+    <string name="emptypage">"&#128577; \nThere is no Entry yet.\naTake a picture."</string>
+    <string name="preference_key_cardviewlayout">cardviewlayout</string>
+    <string name="preference_title_cardviewlayout">Shows your entries in a Card View with borders</string>
+    <string name="preference_description_cardviewlayout">You can choose if you want the entries to be displayed as card view with or without borders</string>
 
 </resources>

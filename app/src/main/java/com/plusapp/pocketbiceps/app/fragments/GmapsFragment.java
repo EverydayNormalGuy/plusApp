@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -54,6 +55,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.plusapp.pocketbiceps.app.ActivityImageFromMarker;
 import com.plusapp.pocketbiceps.app.MainActivity;
 import com.plusapp.pocketbiceps.app.MemoryAdapter;
 import com.plusapp.pocketbiceps.app.R;
@@ -97,8 +99,12 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     private MemoryAdapter memAdapter;
     private LatLng positionMarkers;
     private Bitmap bmpDecoded;
+    boolean sentFromCardView;
+    String locationFromCardView;
 
     public static Bitmap rotateBitmap(Bitmap source, float angle) {
+
+
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -109,6 +115,11 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
+        if (getArguments() != null) {
+            locationFromCardView = getArguments().getString("location_key");
+            this.sentFromCardView = true;
+
+        }
         return inflater.inflate(R.layout.fragment_gmaps, container, false);
 
 
@@ -125,6 +136,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         mMarkerImageView = (ImageView) mCustomMarkerView.findViewById(R.id.placeholder_image_marker);
 
         data = new MarkerDataSource(getActivity().getBaseContext());
+
     }
 
     //Wird fuer die LocationGoogleApi gebraucht
@@ -144,6 +156,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
 
         SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        // Der String hier muss seltsamerweise hardcoded sein, sonst kann man den Typ nicht mehr aendern
         String gMapViewType = sPrefs.getString("gmapviewtype", "2");
 
         /**
@@ -248,10 +261,22 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                 Bitmap rotatedBmp;
 
                 // Wird benoetigt damit die Bilder in den Marker auf der Map richtig rum gedreht sind
+                // Maincamera in Landscape aufgenommen
                 if (orientation == 6) {
-                     rotatedBmp = rotateBitmap(bmpDecoded, 90);
+                    rotatedBmp = rotateBitmap(bmpDecoded, 90);
                     bmpDecoded = rotatedBmp;
                 }
+                // Frontcamera in Portrait aufgenommen
+                if (orientation == 8) {
+                    rotatedBmp = rotateBitmap(bmpDecoded, 270);
+                    bmpDecoded = rotatedBmp;
+                }
+                // Frontcamera in Landscape aufgenommen
+                if (orientation == 3) {
+                    rotatedBmp = rotateBitmap(bmpDecoded, 180);
+                    bmpDecoded = rotatedBmp;
+                }
+
 
                 gMap.addMarker(new MarkerOptions()
                         .title(m.get(i).getTitle())
@@ -260,6 +285,25 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                         .icon(BitmapDescriptorFactory
                                 .fromBitmap(getMarkerBitmapFromView(mCustomMarkerView, bmpDecoded))));
 
+
+                gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+
+                        String locForDB;
+                        String loc;
+                        loc = marker.getPosition().toString();
+
+
+                        Intent intent = new Intent(getActivity().getApplicationContext(), ActivityImageFromMarker.class);
+                        intent.putExtra("location", loc);
+                        // Flag muss gesetzt werden ansonsten:
+                        // AndroidRuntimeException: Calling startActivity() from outside of an Activity  context requires the FLAG_ACTIVITY_NEW_TASK flag. Is this really what you want?
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getActivity().getApplicationContext().startActivity(intent);
+                        return false;
+                    }
+                });
             }
 
         }
@@ -301,8 +345,19 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         gMap.getUiSettings().setMapToolbarEnabled(false);
         //move map camera
-        gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        gMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+        if (sentFromCardView) {
+
+            String[] sLatLng = locationFromCardView.split(" ");
+            //Stelle 1 ist Lat und Stelle 0 Long
+            LatLng locFromCardViewMarker = new LatLng(Double.valueOf(sLatLng[1]), Double.valueOf(sLatLng[0]));
+            gMap.moveCamera(CameraUpdateFactory.newLatLng(locFromCardViewMarker));
+            gMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+
+        } else {
+            gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            gMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        }
+
 
         //stop location updates
         if (googleApiClient != null) {
