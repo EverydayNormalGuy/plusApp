@@ -3,6 +3,7 @@ package com.plusapp.pocketbiceps.app;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -47,6 +48,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 
+import net.steamcrafted.lineartimepicker.dialog.LinearDatePickerDialog;
+import net.steamcrafted.lineartimepicker.dialog.LinearTimePickerDialog;
+
 import java.io.File;
 import java.util.Date;
 
@@ -72,6 +76,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
     long dbvCurrTime;
     MemoryAdapter memAdapter;
     Button btnGetLoc;
+    Button btnEditTime;
     GoogleApiClient googleApiClient;
     Toolbar toolbarAdd;
     MarkerDataSource data;
@@ -130,9 +135,13 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
             if (extras.getString("pathName") != null) {
                 this.galleryPathName = extras.getString("pathName");
             }
-            if (extras.getString("fromGallery").equals("true")){
-                this.fromGallery = true;
+            if (extras.getString("fromGallery") != null) {
+
+                if (extras.getString("fromGallery").equals("true")) {
+                    this.fromGallery = true;
+                }
             }
+
         }
 
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
@@ -153,7 +162,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
         etTitle = (EditText) findViewById(R.id.editTitle);
         etDescription = (EditText) findViewById(R.id.editDescription);
         btnGetLoc = (Button) findViewById(R.id.btnGetLocation);
-
+        btnEditTime = (Button) findViewById(R.id.btnEditTime);
         Glide.with(this)
                 .load(f)
                 .error(R.drawable.cast_album_art_placeholder)
@@ -175,40 +184,71 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
         sv.setButtonText(getString(R.string.got_it));
 
-        if (fromGallery){
+        if (fromGallery) {
             btnGetLoc.setText(R.string.add_location);
         }
+
+
+        btnEditTime.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                LinearDatePickerDialog dialog = LinearDatePickerDialog.Builder.with(AddActivity.this)
+                        .setButtonCallback(new LinearDatePickerDialog.ButtonCallback() {
+                            @Override
+                            public void onPositive(DialogInterface dialog, int year, int month, int day) {
+                                //TODO: Datum in Miliseconds speichern!
+                            }
+
+                            @Override
+                            public void onNegative(DialogInterface dialog) {
+
+                            }
+                        })
+                        .setDialogBackgroundColor(R.color.colorCardViewBlue)
+                        .setPickerBackgroundColor(R.color.color_white)
+                        .setLineColor(R.color.colorCardViewBlue)
+                        .setTextBackgroundColor(R.color.color_grey)
+                        .setButtonColor(R.color.color_white)
+                        .setYear(2017)
+                        .setShowTutorial(false)
+                        .build();
+                dialog.show();
+
+            }
+        });
+
+
         btnGetLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!fromGallery){
-                if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(AddActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                            PERMISSION_ACCESS_COARSE_LOCATION);
-                    // Snackbar wird benötigt dass das Android System genug Zeit hat nach der Permissionsabfrage die aktuelle Position zu bekommen.
-                    // Der sbOnClickListener triggert onLocationChanged an, so dass bei betaetigen von Okay die aktuelle Position nochmals abgefragt wird.
-                    Snackbar.make(findViewById(android.R.id.content), R.string.snachbar_loc, Snackbar.LENGTH_INDEFINITE).setAction(R.string.got_it, sbOnClickListener).show();
+                if (!fromGallery) {
+                    if (ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(AddActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                PERMISSION_ACCESS_COARSE_LOCATION);
+                        // Snackbar wird benötigt dass das Android System genug Zeit hat nach der Permissionsabfrage die aktuelle Position zu bekommen.
+                        // Der sbOnClickListener triggert onLocationChanged an, so dass bei betaetigen von Okay die aktuelle Position nochmals abgefragt wird.
+                        Snackbar.make(findViewById(android.R.id.content), R.string.snachbar_loc, Snackbar.LENGTH_INDEFINITE).setAction(R.string.got_it, sbOnClickListener).show();
 
-                }
-                if (ContextCompat.checkSelfPermission(getBaseContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    buildGoogleApiClient();
-                }
-                }
-                else if (fromGallery){
+                    }
+                    if (ContextCompat.checkSelfPermission(getBaseContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        buildGoogleApiClient();
+                    }
+                } else if (fromGallery) {
 
-                try {
-                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+                    try {
+                        PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
 //                    intentBuilder.setLatLngBounds(BOUNDS_MOUNTAIN_VIEW);
-                    Intent intent = intentBuilder.build(AddActivity.this);
-                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                        Intent intent = intentBuilder.build(AddActivity.this);
+                        startActivityForResult(intent, PLACE_PICKER_REQUEST);
 
-                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e ){
-                    e.printStackTrace();
-                }
+                    } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -256,18 +296,19 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
 
-        if (requestCode == PLACE_PICKER_REQUEST && resultCode == Activity.RESULT_OK){
-            final Place place = PlacePicker.getPlace(this,data);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == Activity.RESULT_OK) {
+            final Place place = PlacePicker.getPlace(this, data);
             final CharSequence name = place.getName();
             final CharSequence address = place.getAddress();
             String latlng = place.getLatLng().toString();
             Log.d("bla", latlng);
 
-            dbLati = TextUtils.substring(latlng, latlng.indexOf("(")+1, latlng.indexOf(","));
-            dbLongi = TextUtils.substring(latlng, latlng.indexOf(",")+1, latlng.indexOf(')'));
+            dbLati = TextUtils.substring(latlng, latlng.indexOf("(") + 1, latlng.indexOf(","));
+            dbLongi = TextUtils.substring(latlng, latlng.indexOf(",") + 1, latlng.indexOf(')'));
 
 //            String attributions = (String) place.getAttributions();
 //            if (attributions == null) {
@@ -279,8 +320,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
             super.onActivityResult(requestCode, resultCode, data);
         }
 
-        }
-
+    }
 
 
     public void saveAddings() {

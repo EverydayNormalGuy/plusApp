@@ -123,7 +123,6 @@ public class ActivityEdit extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(ivMomentUpdate);
 
-
             updateTitle.setText(mmo.getTitle());
             updateDescription.setText(mmo.getSnippet());
         }
