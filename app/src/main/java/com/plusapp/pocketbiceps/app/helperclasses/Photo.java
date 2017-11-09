@@ -24,13 +24,10 @@ public class Photo implements Parcelable {
     MyMarkerObj mmo;
     static List<MyMarkerObj> mList;
 
-
     public Photo(String url, String title) {
         mUrl = url;
         mTitle = title;
     }
-
-
 
     public Photo (String url, String title, String description){
         mUrl = url;

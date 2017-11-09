@@ -69,11 +69,9 @@ public class ActivityImageSlider extends FragmentActivity {
         NUM_ITEMS = mList.size();
         temp = new Photo[mList.size()];
 
-
         for (int i = 0; i < mList.size(); i++){
             temp[i] = new Photo(mList.get(i).getPath(), mList.get(i).getTitle());
         }
-
 
         imageFragmentPagerAdapter = new ImageFragmentPagerAdapter(getSupportFragmentManager());
         viewPager = (HackyViewPager) findViewById(R.id.pager);
@@ -110,8 +108,6 @@ public class ActivityImageSlider extends FragmentActivity {
             Bundle bundle = getArguments();
             final int position = bundle.getInt("position");
 
-
-
             GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivSlider);
 
             Glide.with(this)
@@ -120,9 +116,7 @@ public class ActivityImageSlider extends FragmentActivity {
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(ivSlider);
 
-//            Glide.with(this).load(temp[position].getUrl()).into(ivSlider);
                 return swipeView;
-//            }
         }
         static SwipeFragment newInstance(int position) {
             SwipeFragment swipeFragment = new SwipeFragment();

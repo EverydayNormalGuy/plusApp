@@ -67,12 +67,10 @@ public class SortDialogFragment extends DialogFragment {
 
     }
 
-
     public void saveSortOrder(int sortModeX) {
         sp = getActivity().getSharedPreferences("prefs_sort", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("sort_mode", sortModeX);
         editor.apply();
     }
-
 }

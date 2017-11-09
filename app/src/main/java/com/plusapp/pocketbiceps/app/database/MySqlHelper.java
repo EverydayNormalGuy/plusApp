@@ -18,7 +18,6 @@ public class MySqlHelper extends SQLiteOpenHelper {
     public static final String COUNTER ="loc_counter";
     public static final String PATH = "loc_path";
 
-
     private static final int D_VERSION = 1;
     private static final String DB_NAME = "markerlocations.db";
     private static final String DB_CREATE = "create table "+ TABLE_NAME + "("
@@ -33,14 +32,11 @@ public class MySqlHelper extends SQLiteOpenHelper {
 
     public MySqlHelper(Context context){
         super(context, DB_NAME, null, D_VERSION);
-
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL(DB_CREATE);
-
     }
 
     @Override
@@ -48,7 +44,4 @@ public class MySqlHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME);
         onCreate(db);
     }
-
-
-
 }

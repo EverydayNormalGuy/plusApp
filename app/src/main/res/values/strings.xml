@@ -110,5 +110,6 @@
     <string name="preference_key_cardviewlayout">cardviewlayout</string>
     <string name="preference_title_cardviewlayout">Shows your entries in a Card View with borders</string>
     <string name="preference_description_cardviewlayout">You can choose if you want the entries to be displayed as card view with or without borders</string>
+    <string name="add_location">Add Location</string>
 
 </resources>

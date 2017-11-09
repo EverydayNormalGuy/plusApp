@@ -3,8 +3,6 @@ package com.plusapp.pocketbiceps.app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -13,9 +11,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.webkit.WebView;
-import android.widget.Toast;
-
-import java.util.prefs.PreferenceChangeListener;
 
 /**
  * Created by Steffi on 18.02.2017.
@@ -81,10 +76,9 @@ public class ActivityPreference extends PreferenceActivity implements Preference
                 } else {
 
                 }
-                return true;
+                return false;
             }
         });
-
 
         // Open-Source Libs
         Preference openSource = findPreference("showOpenSourceLibs");
@@ -118,7 +112,6 @@ public class ActivityPreference extends PreferenceActivity implements Preference
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
-
 
     // About Dialog
     private void displayAboutAlertDialog() {

@@ -34,8 +34,6 @@ public class MyMarkerObj {
         this.setTimestamp(timestamp);
         this.setCounter(counter);
         this.setPath(path);
-
-
     }
     public String getPosition() {
         return position;
@@ -61,7 +59,6 @@ public class MyMarkerObj {
     public void setId(long id) {
         this.id = id;
     }
-
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;

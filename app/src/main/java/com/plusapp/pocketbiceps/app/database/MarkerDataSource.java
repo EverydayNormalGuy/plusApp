@@ -26,9 +26,6 @@ public class MarkerDataSource {
         db = dbhelper.getWritableDatabase();
     }
 
-
-
-
     public void close() {
         db.close();
     }
@@ -43,7 +40,6 @@ public class MarkerDataSource {
         v.put(MySqlHelper.PATH, m.getPath());
 
         db.insert(MySqlHelper.TABLE_NAME, null, v);
-
     }
 
     public List<MyMarkerObj> getMyMarkers(int sortOrder){
@@ -53,7 +49,6 @@ public class MarkerDataSource {
         String orderByCounterDesc = MySqlHelper.COUNTER + " DESC";
         String orderByTimeAsc = MySqlHelper.TIME_STAMP + " ASC";
         String orderByCounterAsc = MySqlHelper.COUNTER + " ASC";
-
 
         //Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, orderByTimeDesc);
 
@@ -74,11 +69,7 @@ public class MarkerDataSource {
                 break;
         }
 
-
-
-
         //Cursor cursor = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, null);
-
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             MyMarkerObj m = cursorToMarker(cursor);
@@ -87,10 +78,7 @@ public class MarkerDataSource {
         }
         cursor.close();
         return markers;
-
     }
-
-
 
     public void updateMarker(MyMarkerObj m){
         //Jedes mal wenn ein update durchgeführt wird, wird der counter erhöht
@@ -105,13 +93,10 @@ public class MarkerDataSource {
         db.update(MySqlHelper.TABLE_NAME,v,MySqlHelper.TIME_STAMP + " = '" +m.getTimestamp()+ "'",null);
     }
 
-
     public void sortMostViewed(){
         Cursor c = db.query(MySqlHelper.TABLE_NAME, cols, null, null, null, null, MySqlHelper.COUNTER+" DESC");
         c.moveToFirst();
     }
-
-
 
     public void deleteMarker(MyMarkerObj m) {
         db.delete(MySqlHelper.TABLE_NAME, MySqlHelper.PATH + " = '" +m.getPath()+ "'",null);

@@ -20,7 +20,6 @@ import java.util.List;
 
 public class ActivityImageFromMarker extends AppCompatActivity {
 
-
     MarkerDataSource data;
     MyMarkerObj mmo;
     List<MyMarkerObj> m;
@@ -43,7 +42,6 @@ public class ActivityImageFromMarker extends AppCompatActivity {
         String resolution_key = getString(R.string.preference_key_resolution);
         isSetToHighResolution = sPrefs.getBoolean(resolution_key, false);
 
-
         if (isSetToDarkTheme == true) {
             setTheme(R.style.DarkTheme);
             isDarkTheme = true;
@@ -58,11 +56,9 @@ public class ActivityImageFromMarker extends AppCompatActivity {
             // Das Key Argument "currTime" muss mit dem Key aus der MainAct. uebereinstimmen
             this.locFromMarker = extras.getString("location");
 
-
             data = new MarkerDataSource(this);
             data.open();
             m = data.getMyMarkers(MainActivity.sortOrder);
-
 
             ivMarkerImage = (PhotoView) findViewById(R.id.ivImageMarker);
 
@@ -97,8 +93,6 @@ public class ActivityImageFromMarker extends AppCompatActivity {
                         .override(612,612)
                         .into(ivMarkerImage);
             }
-
-
         }
     }
 }
