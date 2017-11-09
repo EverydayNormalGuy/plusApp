@@ -193,27 +193,39 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
             @Override
             public void onClick(View v) {
-                LinearDatePickerDialog dialog = LinearDatePickerDialog.Builder.with(AddActivity.this)
-                        .setButtonCallback(new LinearDatePickerDialog.ButtonCallback() {
-                            @Override
-                            public void onPositive(DialogInterface dialog, int year, int month, int day) {
-                                //TODO: Datum in Miliseconds speichern!
-                            }
 
-                            @Override
-                            public void onNegative(DialogInterface dialog) {
+                boolean firstTimeDatePicker = false;
 
-                            }
-                        })
-                        .setDialogBackgroundColor(R.color.colorCardViewBlue)
-                        .setPickerBackgroundColor(R.color.color_white)
-                        .setLineColor(R.color.colorCardViewBlue)
-                        .setTextBackgroundColor(R.color.color_grey)
-                        .setButtonColor(R.color.color_white)
-                        .setYear(2017)
-                        .setShowTutorial(false)
-                        .build();
-                dialog.show();
+                final String PREFS_NAME = "MyPrefsFile";
+                SharedPreferences firstPref = getSharedPreferences(PREFS_NAME, 0);
+                if (firstPref.getBoolean("First_Time_DatePicker", true)) {
+                    //Do first operation
+                    firstTimeDatePicker = true;
+                    firstPref.edit().putBoolean("First_Time_DatePicker", false).apply();
+                }
+
+                    LinearDatePickerDialog dialog = LinearDatePickerDialog.Builder.with(AddActivity.this)
+
+                            .setDialogBackgroundColor(getResources().getColor(R.color.dardBlue))
+                            .setLineColor(getResources().getColor(R.color.color_white))
+                            .setTextBackgroundColor(getResources().getColor(R.color.dardBlue))
+                            .setButtonColor(getResources().getColor(R.color.color_white))
+                            .setYear(2017)
+                            .setTextColor(getResources().getColor(R.color.color_white))
+                            .setShowTutorial(firstTimeDatePicker)
+                            .setButtonCallback(new LinearDatePickerDialog.ButtonCallback() {
+                                @Override
+                                public void onPositive(DialogInterface dialog, int year, int month, int day) {
+                                    //TODO: Datum in Miliseconds speichern!
+                                }
+
+                                @Override
+                                public void onNegative(DialogInterface dialog) {
+
+                                }
+                            })
+                            .build();
+                    dialog.show();
 
             }
         });

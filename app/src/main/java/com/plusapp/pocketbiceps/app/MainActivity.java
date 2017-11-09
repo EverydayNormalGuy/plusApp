@@ -5,11 +5,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
@@ -60,6 +62,8 @@ import com.plusapp.pocketbiceps.app.fragments.SortDialogFragment;
 import com.plusapp.pocketbiceps.app.helperclasses.ViewTargets;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import net.steamcrafted.lineartimepicker.dialog.LinearDatePickerDialog;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -733,6 +737,7 @@ public class MainActivity extends AppCompatActivity
 
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PLAYSTORE_LINK + this.getPackageName())));
         } else if (id == R.id.nav_send) {
+
 
             displayImpressumAlertDialog();
         }

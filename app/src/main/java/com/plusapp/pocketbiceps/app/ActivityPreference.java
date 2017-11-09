@@ -76,7 +76,7 @@ public class ActivityPreference extends PreferenceActivity implements Preference
                 } else {
 
                 }
-                return false;
+                return true;
             }
         });
 
