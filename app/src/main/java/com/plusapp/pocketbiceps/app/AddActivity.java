@@ -53,6 +53,7 @@ import net.steamcrafted.lineartimepicker.dialog.LinearTimePickerDialog;
 
 import java.io.File;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Diese Activity wird gestartet nachdem das Foto aufgenommen wurde.
@@ -217,6 +218,13 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
                                 @Override
                                 public void onPositive(DialogInterface dialog, int year, int month, int day) {
                                     //TODO: Datum in Miliseconds speichern!
+                                    int year2 = year;
+                                    int month2 = month-1;
+                                    int day2 = day;
+
+                                    Date date = new GregorianCalendar(year2, month2, day2).getTime();
+                                    dbvCurrTime = date.getTime();
+
                                 }
 
                                 @Override
@@ -242,6 +250,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
                                 PERMISSION_ACCESS_COARSE_LOCATION);
                         // Snackbar wird benötigt dass das Android System genug Zeit hat nach der Permissionsabfrage die aktuelle Position zu bekommen.
                         // Der sbOnClickListener triggert onLocationChanged an, so dass bei betaetigen von Okay die aktuelle Position nochmals abgefragt wird.
+
                         Snackbar.make(findViewById(android.R.id.content), R.string.snachbar_loc, Snackbar.LENGTH_INDEFINITE).setAction(R.string.got_it, sbOnClickListener).show();
 
                     }
@@ -254,7 +263,6 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
 
                     try {
                         PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-//                    intentBuilder.setLatLngBounds(BOUNDS_MOUNTAIN_VIEW);
                         Intent intent = intentBuilder.build(AddActivity.this);
                         startActivityForResult(intent, PLACE_PICKER_REQUEST);
 
