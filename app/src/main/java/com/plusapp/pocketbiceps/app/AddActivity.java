@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -205,26 +206,24 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.Co
                     firstPref.edit().putBoolean("First_Time_DatePicker", false).apply();
                 }
 
+
                     LinearDatePickerDialog dialog = LinearDatePickerDialog.Builder.with(AddActivity.this)
 
                             .setDialogBackgroundColor(getResources().getColor(R.color.dardBlue))
                             .setLineColor(getResources().getColor(R.color.color_white))
                             .setTextBackgroundColor(getResources().getColor(R.color.dardBlue))
                             .setButtonColor(getResources().getColor(R.color.color_white))
-                            .setYear(2017)
+                            .setYear(Calendar.getInstance().get(Calendar.YEAR))
                             .setTextColor(getResources().getColor(R.color.color_white))
                             .setShowTutorial(firstTimeDatePicker)
                             .setButtonCallback(new LinearDatePickerDialog.ButtonCallback() {
                                 @Override
                                 public void onPositive(DialogInterface dialog, int year, int month, int day) {
-                                    //TODO: Datum in Miliseconds speichern!
                                     int year2 = year;
                                     int month2 = month-1;
                                     int day2 = day;
-
                                     Date date = new GregorianCalendar(year2, month2, day2).getTime();
                                     dbvCurrTime = date.getTime();
-
                                 }
 
                                 @Override

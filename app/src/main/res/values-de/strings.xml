@@ -105,5 +105,6 @@
     <string name="preference_title_cardviewlayout">Zeigt die Einträge als Kacheln</string>
     <string name="preference_description_cardviewlayout">Alternativ kann auch ein moderneres Layout benutzt werden ohne Rahmen</string>
     <string name="add_location">Ort hinzufügen</string>
+    <string name="edit_date">Datum ändern</string>
 
 </resources>

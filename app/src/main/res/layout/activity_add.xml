@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:text="Edit Time"
+                    android:text="@string/edit_date"
                     android:textColor="#03A9F4"
                     android:layout_alignParentEnd="true"
                     android:layout_alignStart="@+id/btnGetLocation"
