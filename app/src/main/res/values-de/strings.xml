@@ -56,7 +56,7 @@
     <string name="about_desc">Das ist eine kostenfreie App für die private Nutzung
         Version:</string>
     <string name="save_loc">Standort speichern</string>
-    <string name="save_loc_tut">Nachdem du das Foto aufgenommen hast, hast du die Möglichkeit über \'Standort speichern\' den Ort der Aufnahme zu speichern und später über die GoogleMap anzeigen zu lassen. Für das Speichern des Ortes wird die Berechtigung der Standort Abfrage benötigt.  Hier kannst du weiterhin einen Titel und eine Beschreibung zu deinem Foto angeben, allerdings ist das kein muss</string>
+    <string name="save_loc_tut">Nachdem du das Foto aufgenommen hast, hast du die Möglichkeit über \'Standort speichern\' den Ort der Aufnahme zu speichern und später über die GoogleMap anzeigen zu lassen. Für das Speichern des Ortes wird die Berechtigung der Standort Abfrage benötigt. Hier kannst du weiterhin einen Titel und eine Beschreibung zu deinem Foto angeben, allerdings ist das kein muss</string>
     <string name="got_it">Alles klar!</string>
     <string name="snachbar_loc">Der Standort wird nur beim Speichern abgefragt</string>
     <string name="getting_started">Erste Schritte..</string>
@@ -102,7 +102,9 @@
     <string name="take_picture">Foto aufnehmen</string>
     <string name="emptypage">"&#128577; \nNoch kein Eintrag vorhanden. \nNimmm jetzt ein Foto auf oder importiere eines aus der Galerie"</string>
     <string name="preference_key_cardviewlayout">cardviewlayout</string>
-    <string name="preference_title_cardviewlayout">Zeigt die Einträge in einer Kachelansicht mit Rahmen</string>
+    <string name="preference_title_cardviewlayout">Zeigt die Einträge als Kacheln</string>
     <string name="preference_description_cardviewlayout">Alternativ kann auch ein moderneres Layout benutzt werden ohne Rahmen</string>
+    <string name="add_location">Ort hinzufügen</string>
+    <string name="edit_date">Datum ändern</string>
 
 </resources>

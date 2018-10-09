@@ -59,7 +59,6 @@ public class ActivityEdit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-
         toolbarAdd = (Toolbar) findViewById(R.id.toolbar2); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbarAdd);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
@@ -93,8 +92,6 @@ public class ActivityEdit extends AppCompatActivity {
             updateTitle = (EditText) findViewById(R.id.updateTitle);
             updateDescription = (EditText) findViewById(R.id.updateDescription);
 
-//            bottomLayout = (LinearLayout) findViewById(R.id.fullscreen_content_controls);
-
             mmo = m.get(index);
 
             SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
@@ -104,7 +101,6 @@ public class ActivityEdit extends AppCompatActivity {
 
             MemoryAdapter mem = new MemoryAdapter();
             //Bitmap bmp = mem.decodeFile(f);
-
 
             Transformation blurTransformation = new Transformation() {
                 @Override
@@ -127,13 +123,9 @@ public class ActivityEdit extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(ivMomentUpdate);
 
-
             updateTitle.setText(mmo.getTitle());
             updateDescription.setText(mmo.getSnippet());
-
-
         }
-
     }
 
     @Override
@@ -159,7 +151,6 @@ public class ActivityEdit extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-
     }
 
     public void saveAddings() {

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.plusapp.pocketbiceps.app.R;
 
-
 public class DetailsFragment extends Fragment {
 
     @Nullable
@@ -21,7 +20,5 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-
     }
-
 }

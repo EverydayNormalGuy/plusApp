@@ -43,7 +43,6 @@ public class ActivityGallery extends AppCompatActivity {
 
         ActivityGallery.ImageGalleryAdapter adapter = new ActivityGallery.ImageGalleryAdapter(this, Photo.getPhotos(getBaseContext()));
         recyclerView.setAdapter(adapter);
-
     }
 
     private class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapter.MyViewHolder>  {
@@ -69,7 +68,6 @@ public class ActivityGallery extends AppCompatActivity {
 
             // Hier muss mit Target gearbeitet werden ansonsten werden bei Gifs lediglich placeholder angezeigt
             GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
-
 
             Glide.with(mContext)
                     .load(photo.getUrl())

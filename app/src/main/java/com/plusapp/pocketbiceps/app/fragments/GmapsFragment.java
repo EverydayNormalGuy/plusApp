@@ -1,36 +1,27 @@
 package com.plusapp.pocketbiceps.app.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -38,8 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -50,7 +39,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -61,16 +49,12 @@ import com.plusapp.pocketbiceps.app.MemoryAdapter;
 import com.plusapp.pocketbiceps.app.R;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import static android.content.Context.LOCATION_SERVICE;
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 
@@ -103,8 +87,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     String locationFromCardView;
 
     public static Bitmap rotateBitmap(Bitmap source, float angle) {
-
-
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -114,15 +96,11 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
         if (getArguments() != null) {
             locationFromCardView = getArguments().getString("location_key");
             this.sentFromCardView = true;
-
         }
         return inflater.inflate(R.layout.fragment_gmaps, container, false);
-
-
     }
 
     @Override
@@ -134,9 +112,7 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         //Inflate die custom marker XML und referenziert auf die darininhaltende Imageview
         mCustomMarkerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_custom_marker, null);
         mMarkerImageView = (ImageView) mCustomMarkerView.findViewById(R.id.placeholder_image_marker);
-
         data = new MarkerDataSource(getActivity().getBaseContext());
-
     }
 
     //Wird fuer die LocationGoogleApi gebraucht
@@ -179,30 +155,16 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
             gMap.setMyLocationEnabled(true);
         }
 
-
         MapsInitializer.initialize(getActivity());
         try {
             addCustomMarker();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     //Erstellt ein Bitmap die in die CustomMarker view eingefuegt wird
     private Bitmap getMarkerBitmapFromView(View view, Bitmap bitmap) {
-
-//        Matrix matrix = new Matrix();
-//
-//        switch (orientation) {
-//            case 6:
-//                matrix.postRotate(90);
-//                break;
-//            default:
-//                break;
-//        }
-
 
         mMarkerImageView.setImageBitmap(bitmap);
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -219,7 +181,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
             drawable.draw(canvas);
         view.draw(canvas);
 
-
         return returnedBitmap;
     }
 
@@ -229,7 +190,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
         if (gMap == null) {
             return;
         }
-
 
         data.open();
 
@@ -255,7 +215,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                 ExifInterface exif = new ExifInterface(m.get(i).getPath());
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
 
-
                 Bitmap bmpDecoded = memAdapter.decodeFile(f);
 
                 Bitmap rotatedBmp;
@@ -277,14 +236,12 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                     bmpDecoded = rotatedBmp;
                 }
 
-
                 gMap.addMarker(new MarkerOptions()
                         .title(m.get(i).getTitle())
                         // .snippet(m.get(i).getSnippet())
                         .position(positionMarkers)
                         .icon(BitmapDescriptorFactory
                                 .fromBitmap(getMarkerBitmapFromView(mCustomMarkerView, bmpDecoded))));
-
 
                 gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
@@ -305,7 +262,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                     }
                 });
             }
-
         }
     }
 
@@ -321,8 +277,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
         }
-
-
     }
 
     @Override
@@ -336,7 +290,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
 
     @Override
     public void onLocationChanged(Location location) {
-
 
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
@@ -357,7 +310,6 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
             gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             gMap.animateCamera(CameraUpdateFactory.zoomTo(14));
         }
-
 
         //stop location updates
         if (googleApiClient != null) {
@@ -403,6 +355,5 @@ public class GmapsFragment extends Fragment implements OnMapReadyCallback, Googl
     public void onStop() {
         super.onStop();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-
     }
 }

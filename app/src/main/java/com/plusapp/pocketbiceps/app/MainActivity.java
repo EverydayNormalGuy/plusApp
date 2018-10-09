@@ -5,12 +5,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
@@ -36,7 +37,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,12 +50,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.plusapp.pocketbiceps.app.database.MarkerDataSource;
 import com.plusapp.pocketbiceps.app.database.MyMarkerObj;
 import com.plusapp.pocketbiceps.app.fragments.GmapsFragment;
@@ -65,8 +63,9 @@ import com.plusapp.pocketbiceps.app.helperclasses.ViewTargets;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import net.steamcrafted.lineartimepicker.dialog.LinearDatePickerDialog;
+
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -184,8 +183,6 @@ public class MainActivity extends AppCompatActivity
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
-
-
         momentsCount = createList2().size();
 
         fab_Menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
@@ -318,7 +315,6 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
-
     }
 
     // Tutorial fuer den User beim ersten Starten der App
@@ -471,7 +467,6 @@ public class MainActivity extends AppCompatActivity
         if (createList2().size() == 1) {
             recreate();
         }
-
     }
 
     // Die Permissions fuer das Schreiben des External Storage werden hier abgefragt
@@ -581,6 +576,7 @@ public class MainActivity extends AppCompatActivity
                             intent.putExtra("currTime", originalTimeInMilli);
                         }
                         intent.putExtra("pathName", imgDecodableString);
+                        intent.putExtra("fromGallery", "true");
 
 
                         startActivity(intent);
@@ -647,7 +643,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
-
     }
 
     @Override
@@ -712,7 +707,6 @@ public class MainActivity extends AppCompatActivity
                 // ansonsten stuerzt die App bei BackButtonPressed ab
             } else {
 
-
                 try{
                     for (int i = 0; i <navigationView.getMenu().size() ; i++) {
                         navigationView.getMenu().getItem(i).setChecked(false);
@@ -734,7 +728,6 @@ public class MainActivity extends AppCompatActivity
                         PERMISSION_ACCESS_COARSE_LOCATION);
             }
 
-
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(MainActivity.this, ActivityPreference.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -743,11 +736,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PLAYSTORE_LINK + this.getPackageName())));
-
         } else if (id == R.id.nav_send) {
 
-            displayImpressumAlertDialog();
 
+            displayImpressumAlertDialog();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -773,6 +765,5 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e){
 
         }
-
     }
 }

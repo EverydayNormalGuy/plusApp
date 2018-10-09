@@ -61,13 +61,11 @@ import java.util.List;
 
 public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryViewHolder>  {
 
-
     public MarkerDataSource data;
 
     MyMarkerObj mmo;
     MainActivity mainActivity;
     DetailsFragment detailsFrag = new DetailsFragment();
-
 
     // Liste der Titels und Snippets
     private List<MyMarkerObj> m;
@@ -93,11 +91,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
         mainActivity = ((MainActivity) mContext);
         mainActivity.refresh();
-
-//        m.clear();
-//        m.addAll(mx);
-//        notifyDataSetChanged();
-//        Toast.makeText(mContext, "as"+m, Toast.LENGTH_SHORT).show();
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -186,8 +179,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
             params9.addRule(RelativeLayout.BELOW, R.id.cvImage);
         }
 
-
-
         memoryViewHolder.mem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,7 +189,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
             }
         });
-
 
         memoryViewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,13 +257,11 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         SimpleDateFormat formatterForImageSearch = new SimpleDateFormat("dd-MM-yyyy-HH-mm-SS");
         String imageDate=formatterForImageSearch.format(new Date(mmo.getTimestamp()));
 
-
         File f = new File(mmo.getPath());
 
         //Glide uebernimmt das decoden und das Laden der Bilder im Hintergrund um laggs zu vermeiden
         //Context ueber constructor von main activity
 //        Picasso.with(mContext).load(f).resize(1080,1080).centerCrop().into(memoryViewHolder.vImage);
-
 
         ImageView memImageView = memoryViewHolder.vImage;
 
@@ -353,7 +341,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
 
             return BitmapFactory.decodeStream(new FileInputStream(bmpFile),null,o2);
 
-
         }
 
         catch (FileNotFoundException e){} catch (IOException e) {
@@ -371,7 +358,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.MemoryView
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.card_view, viewGroup, false);
-        
 
         return new MemoryViewHolder(itemView);
     }
